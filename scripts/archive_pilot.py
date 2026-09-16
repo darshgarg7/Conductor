@@ -38,11 +38,15 @@ def archive(source: Path, data: Path, output: Path) -> None:
     for phase in PHASES:
         directory = source / phase
         if not directory.is_dir():
+            if phase in {"export-copy-attempt", "export-numerical-attempt"}:
+                continue
             raise FileNotFoundError(directory)
         for path in sorted(directory.iterdir()):
             if not path.is_file():
                 continue
-            if path.name in OMITTED or path.suffix == ".log":
+            if phase == "export-verification" and path.name == "manifest.json":
+                omit(path, "The raw export manifest contains a host-specific path; validation.json retains unchanged numerical fields and file hashes.")
+            elif path.name in OMITTED or path.suffix == ".log":
                 omit(path, "Console logs, profiler traces and local pointers stay in the working output.")
             elif phase in {"dense-sequential-evaluation", "strong-dense-evaluation"} and path.name not in DENSE_ARTIFACTS:
                 omit(path, "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted.")
@@ -70,9 +74,14 @@ def archive(source: Path, data: Path, output: Path) -> None:
     for path in sorted(data.iterdir()):
         if path.is_file() and path.suffix in {".json", ".jsonl"}:
             copy(path, output / "data" / path.name)
-    for name in ("post_training_verification.json", "post_training_sft_verification.json",
-                 "supervision_diagnostics.json", "doctor.json", "verify_post_training.py"):
-        copy(source / name, output / "verification" / name)
+    for name in ("post_training_verification.json", "supervision_diagnostics.json", "doctor.json"):
+        original = source / name
+        if not original.exists():
+            original = source / "adapter-verification" / name
+        copy(original, output / "verification" / name)
+    for name in ("post_training_sft_verification.json", "verify_post_training.py", "validate_merged_export.py"):
+        if (source / name).exists():
+            copy(source / name, output / "verification" / name)
     manifest_path = source / "export" / "manifest.json"
     manifest = json.loads(manifest_path.read_text())
     validation_fields = ("original_base_model", "original_resolved_revision", "source_checkpoint", "preserve_model",

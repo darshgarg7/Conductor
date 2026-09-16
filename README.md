@@ -83,6 +83,15 @@ python -m conductor.benchmark --config configs/inference/granite_pilot.yaml
 python scripts/smoke_serving.py --config configs/serving/granite_pilot.yaml
 ```
 
+For the supplementary controls and artifact checks:
+
+```bash
+python -m conductor.evaluate --config configs/evaluation/granite_dense_sequential.yaml
+python -m conductor.evaluate --config configs/evaluation/granite_strong_dense.yaml
+python scripts/verify_pilot_adapters.py
+python scripts/validate_pilot_export.py
+```
+
 The [results directory](results/granite-pilot/report.md) contains the measured
 pilot, sealed development data, request timings, expert probes and per-phase
 provenance. `scripts/report_pilot.py` rebuilds this recorded report and training
