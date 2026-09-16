@@ -21,10 +21,12 @@ def report(root: Path) -> None:
     if len(evaluation["policy_status"]) != 7 or any(row["status"] != "measured" for row in evaluation["policy_status"]):
         raise ValueError("All seven baseline policies must have completed evaluation.")
     model = load("sft", "controller.json")["configuration"]["model"]
-    labels = {row["policy"]: row.get("label", row["policy"]) for row in evaluation["policy_status"]}
+    labels = {"all_agent": "All-Agent", "base_moe": "Base MoE (random head)", "conductor_sft": "Conductor-SFT",
+              "conductor_preference": "Conductor-Preference", "rule_based": "Rule-Based",
+              "random_top_k": "Random Top-K", "static_supervisor": "Static Supervisor"}
     training = []
     for phase, metrics in (("sft", sft), ("preference", dpo)):
-        training.append({"stage": phase.upper(), "fitting": metrics["train_examples"], "validation": metrics["validation_examples"],
+        training.append({"stage": "SFT" if phase == "sft" else "DPO", "fitting": metrics["train_examples"], "validation": metrics["validation_examples"],
                          "windows": metrics["optimizer_windows"], "initial": metrics["initial_train"]["loss"],
                          "final": metrics["final_train"]["loss"], "validation_loss": metrics["final_validation"]["loss"]})
     policies = [{**row, "label": labels[row["policy"]],

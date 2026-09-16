@@ -16,6 +16,8 @@ PHASES = (
     "export-copy-attempt", "export-numerical-attempt",
 )
 OMITTED = {"controller_trace.json", "latest_resume.json"}
+DENSE_ARTIFACTS = {"run.json", "metrics.json", "evaluation_provenance.json", "specialist_audit.json",
+                   "trajectories.jsonl", "task_metrics.csv"}
 
 
 def archive(source: Path, data: Path, output: Path) -> None:
@@ -42,6 +44,12 @@ def archive(source: Path, data: Path, output: Path) -> None:
                 continue
             if path.name in OMITTED or path.suffix == ".log":
                 omit(path, "Console logs, profiler traces and local pointers stay in the working output.")
+            elif phase in {"dense-sequential-evaluation", "strong-dense-evaluation"} and path.name not in DENSE_ARTIFACTS:
+                omit(path, "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted.")
+            elif phase in {"sft", "preference"} and path.name in {"checkpoint_pointer.json", "expert_statistics.json", "expert_statistics_before.json"}:
+                omit(path, "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived.")
+            elif path.name == "report.md":
+                omit(path, "The combined pilot report replaces separate generated phase reports.")
             elif path.suffix in {".json", ".jsonl", ".csv", ".md", ".txt"}:
                 copy(path, output / "phases" / phase / path.name)
         run_path = directory / "run.json"

@@ -70,7 +70,7 @@ def plot_results(rows: list[dict[str, Any]], output: Path, benchmarks: dict[str,
         names = [row["policy"] for row in summaries]
         # Keep backend identities in the raw tables; compact display names make
         # the figure readable without hiding the random coordination head.
-        short_names = {"all_agent": "All agents", "base_moe": "Base controller\n(random head)",
+        short_names = {"all_agent": "All agents", "base_moe": "Base MoE\nrandom head",
                        "conductor_sft": "SFT", "conductor_preference": "DPO",
                        "random_top_k": "Random\ntop-k", "rule_based": "Rules",
                        "static_supervisor": "Prompted\nsupervisor"}
