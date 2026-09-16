@@ -10,7 +10,7 @@ import sys
 import pytest
 
 from conductor.utils.config import load_config
-from scripts.make_sweep import materialize_sweep
+from conductor.utils.sweeps import materialize_sweep
 
 ROOT = Path(__file__).resolve().parents[1]
 
