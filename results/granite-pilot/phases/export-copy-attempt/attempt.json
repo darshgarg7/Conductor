@@ -1,0 +1,6 @@
+{
+  "status": "interrupted",
+  "reason": "Full FP32 backbone copy export was stopped after observing host memory pressure (approximately70MiB free,8.7GiB compressed); no export was published. This is not an OOM result or a completed timing measurement.",
+  "requested_device": "cpu",
+  "dtype": "float32"
+}

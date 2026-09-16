@@ -1,0 +1,2 @@
+{"epoch": 1, "train_loss": 0.3203533148539632, "validation_loss": 0.21679601635292378, "validation_accuracy": 0.9074074074074074, "optimizer_windows": 41, "learning_rate": 0.0001, "mean_dpo_margin": 2.0143701856335006}
+{"epoch": 2, "train_loss": 0.23457414633189672, "validation_loss": 0.1509596459246512, "validation_accuracy": 0.9259259259259259, "optimizer_windows": 82, "learning_rate": 0.0001, "mean_dpo_margin": 6.838642235155459}

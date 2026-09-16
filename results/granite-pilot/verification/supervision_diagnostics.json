@@ -1,0 +1,8 @@
+{
+  "initial_state_task_count": 12,
+  "initial_states_with_multiple_distinct_successful_targets": 12,
+  "distinct_target_counts": {
+    "2": 12
+  },
+  "interpretation": "Successful reference trajectories can provide different first actions for the same task; this does not identify a unique cost-optimal SFT label."
+}

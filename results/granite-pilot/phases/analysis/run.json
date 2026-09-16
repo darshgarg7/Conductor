@@ -1,0 +1,51 @@
+{
+  "configuration": {
+    "seed": 42,
+    "analysis": {
+      "evaluation": "outputs/research/granite-pilot/evaluation",
+      "benchmark": "outputs/research/granite-pilot/inference",
+      "source_sha256": {
+        "evaluation/metrics.json": "24c1f3713583093ba505f097270a0c00473b70fcd702cf1f23cb3d1fcc309c2f",
+        "evaluation/trajectories.jsonl": "b683fb78e0b64005116f58f905be78f64e5b88583ace612fbe9259d49f83c53b",
+        "inference/metrics.json": "0c0173044b6621fdd822ba2884e7f0e4040b4c43326825559e391e31340d82c8"
+      },
+      "script_sha256": "b87d1a7a37c60f736693f40b8706fad2a63162c83f537b22f90967a9c4dc4302"
+    }
+  },
+  "git_commit": "77d8fdab64ad39b11cbdc24546399c310593f227",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": null,
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 1.7937307090032846,
+  "metrics": {
+    "status": "derived_from_measurements",
+    "analysis_sha256": "aed708d2eea393caed30456265130aca1ffddf1cb3e8ba198d7e0e12d9c7ca08",
+    "input_sha256": {
+      "evaluation/metrics.json": "24c1f3713583093ba505f097270a0c00473b70fcd702cf1f23cb3d1fcc309c2f",
+      "evaluation/trajectories.jsonl": "b683fb78e0b64005116f58f905be78f64e5b88583ace612fbe9259d49f83c53b",
+      "inference/metrics.json": "0c0173044b6621fdd822ba2884e7f0e4040b4c43326825559e391e31340d82c8"
+    }
+  }
+}

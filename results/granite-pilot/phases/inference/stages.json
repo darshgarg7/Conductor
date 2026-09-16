@@ -1,0 +1,231 @@
+{
+  "status": "measured",
+  "samples": [
+    {
+      "repeat": 0,
+      "batch_size": 2,
+      "input_tokens": 209,
+      "serialization": {
+        "host_seconds": 0.007861999969463795,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "tokenization": {
+        "host_seconds": 0.00046737497905269265,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "transfer": {
+        "host_seconds": 1.3749988283962011e-05,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "forward": {
+        "host_seconds": 0.4052070420002565,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decision": {
+        "host_seconds": 0.00016266695456579328,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decisions": [
+        {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        {
+          "selected_agents": [],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": true
+        }
+      ],
+      "cpu_rss_bytes": 5178032128,
+      "cpu_rss_measurement": "current_process_rss",
+      "measured_controller_device": "cpu",
+      "cuda_allocated_bytes": null,
+      "cuda_peak_allocated_bytes": null,
+      "cuda_reserved_bytes": null,
+      "cuda_peak_reserved_bytes": null
+    },
+    {
+      "repeat": 1,
+      "batch_size": 2,
+      "input_tokens": 209,
+      "serialization": {
+        "host_seconds": 0.0001015419838950038,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "tokenization": {
+        "host_seconds": 0.00014337495667859912,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "transfer": {
+        "host_seconds": 1.087499549612403e-05,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "forward": {
+        "host_seconds": 0.4098574169911444,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decision": {
+        "host_seconds": 0.00014412502059713006,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decisions": [
+        {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        {
+          "selected_agents": [],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": true
+        }
+      ],
+      "cpu_rss_bytes": 5178081280,
+      "cpu_rss_measurement": "current_process_rss",
+      "measured_controller_device": "cpu",
+      "cuda_allocated_bytes": null,
+      "cuda_peak_allocated_bytes": null,
+      "cuda_reserved_bytes": null,
+      "cuda_peak_reserved_bytes": null
+    },
+    {
+      "repeat": 2,
+      "batch_size": 2,
+      "input_tokens": 209,
+      "serialization": {
+        "host_seconds": 9.55839641392231e-05,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "tokenization": {
+        "host_seconds": 0.00014216697309166193,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "transfer": {
+        "host_seconds": 1.0624993592500687e-05,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "forward": {
+        "host_seconds": 0.40605216595577076,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decision": {
+        "host_seconds": 0.00014470797032117844,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decisions": [
+        {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        {
+          "selected_agents": [],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": true
+        }
+      ],
+      "cpu_rss_bytes": 5178081280,
+      "cpu_rss_measurement": "current_process_rss",
+      "measured_controller_device": "cpu",
+      "cuda_allocated_bytes": null,
+      "cuda_peak_allocated_bytes": null,
+      "cuda_reserved_bytes": null,
+      "cuda_peak_reserved_bytes": null
+    }
+  ],
+  "trace": {
+    "status": "measured",
+    "path": "outputs/research/granite-pilot/inference/controller_trace.json",
+    "activities": [
+      "ProfilerActivity.CPU"
+    ],
+    "instrumented_sample": {
+      "repeat": -1,
+      "batch_size": 2,
+      "input_tokens": 209,
+      "serialization": {
+        "host_seconds": 0.0007528340211138129,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "tokenization": {
+        "host_seconds": 0.002132292021997273,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "transfer": {
+        "host_seconds": 1.9291997887194157e-05,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "forward": {
+        "host_seconds": 0.42793458298547193,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decision": {
+        "host_seconds": 0.0001669580233283341,
+        "cuda_event_seconds": null,
+        "timing_backend": "synchronized_host_cpu_fallback"
+      },
+      "decisions": [
+        {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        {
+          "selected_agents": [],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": true
+        }
+      ],
+      "cpu_rss_bytes": 5196693504,
+      "cpu_rss_measurement": "current_process_rss",
+      "measured_controller_device": "cpu",
+      "cuda_allocated_bytes": null,
+      "cuda_peak_allocated_bytes": null,
+      "cuda_reserved_bytes": null,
+      "cuda_peak_reserved_bytes": null
+    }
+  },
+  "token_cache": {
+    "entries": 25,
+    "max_entries": 128,
+    "hits": 1215,
+    "misses": 25
+  },
+  "scope": "Separately synchronized warm stages. Stage sums are diagnostic; they do not equal asynchronous service latency. Instrumentation is excluded from request throughput measurements."
+}

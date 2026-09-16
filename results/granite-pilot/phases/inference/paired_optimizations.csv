@@ -1,0 +1,13 @@
+batch_size,context_size_requested_words,concurrency,k,routing_interval,request_count,baseline,candidate,status,request_throughput_ratio,p95_latency_ratio,interpretation
+1,128,1,2,1,24,single,dynamic,measured,1.006913078010814,0.5765623622982664,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+4,128,4,2,1,24,single,dynamic,measured,0.8426958251098942,1.1329300278277505,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+4,128,1,3,1,24,single,dynamic,measured,0.9325797180923248,0.7544886221858591,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+1,128,4,1,1,24,single,dynamic,measured,0.5335835208206016,2.1866514881183723,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+1,128,1,3,1,24,single,dynamic,measured,1.3379875707329674,0.8057291821550434,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+4,128,1,1,1,24,single,dynamic,measured,0.8949100454884901,0.8919186886543591,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+4,128,4,3,1,24,single,dynamic,measured,0.8448464711421314,1.422531302439963,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+1,128,1,1,1,24,single,dynamic,measured,1.4176812596079384,0.8460182691168613,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+4,128,4,1,1,24,single,dynamic,measured,1.141681747601293,1.123903419418761,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+4,128,1,2,1,24,single,dynamic,measured,1.4535196131513088,0.4548461658916124,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+1,128,4,2,1,24,single,dynamic,measured,0.7004103594363948,1.5785109319835136,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
+1,128,4,3,1,24,single,dynamic,measured,1.0630850420001134,0.6870893072357893,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.

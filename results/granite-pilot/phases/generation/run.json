@@ -1,0 +1,98 @@
+{
+  "configuration": {
+    "agents": {
+      "backend": "deterministic",
+      "token_price_per_million": 0.0,
+      "names": [
+        "planner",
+        "retriever",
+        "researcher",
+        "coder",
+        "tool_executor",
+        "critic",
+        "verifier",
+        "math"
+      ]
+    },
+    "seed": 42,
+    "dataset_output": "data/generated/granite-pilot",
+    "output": "outputs/research/granite-pilot/generation",
+    "train_count": 12,
+    "eval_count": 6,
+    "policies": [
+      "all_agent",
+      "rule_based",
+      "random_top_k"
+    ],
+    "orchestration": {
+      "k": 2,
+      "max_rounds": 3,
+      "token_budget": 8192,
+      "agent_call_budget": 12,
+      "routing_interval": 1
+    },
+    "preference": {
+      "enabled": true,
+      "max_candidates": 10,
+      "max_states_per_task": 2
+    },
+    "reward": {
+      "token_weight": 0.05,
+      "latency_weight": 0.0,
+      "agent_call_weight": 0.04,
+      "communication_weight": 0.01,
+      "token_scale": 1000,
+      "latency_scale": 1,
+      "communication_scale": 20
+    }
+  },
+  "git_commit": "9632dd3c495cba84c1a340b6cc6ae6db1b58987c",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": null,
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 3.504460584023036,
+  "metrics": {
+    "tasks": 18,
+    "source_tasks": 18,
+    "train_tasks": 12,
+    "eval_tasks": 6,
+    "trajectories": 54,
+    "successes": 51,
+    "failures": 3,
+    "sft_records": 72,
+    "preference_records": 216,
+    "sft_excluded_non_sparse": 12,
+    "unavailable_policies": [],
+    "resumed_trajectories": 0,
+    "dataset_directory": "data/generated/granite-pilot",
+    "source_sha256": "ef6cbc18cdf949a9766fd87982c01f81afe651b9bf35cc30e85651357ecfe786",
+    "source_kind": "synthetic_development_templates",
+    "durable_preference_trials": 240,
+    "recovery_scope": "completed trajectories and counterfactual trials replay without execution; interrupted uncommitted invocations may repeat",
+    "scope": "Actual executions; synthetic development fixtures do not establish real language-task quality.",
+    "preference_protocol": "exact-state counterfactual action at configurable initial/late states, fixed continuation",
+    "training_split": "train only; source task IDs/public texts validated disjoint"
+  }
+}

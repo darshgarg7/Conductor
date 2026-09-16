@@ -1,0 +1,5 @@
+{
+  "status": "rejected_before_publication",
+  "reason": "FP32 raw-logit gate failed on12/2910 elements, maximumabsolute deviation6.504356861114502e-05. No export was published. No argmax or probability equivalence is inferred from this failed gate.",
+  "dtype": "float32"
+}

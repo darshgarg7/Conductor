@@ -1,0 +1,74 @@
+{
+  "generation": {
+    "git_commit": "9632dd3c495cba84c1a340b6cc6ae6db1b58987c",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 3.504460584023036
+  },
+  "sft": {
+    "git_commit": "9632dd3c495cba84c1a340b6cc6ae6db1b58987c",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 363.03312725003343
+  },
+  "preference": {
+    "git_commit": "9632dd3c495cba84c1a340b6cc6ae6db1b58987c",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 601.1146787910257
+  },
+  "evaluation": {
+    "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 54.999251042027026
+  },
+  "inference": {
+    "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 486.6605850419728
+  },
+  "analysis": {
+    "git_commit": "77d8fdab64ad39b11cbdc24546399c310593f227",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 1.7937307090032846
+  },
+  "dense-sequential-evaluation": {
+    "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 30.06091408402426
+  },
+  "strong-dense-evaluation": {
+    "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 28.620007749996148
+  },
+  "serving": {
+    "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 21.913728874991648
+  },
+  "export-verification": {
+    "git_commit": "8f45a4647675bdb0547eae587d337354cfd994f4",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 91.95012400002452
+  },
+  "export-copy-attempt": {
+    "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": null
+  },
+  "export-numerical-attempt": {
+    "git_commit": "b75568efad534005dd6ba3f991cb404f134f9bcf",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": null
+  }
+}

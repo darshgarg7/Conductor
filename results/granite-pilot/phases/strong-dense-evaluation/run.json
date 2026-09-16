@@ -1,0 +1,3053 @@
+{
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 128,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": false,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      }
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": true,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "agents": {
+      "backend": "deterministic",
+      "token_price_per_million": 0.0,
+      "names": [
+        "planner",
+        "retriever",
+        "researcher",
+        "coder",
+        "tool_executor",
+        "critic",
+        "verifier",
+        "math"
+      ]
+    },
+    "output": "outputs/research/granite-pilot/strong-dense-evaluation",
+    "data": "data/generated/granite-pilot/tasks.jsonl",
+    "splits": [
+      "eval"
+    ],
+    "policies": [
+      "all_agent",
+      "rule_based",
+      "conductor_sft",
+      "conductor_preference"
+    ],
+    "mandatory_policies": [
+      "all_agent",
+      "rule_based",
+      "conductor_sft",
+      "conductor_preference"
+    ],
+    "supervisor": {
+      "name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "device": "cpu",
+      "dtype": "float32",
+      "use_chat_template": true,
+      "max_new_tokens": 96,
+      "max_context": 2048
+    },
+    "checkpoints": {
+      "conductor_sft": "outputs/research/granite-pilot/sft",
+      "conductor_preference": "outputs/research/granite-pilot/preference"
+    },
+    "k": 2,
+    "max_rounds": 3,
+    "token_budget": 8192,
+    "agent_call_budget": 12,
+    "probe_batch_size": 2,
+    "strict_mode": false,
+    "bootstrap_samples": 2000,
+    "all_agent": {
+      "rounds": 2,
+      "execution_mode": "sequential"
+    },
+    "routing_interval": 1
+  },
+  "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": null,
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 28.620007749996148,
+  "metrics": {
+    "policies": [
+      {
+        "policy": "all_agent",
+        "task_count": 6,
+        "success_rate": 0.8333333333333334,
+        "mean_grader_score": 0.8333333333333334,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 2854.3333333333335,
+        "mean_total_tokens": 2854.3333333333335,
+        "mean_agent_calls": 12.0,
+        "mean_rounds": 2.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.014819548494415358,
+        "mean_controller_seconds": 6.1972183175385e-05,
+        "mean_controller_overhead_fraction": 0.004868105434775077,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 86.0,
+        "mean_unique_communication_edges": 66.0,
+        "mean_communication_density": 0.8148148148148148,
+        "mean_communication_sparsity": 0.18518518518518523,
+        "mean_physical_controller_agent_messages": 24.0,
+        "mean_logical_inter_agent_edges": 62.0,
+        "mean_communication_message_bytes": 31284.833333333332,
+        "mean_communication_estimated_tokens": 2854.3333333333335,
+        "mean_activation_sparsity": 0.25,
+        "p50_wall_clock_seconds": 0.011173645470989868,
+        "p95_wall_clock_seconds": 0.027632885496132076,
+        "p50_controller_seconds": 5.858353688381612e-05,
+        "p95_controller_seconds": 7.839547470211983e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_preference",
+        "task_count": 6,
+        "success_rate": 0.3333333333333333,
+        "mean_grader_score": 0.3333333333333333,
+        "mean_controller_tokens": 216.83333333333334,
+        "mean_downstream_tokens": 36.333333333333336,
+        "mean_total_tokens": 253.16666666666666,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.5953970621534003,
+        "mean_controller_seconds": 0.5841004721490511,
+        "mean_controller_overhead_fraction": 0.9808503255765654,
+        "mean_controller_token_fraction": 0.8570198556158383,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 361.5,
+        "mean_communication_estimated_tokens": 36.333333333333336,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.5989751659799367,
+        "p95_wall_clock_seconds": 0.6445226559735602,
+        "p50_controller_seconds": 0.5887045829731505,
+        "p95_controller_seconds": 0.6332911874633282,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_sft",
+        "task_count": 6,
+        "success_rate": 0.3333333333333333,
+        "mean_grader_score": 0.3333333333333333,
+        "mean_controller_tokens": 216.83333333333334,
+        "mean_downstream_tokens": 36.333333333333336,
+        "mean_total_tokens": 253.16666666666666,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.7056806388427503,
+        "mean_controller_seconds": 0.6945283609772256,
+        "mean_controller_overhead_fraction": 0.984210460319734,
+        "mean_controller_token_fraction": 0.8570198556158383,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 361.5,
+        "mean_communication_estimated_tokens": 36.333333333333336,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.6677125630085357,
+        "p95_wall_clock_seconds": 0.8932062812527874,
+        "p50_controller_seconds": 0.6575559584598523,
+        "p95_controller_seconds": 0.8782873227028176,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "rule_based",
+        "task_count": 6,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 53.666666666666664,
+        "mean_total_tokens": 53.666666666666664,
+        "mean_agent_calls": 1.3333333333333333,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.009677034822137406,
+        "mean_controller_seconds": 3.526418974312643e-05,
+        "mean_controller_overhead_fraction": 0.0036477419201774892,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 3.0,
+        "mean_unique_communication_edges": 3.0,
+        "mean_communication_density": 0.037037037037037035,
+        "mean_communication_sparsity": 0.9629629629629629,
+        "mean_physical_controller_agent_messages": 2.6666666666666665,
+        "mean_logical_inter_agent_edges": 0.3333333333333333,
+        "mean_communication_message_bytes": 575.3333333333334,
+        "mean_communication_estimated_tokens": 53.666666666666664,
+        "mean_activation_sparsity": 0.8333333333333334,
+        "p50_wall_clock_seconds": 0.009680062998086214,
+        "p95_wall_clock_seconds": 0.009905426748446189,
+        "p50_controller_seconds": 3.58960242010653e-05,
+        "p95_controller_seconds": 3.813576768152416e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      }
+    ],
+    "categories": [
+      {
+        "policy": "all_agent",
+        "category": "code",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 2,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 2854.0,
+        "mean_total_tokens": 2854.0,
+        "mean_agent_calls": 12.0,
+        "mean_rounds": 2.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.010697229008655995,
+        "mean_controller_seconds": 5.408303695730865e-05,
+        "mean_controller_overhead_fraction": 0.005055559889779169,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 86.0,
+        "mean_unique_communication_edges": 66.0,
+        "mean_communication_density": 0.8148148148148148,
+        "mean_communication_sparsity": 0.18518518518518523,
+        "mean_physical_controller_agent_messages": 24.0,
+        "mean_logical_inter_agent_edges": 62.0,
+        "mean_communication_message_bytes": 31047.5,
+        "mean_communication_estimated_tokens": 2854.0,
+        "mean_activation_sparsity": 0.25,
+        "p50_wall_clock_seconds": 0.010697229008655995,
+        "p95_wall_clock_seconds": 0.010723498207516969,
+        "p50_controller_seconds": 5.408303695730865e-05,
+        "p95_controller_seconds": 5.505861190613359e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "all_agent",
+        "category": "composed_math_string",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 2957.0,
+        "mean_total_tokens": 2957.0,
+        "mean_agent_calls": 12.0,
+        "mean_rounds": 2.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.03267799998866394,
+        "mean_controller_seconds": 6.295897765085101e-05,
+        "mean_controller_overhead_fraction": 0.0019266472144161698,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 86.0,
+        "mean_unique_communication_edges": 66.0,
+        "mean_communication_density": 0.8148148148148148,
+        "mean_communication_sparsity": 0.18518518518518523,
+        "mean_physical_controller_agent_messages": 24.0,
+        "mean_logical_inter_agent_edges": 62.0,
+        "mean_communication_message_bytes": 31869.0,
+        "mean_communication_estimated_tokens": 2957.0,
+        "mean_activation_sparsity": 0.25,
+        "p50_wall_clock_seconds": 0.03267799998866394,
+        "p95_wall_clock_seconds": 0.03267799998866394,
+        "p50_controller_seconds": 6.295897765085101e-05,
+        "p95_controller_seconds": 6.295897765085101e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "all_agent",
+        "category": "composed_retrieval_math",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 2853.0,
+        "mean_total_tokens": 2853.0,
+        "mean_agent_calls": 12.0,
+        "mean_rounds": 2.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.011446999968029559,
+        "mean_controller_seconds": 5.9959013015031815e-05,
+        "mean_controller_overhead_fraction": 0.005237967430985581,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 86.0,
+        "mean_unique_communication_edges": 66.0,
+        "mean_communication_density": 0.8148148148148148,
+        "mean_communication_sparsity": 0.18518518518518523,
+        "mean_physical_controller_agent_messages": 24.0,
+        "mean_logical_inter_agent_edges": 62.0,
+        "mean_communication_message_bytes": 31730.0,
+        "mean_communication_estimated_tokens": 2853.0,
+        "mean_activation_sparsity": 0.25,
+        "p50_wall_clock_seconds": 0.011446999968029559,
+        "p95_wall_clock_seconds": 0.011446999968029559,
+        "p50_controller_seconds": 5.9959013015031815e-05,
+        "p95_controller_seconds": 5.9959013015031815e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "all_agent",
+        "category": "math",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 2757.0,
+        "mean_total_tokens": 2757.0,
+        "mean_agent_calls": 12.0,
+        "mean_rounds": 2.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.012497542018536478,
+        "mean_controller_seconds": 8.354097371920943e-05,
+        "mean_controller_overhead_fraction": 0.006684592345862941,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 86.0,
+        "mean_unique_communication_edges": 66.0,
+        "mean_communication_density": 0.8148148148148148,
+        "mean_communication_sparsity": 0.18518518518518523,
+        "mean_physical_controller_agent_messages": 24.0,
+        "mean_logical_inter_agent_edges": 62.0,
+        "mean_communication_message_bytes": 30539.0,
+        "mean_communication_estimated_tokens": 2757.0,
+        "mean_activation_sparsity": 0.25,
+        "p50_wall_clock_seconds": 0.012497542018536478,
+        "p95_wall_clock_seconds": 0.012497542018536478,
+        "p50_controller_seconds": 8.354097371920943e-05,
+        "p95_controller_seconds": 8.354097371920943e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "all_agent",
+        "category": "retrieval",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 2851.0,
+        "mean_total_tokens": 2851.0,
+        "mean_agent_calls": 12.0,
+        "mean_rounds": 2.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.010900290973950177,
+        "mean_controller_seconds": 5.720806075260043e-05,
+        "mean_controller_overhead_fraction": 0.005248305837827437,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 86.0,
+        "mean_unique_communication_edges": 66.0,
+        "mean_communication_density": 0.8148148148148148,
+        "mean_communication_sparsity": 0.18518518518518523,
+        "mean_physical_controller_agent_messages": 24.0,
+        "mean_logical_inter_agent_edges": 62.0,
+        "mean_communication_message_bytes": 31476.0,
+        "mean_communication_estimated_tokens": 2851.0,
+        "mean_activation_sparsity": 0.25,
+        "p50_wall_clock_seconds": 0.010900290973950177,
+        "p95_wall_clock_seconds": 0.010900290973950177,
+        "p50_controller_seconds": 5.720806075260043e-05,
+        "p95_controller_seconds": 5.720806075260043e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_preference",
+        "category": "code",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 2,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 208.5,
+        "mean_downstream_tokens": 32.0,
+        "mean_total_tokens": 240.5,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.5626767704961821,
+        "mean_controller_seconds": 0.5523576874984428,
+        "mean_controller_overhead_fraction": 0.9816352849199788,
+        "mean_controller_token_fraction": 0.8669386908261005,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 327.5,
+        "mean_communication_estimated_tokens": 32.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.5626767704961821,
+        "p95_wall_clock_seconds": 0.5872362139227334,
+        "p50_controller_seconds": 0.5523576874984428,
+        "p95_controller_seconds": 0.5767317686986644,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_preference",
+        "category": "composed_math_string",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 221.0,
+        "mean_downstream_tokens": 39.0,
+        "mean_total_tokens": 260.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.646593707962893,
+        "mean_controller_seconds": 0.634772332967259,
+        "mean_controller_overhead_fraction": 0.9817174605164696,
+        "mean_controller_token_fraction": 0.85,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 376.0,
+        "mean_communication_estimated_tokens": 39.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.646593707962893,
+        "p95_wall_clock_seconds": 0.646593707962893,
+        "p50_controller_seconds": 0.634772332967259,
+        "p95_controller_seconds": 0.634772332967259,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_preference",
+        "category": "composed_retrieval_math",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 227.0,
+        "mean_downstream_tokens": 44.0,
+        "mean_total_tokens": 271.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.6383095000055619,
+        "mean_controller_seconds": 0.628847750951536,
+        "mean_controller_overhead_fraction": 0.9851768631769644,
+        "mean_controller_token_fraction": 0.8376383763837638,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 429.0,
+        "mean_communication_estimated_tokens": 44.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.6383095000055619,
+        "p95_wall_clock_seconds": 0.6383095000055619,
+        "p50_controller_seconds": 0.628847750951536,
+        "p95_controller_seconds": 0.628847750951536,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_preference",
+        "category": "math",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 209.0,
+        "mean_downstream_tokens": 32.0,
+        "mean_total_tokens": 241.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.5541403329698369,
+        "mean_controller_seconds": 0.5382982079754584,
+        "mean_controller_overhead_fraction": 0.9714113482599707,
+        "mean_controller_token_fraction": 0.8672199170124482,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 321.0,
+        "mean_communication_estimated_tokens": 32.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.5541403329698369,
+        "p95_wall_clock_seconds": 0.5541403329698369,
+        "p50_controller_seconds": 0.5382982079754584,
+        "p95_controller_seconds": 0.5382982079754584,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_preference",
+        "category": "retrieval",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 227.0,
+        "mean_downstream_tokens": 39.0,
+        "mean_total_tokens": 266.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.6079852909897454,
+        "mean_controller_seconds": 0.5979691660031676,
+        "mean_controller_overhead_fraction": 0.9835257116660299,
+        "mean_controller_token_fraction": 0.8533834586466166,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 388.0,
+        "mean_communication_estimated_tokens": 39.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.6079852909897454,
+        "p95_wall_clock_seconds": 0.6079852909897454,
+        "p50_controller_seconds": 0.5979691660031676,
+        "p95_controller_seconds": 0.5979691660031676,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_sft",
+        "category": "code",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 2,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 208.5,
+        "mean_downstream_tokens": 32.0,
+        "mean_total_tokens": 240.5,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.7029251460044179,
+        "mean_controller_seconds": 0.6924554579309188,
+        "mean_controller_overhead_fraction": 0.9849452052553496,
+        "mean_controller_token_fraction": 0.8669386908261005,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 327.5,
+        "mean_communication_estimated_tokens": 32.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.7029251460044179,
+        "p95_wall_clock_seconds": 0.7505607771134237,
+        "p50_controller_seconds": 0.6924554579309188,
+        "p95_controller_seconds": 0.7407210701319855,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_sft",
+        "category": "composed_math_string",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 221.0,
+        "mean_downstream_tokens": 39.0,
+        "mean_total_tokens": 260.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.5743414160097018,
+        "mean_controller_seconds": 0.5645801250357181,
+        "mean_controller_overhead_fraction": 0.9830043756172047,
+        "mean_controller_token_fraction": 0.85,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 376.0,
+        "mean_communication_estimated_tokens": 39.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.5743414160097018,
+        "p95_wall_clock_seconds": 0.5743414160097018,
+        "p50_controller_seconds": 0.5645801250357181,
+        "p95_controller_seconds": 0.5645801250357181,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_sft",
+        "category": "composed_retrieval_math",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 227.0,
+        "mean_downstream_tokens": 44.0,
+        "mean_total_tokens": 271.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.9389904999989085,
+        "mean_controller_seconds": 0.9223551249597222,
+        "mean_controller_overhead_fraction": 0.9822837664074283,
+        "mean_controller_token_fraction": 0.8376383763837638,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 429.0,
+        "mean_communication_estimated_tokens": 44.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.9389904999989085,
+        "p95_wall_clock_seconds": 0.9389904999989085,
+        "p50_controller_seconds": 0.9223551249597222,
+        "p95_controller_seconds": 0.9223551249597222,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_sft",
+        "category": "math",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 209.0,
+        "mean_downstream_tokens": 32.0,
+        "mean_total_tokens": 241.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.6294731660163961,
+        "mean_controller_seconds": 0.619039083016105,
+        "mean_controller_overhead_fraction": 0.9834241019894098,
+        "mean_controller_token_fraction": 0.8672199170124482,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 321.0,
+        "mean_communication_estimated_tokens": 32.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.6294731660163961,
+        "p95_wall_clock_seconds": 0.6294731660163961,
+        "p50_controller_seconds": 0.619039083016105,
+        "p95_controller_seconds": 0.619039083016105,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "conductor_sft",
+        "category": "retrieval",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 227.0,
+        "mean_downstream_tokens": 39.0,
+        "mean_total_tokens": 266.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.6854284590226598,
+        "mean_controller_seconds": 0.676284916989971,
+        "mean_controller_overhead_fraction": 0.9866601073936637,
+        "mean_controller_token_fraction": 0.8533834586466166,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 388.0,
+        "mean_communication_estimated_tokens": 39.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.6854284590226598,
+        "p95_wall_clock_seconds": 0.6854284590226598,
+        "p50_controller_seconds": 0.676284916989971,
+        "p95_controller_seconds": 0.676284916989971,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "rule_based",
+        "category": "code",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 2,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 32.0,
+        "mean_total_tokens": 32.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.009858270495897159,
+        "mean_controller_seconds": 3.270851448178291e-05,
+        "mean_controller_overhead_fraction": 0.003315671882735488,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 327.5,
+        "mean_communication_estimated_tokens": 32.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.009858270495897159,
+        "p95_wall_clock_seconds": 0.009943151750485412,
+        "p50_controller_seconds": 3.270851448178291e-05,
+        "p95_controller_seconds": 3.5033654421567916e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "rule_based",
+        "category": "composed_math_string",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 92.0,
+        "mean_total_tokens": 92.0,
+        "mean_agent_calls": 2.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.009518374979961663,
+        "mean_controller_seconds": 3.766699228435755e-05,
+        "mean_controller_overhead_fraction": 0.003957292328118519,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 5.0,
+        "mean_unique_communication_edges": 5.0,
+        "mean_communication_density": 0.06172839506172839,
+        "mean_communication_sparsity": 0.9382716049382716,
+        "mean_physical_controller_agent_messages": 4.0,
+        "mean_logical_inter_agent_edges": 1.0,
+        "mean_communication_message_bytes": 1000.0,
+        "mean_communication_estimated_tokens": 92.0,
+        "mean_activation_sparsity": 0.75,
+        "p50_wall_clock_seconds": 0.009518374979961663,
+        "p95_wall_clock_seconds": 0.009518374979961663,
+        "p50_controller_seconds": 3.766699228435755e-05,
+        "p95_controller_seconds": 3.766699228435755e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "rule_based",
+        "category": "composed_retrieval_math",
+        "split": "eval",
+        "generalization": "unseen_composition",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 104.0,
+        "mean_total_tokens": 104.0,
+        "mean_agent_calls": 2.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.009467166964896023,
+        "mean_controller_seconds": 3.829202614724636e-05,
+        "mean_controller_overhead_fraction": 0.004044718582574076,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 5.0,
+        "mean_unique_communication_edges": 5.0,
+        "mean_communication_density": 0.06172839506172839,
+        "mean_communication_sparsity": 0.9382716049382716,
+        "mean_physical_controller_agent_messages": 4.0,
+        "mean_logical_inter_agent_edges": 1.0,
+        "mean_communication_message_bytes": 1134.0,
+        "mean_communication_estimated_tokens": 104.0,
+        "mean_activation_sparsity": 0.75,
+        "p50_wall_clock_seconds": 0.009467166964896023,
+        "p95_wall_clock_seconds": 0.009467166964896023,
+        "p50_controller_seconds": 3.829202614724636e-05,
+        "p95_controller_seconds": 3.829202614724636e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "rule_based",
+        "category": "math",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 27.0,
+        "mean_total_tokens": 27.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.009675459004938602,
+        "mean_controller_seconds": 3.650004509836435e-05,
+        "mean_controller_overhead_fraction": 0.003772435507166512,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 295.0,
+        "mean_communication_estimated_tokens": 27.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.009675459004938602,
+        "p95_wall_clock_seconds": 0.009675459004938602,
+        "p50_controller_seconds": 3.650004509836435e-05,
+        "p95_controller_seconds": 3.650004509836435e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "rule_based",
+        "category": "retrieval",
+        "split": "eval",
+        "generalization": "seen_family",
+        "task_count": 1,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 35.0,
+        "mean_total_tokens": 35.0,
+        "mean_agent_calls": 1.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.009684666991233826,
+        "mean_controller_seconds": 3.3709045965224504e-05,
+        "mean_controller_overhead_fraction": 0.0034806613377348534,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 2.0,
+        "mean_unique_communication_edges": 2.0,
+        "mean_communication_density": 0.024691358024691357,
+        "mean_communication_sparsity": 0.9753086419753086,
+        "mean_physical_controller_agent_messages": 2.0,
+        "mean_logical_inter_agent_edges": 0.0,
+        "mean_communication_message_bytes": 368.0,
+        "mean_communication_estimated_tokens": 35.0,
+        "mean_activation_sparsity": 0.875,
+        "p50_wall_clock_seconds": 0.009684666991233826,
+        "p95_wall_clock_seconds": 0.009684666991233826,
+        "p50_controller_seconds": 3.3709045965224504e-05,
+        "p95_controller_seconds": 3.3709045965224504e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      }
+    ],
+    "policy_status": [
+      {
+        "policy": "all_agent",
+        "label": "all_agent",
+        "status": "measured",
+        "task_count": 6,
+        "checkpoint": null,
+        "controller_backend": "all_agent",
+        "controller_pretrained": null,
+        "specialist_backend": "deterministic",
+        "checkpoint_sha256": null,
+        "controller_token_accounting": "none",
+        "data_sha256": "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d",
+        "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+        "config_sha256": "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c",
+        "experiment_sha256": "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f",
+        "strict_mode": false
+      },
+      {
+        "policy": "rule_based",
+        "label": "rule_based",
+        "status": "measured",
+        "task_count": 6,
+        "checkpoint": null,
+        "controller_backend": "rule_based",
+        "controller_pretrained": null,
+        "specialist_backend": "deterministic",
+        "checkpoint_sha256": null,
+        "controller_token_accounting": "none",
+        "data_sha256": "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d",
+        "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+        "config_sha256": "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c",
+        "experiment_sha256": "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f",
+        "strict_mode": false
+      },
+      {
+        "policy": "conductor_sft",
+        "label": "conductor_sft",
+        "status": "measured",
+        "task_count": 6,
+        "checkpoint": "outputs/research/granite-pilot/sft",
+        "controller_backend": "hf",
+        "controller_pretrained": true,
+        "specialist_backend": "deterministic",
+        "checkpoint_sha256": "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9",
+        "controller_token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "data_sha256": "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d",
+        "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+        "config_sha256": "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c",
+        "experiment_sha256": "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f",
+        "strict_mode": false
+      },
+      {
+        "policy": "conductor_preference",
+        "label": "conductor_preference",
+        "status": "measured",
+        "task_count": 6,
+        "checkpoint": "outputs/research/granite-pilot/preference",
+        "controller_backend": "hf",
+        "controller_pretrained": true,
+        "specialist_backend": "deterministic",
+        "checkpoint_sha256": "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1",
+        "controller_token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "data_sha256": "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d",
+        "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+        "config_sha256": "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c",
+        "experiment_sha256": "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f",
+        "strict_mode": false
+      }
+    ],
+    "fixed_budgets": {
+      "k": 2,
+      "max_rounds": 3,
+      "token_budget": 8192,
+      "agent_call_budget": 12,
+      "routing_interval": 1
+    },
+    "task_count": 6,
+    "provenance": {
+      "data_sha256": "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d",
+      "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+      "config_sha256": "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c",
+      "experiment_sha256": "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f",
+      "strict_mode": false
+    },
+    "specialists_unchanged": true,
+    "paired_comparisons": [
+      {
+        "baseline": "all_agent",
+        "candidate": "rule_based",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2822.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.0008389585127588362
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2865.0,
+            "mean_delta_agent_calls": -10.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.023159625008702278
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -2749.0,
+            "mean_delta_agent_calls": -10.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.0019798330031335354
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2730.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.002822083013597876
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2816.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.0012156239827163517
+          }
+        },
+        "mean_delta_task_success": 0.16666666666666666,
+        "success_delta_ci95": [
+          0.0,
+          0.5
+        ],
+        "success_ratio_ci95": [
+          1.0,
+          2.0
+        ],
+        "mean_delta_grader_score": 0.16666666666666666,
+        "mean_delta_total_tokens": -2800.6666666666665,
+        "token_delta_ci95": [
+          -2854.5,
+          -2749.833333333333
+        ],
+        "token_ratio_ci95": [
+          0.010820719016083256,
+          0.027485994397759103
+        ],
+        "mean_delta_agent_calls": -10.666666666666666,
+        "agent_calls_delta_ci95": [
+          -11.0,
+          -10.333333333333334
+        ],
+        "agent_calls_ratio_ci95": [
+          0.08333333333333333,
+          0.1388888888888889
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": -0.0051425136722779525,
+        "latency_delta_ci95": [
+          -0.012413903189735719,
+          -0.0010929091658908874
+        ],
+        "latency_ratio_ci95": [
+          0.435267841364829,
+          0.899371484357417
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "None"
+            ],
+            "candidate": [
+              "None"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "all_agent",
+        "candidate": "conductor_sft",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2613.5,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6922279169957619
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": -2697.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5416634160210378
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2582.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.9275435000308789
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": -2516.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6169756239978597
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": -2585.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6745281680487096
+          }
+        },
+        "mean_delta_task_success": -0.5,
+        "success_delta_ci95": [
+          -0.8374999999999927,
+          -0.16666666666666663
+        ],
+        "success_ratio_ci95": [
+          0.0,
+          0.8008333333333287
+        ],
+        "mean_delta_grader_score": -0.5,
+        "mean_delta_total_tokens": -2601.1666666666665,
+        "token_delta_ci95": [
+          -2659.6666666666665,
+          -2542.1666666666665
+        ],
+        "token_ratio_ci95": [
+          0.08526230080260556,
+          0.09223587804301585
+        ],
+        "mean_delta_agent_calls": -11.0,
+        "agent_calls_delta_ci95": [
+          -11.0,
+          -11.0
+        ],
+        "agent_calls_ratio_ci95": [
+          0.08333333333333333,
+          0.08333333333333333
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": 0.690861090348335,
+        "latency_delta_ci95": [
+          0.6030188676668331,
+          0.7914437433646526
+        ],
+        "latency_ratio_ci95": [
+          29.266781347771847,
+          71.3988030937707
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "None"
+            ],
+            "candidate": [
+              "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Quality noninferiority is not established by the lower confidence bound",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "all_agent",
+        "candidate": "conductor_preference",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2613.5,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5519795414875261
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": -2697.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.613915707974229
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -2582.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6268625000375323
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": -2516.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5416427909513004
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": -2585.0,
+            "mean_delta_agent_calls": -11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5970850000157952
+          }
+        },
+        "mean_delta_task_success": -0.5,
+        "success_delta_ci95": [
+          -0.8374999999999927,
+          -0.16666666666666663
+        ],
+        "success_ratio_ci95": [
+          0.0,
+          0.8008333333333287
+        ],
+        "mean_delta_grader_score": -0.5,
+        "mean_delta_total_tokens": -2601.1666666666665,
+        "token_delta_ci95": [
+          -2659.6666666666665,
+          -2542.1666666666665
+        ],
+        "token_ratio_ci95": [
+          0.08526230080260556,
+          0.09223587804301585
+        ],
+        "mean_delta_agent_calls": -11.0,
+        "agent_calls_delta_ci95": [
+          -11.0,
+          -11.0
+        ],
+        "agent_calls_ratio_ci95": [
+          0.08333333333333333,
+          0.08333333333333333
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": 0.5805775136589849,
+        "latency_delta_ci95": [
+          0.5501479064912322,
+          0.6096603913836588
+        ],
+        "latency_ratio_ci95": [
+          28.034704866766514,
+          54.7434662144846
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "None"
+            ],
+            "candidate": [
+              "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Quality noninferiority is not established by the lower confidence bound",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "rule_based",
+        "candidate": "all_agent",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2822.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.0008389585127588362
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2865.0,
+            "mean_delta_agent_calls": 10.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.023159625008702278
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 2749.0,
+            "mean_delta_agent_calls": 10.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.0019798330031335354
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2730.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.002822083013597876
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2816.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.0012156239827163517
+          }
+        },
+        "mean_delta_task_success": -0.16666666666666666,
+        "success_delta_ci95": [
+          -0.5,
+          0.0
+        ],
+        "success_ratio_ci95": [
+          0.5,
+          1.0
+        ],
+        "mean_delta_grader_score": -0.16666666666666666,
+        "mean_delta_total_tokens": 2800.6666666666665,
+        "token_delta_ci95": [
+          2749.833333333333,
+          2854.5
+        ],
+        "token_ratio_ci95": [
+          36.382165605095544,
+          92.41530054644808
+        ],
+        "mean_delta_agent_calls": 10.666666666666666,
+        "agent_calls_delta_ci95": [
+          10.333333333333334,
+          11.0
+        ],
+        "agent_calls_ratio_ci95": [
+          7.199999999999999,
+          12.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": 0.0051425136722779525,
+        "latency_delta_ci95": [
+          0.0010929091658908874,
+          0.012413903189735715
+        ],
+        "latency_ratio_ci95": [
+          1.1118875986094667,
+          2.2974359807156732
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "None"
+            ],
+            "candidate": [
+              "None"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Quality noninferiority is not established by the lower confidence bound",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "rule_based",
+        "candidate": "conductor_sft",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 208.5,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6930668755085208
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 168.0,
+            "mean_delta_agent_calls": -1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5648230410297401
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 167.0,
+            "mean_delta_agent_calls": -1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.9295233330340125
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 214.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6197977070114575
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 231.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.675743792031426
+          }
+        },
+        "mean_delta_task_success": -0.6666666666666666,
+        "success_delta_ci95": [
+          -1.0,
+          -0.33333333333333337
+        ],
+        "success_ratio_ci95": [
+          0.0,
+          0.6666666666666666
+        ],
+        "mean_delta_grader_score": -0.6666666666666666,
+        "mean_delta_total_tokens": 199.5,
+        "token_delta_ci95": [
+          181.0,
+          217.84583333333325
+        ],
+        "token_ratio_ci95": [
+          3.3205128205128207,
+          7.967567567567568
+        ],
+        "mean_delta_agent_calls": -0.3333333333333333,
+        "agent_calls_delta_ci95": [
+          -0.6666666666666667,
+          0.0
+        ],
+        "agent_calls_ratio_ci95": [
+          0.6,
+          1.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": 0.6960036040206129,
+        "latency_delta_ci95": [
+          0.6134854521146432,
+          0.7956777425230636
+        ],
+        "latency_ratio_ci95": [
+          64.64166037164908,
+          83.8574825026261
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "None"
+            ],
+            "candidate": [
+              "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Quality noninferiority is not established by the lower confidence bound",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "rule_based",
+        "candidate": "conductor_preference",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 208.5,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.552818500000285
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 168.0,
+            "mean_delta_agent_calls": -1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6370753329829313
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 167.0,
+            "mean_delta_agent_calls": -1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.6288423330406658
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 214.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5444648739648983
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": -1.0,
+            "mean_delta_grader_score": -1.0,
+            "mean_delta_total_tokens": 231.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.5983006239985116
+          }
+        },
+        "mean_delta_task_success": -0.6666666666666666,
+        "success_delta_ci95": [
+          -1.0,
+          -0.33333333333333337
+        ],
+        "success_ratio_ci95": [
+          0.0,
+          0.6666666666666666
+        ],
+        "mean_delta_grader_score": -0.6666666666666666,
+        "mean_delta_total_tokens": 199.5,
+        "token_delta_ci95": [
+          181.0,
+          217.84583333333325
+        ],
+        "token_ratio_ci95": [
+          3.3205128205128207,
+          7.967567567567568
+        ],
+        "mean_delta_agent_calls": -0.3333333333333333,
+        "agent_calls_delta_ci95": [
+          -0.6666666666666667,
+          0.0
+        ],
+        "agent_calls_ratio_ci95": [
+          0.6,
+          1.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": 0.5857200273312628,
+        "latency_delta_ci95": [
+          0.5522387853336113,
+          0.6183580690024731
+        ],
+        "latency_ratio_ci95": [
+          57.546822548364304,
+          65.40399001879543
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "None"
+            ],
+            "candidate": [
+              "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Quality noninferiority is not established by the lower confidence bound",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "conductor_sft",
+        "candidate": "all_agent",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2613.5,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6922279169957619
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": 2697.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5416634160210378
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2582.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.9275435000308789
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": 2516.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6169756239978597
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": 2585.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6745281680487096
+          }
+        },
+        "mean_delta_task_success": 0.5,
+        "success_delta_ci95": [
+          0.16666666666666663,
+          0.8374999999999773
+        ],
+        "success_ratio_ci95": null,
+        "mean_delta_grader_score": 0.5,
+        "mean_delta_total_tokens": 2601.1666666666665,
+        "token_delta_ci95": [
+          2542.1666666666665,
+          2659.6666666666665
+        ],
+        "token_ratio_ci95": [
+          10.841768097373476,
+          11.72851296043656
+        ],
+        "mean_delta_agent_calls": 11.0,
+        "agent_calls_delta_ci95": [
+          11.0,
+          11.0
+        ],
+        "agent_calls_ratio_ci95": [
+          12.0,
+          12.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": -0.690861090348335,
+        "latency_delta_ci95": [
+          -0.7914437433646526,
+          -0.6030188676668331
+        ],
+        "latency_ratio_ci95": [
+          0.014005837026240664,
+          0.034168431031659466
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+            ],
+            "candidate": [
+              "None"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "conductor_sft",
+        "candidate": "rule_based",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -208.5,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6930668755085208
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -168.0,
+            "mean_delta_agent_calls": 1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5648230410297401
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -167.0,
+            "mean_delta_agent_calls": 1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.9295233330340125
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -214.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6197977070114575
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -231.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.675743792031426
+          }
+        },
+        "mean_delta_task_success": 0.6666666666666666,
+        "success_delta_ci95": [
+          0.33333333333333337,
+          1.0
+        ],
+        "success_ratio_ci95": null,
+        "mean_delta_grader_score": 0.6666666666666666,
+        "mean_delta_total_tokens": -199.5,
+        "token_delta_ci95": [
+          -217.8458333333333,
+          -181.0
+        ],
+        "token_ratio_ci95": [
+          0.1255088195386703,
+          0.30115830115830117
+        ],
+        "mean_delta_agent_calls": 0.3333333333333333,
+        "agent_calls_delta_ci95": [
+          0.0,
+          0.6666666666666667
+        ],
+        "agent_calls_ratio_ci95": [
+          1.0,
+          1.6666666666666667
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": -0.6960036040206129,
+        "latency_delta_ci95": [
+          -0.7956777425230636,
+          -0.6134854521146432
+        ],
+        "latency_ratio_ci95": [
+          0.011924994289790224,
+          0.01546989966301339
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+            ],
+            "candidate": [
+              "None"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "conductor_sft",
+        "candidate": "conductor_preference",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.14024837550823577
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.07225229195319116
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.30068099999334663
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.07533283304655924
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.0774431680329144
+          }
+        },
+        "mean_delta_task_success": 0.0,
+        "success_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "success_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "token_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "token_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_agent_calls": 0.0,
+        "agent_calls_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "agent_calls_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": -0.11028357668935011,
+        "latency_delta_ci95": [
+          -0.19525625050300732,
+          -0.023521714135858976
+        ],
+        "latency_ratio_ci95": [
+          0.7540261097755241,
+          0.9629861474957698
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+            ],
+            "candidate": [
+              "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "conductor_preference",
+        "candidate": "all_agent",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2613.5,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5519795414875261
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": 2697.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.613915707974229
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 2582.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6268625000375323
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": 2516.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5416427909513004
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": 2585.0,
+            "mean_delta_agent_calls": 11.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5970850000157952
+          }
+        },
+        "mean_delta_task_success": 0.5,
+        "success_delta_ci95": [
+          0.16666666666666663,
+          0.8374999999999773
+        ],
+        "success_ratio_ci95": null,
+        "mean_delta_grader_score": 0.5,
+        "mean_delta_total_tokens": 2601.1666666666665,
+        "token_delta_ci95": [
+          2542.1666666666665,
+          2659.6666666666665
+        ],
+        "token_ratio_ci95": [
+          10.841768097373476,
+          11.72851296043656
+        ],
+        "mean_delta_agent_calls": 11.0,
+        "agent_calls_delta_ci95": [
+          11.0,
+          11.0
+        ],
+        "agent_calls_ratio_ci95": [
+          12.0,
+          12.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": -0.5805775136589849,
+        "latency_delta_ci95": [
+          -0.6096603913836589,
+          -0.5501479064912324
+        ],
+        "latency_ratio_ci95": [
+          0.018267020142312608,
+          0.03567007410109892
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+            ],
+            "candidate": [
+              "None"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "conductor_preference",
+        "candidate": "rule_based",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": -208.5,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.552818500000285
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -168.0,
+            "mean_delta_agent_calls": 1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6370753329829313
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -167.0,
+            "mean_delta_agent_calls": 1.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.6288423330406658
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -214.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5444648739648983
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 1.0,
+            "mean_delta_grader_score": 1.0,
+            "mean_delta_total_tokens": -231.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.5983006239985116
+          }
+        },
+        "mean_delta_task_success": 0.6666666666666666,
+        "success_delta_ci95": [
+          0.33333333333333337,
+          1.0
+        ],
+        "success_ratio_ci95": null,
+        "mean_delta_grader_score": 0.6666666666666666,
+        "mean_delta_total_tokens": -199.5,
+        "token_delta_ci95": [
+          -217.8458333333333,
+          -181.0
+        ],
+        "token_ratio_ci95": [
+          0.1255088195386703,
+          0.30115830115830117
+        ],
+        "mean_delta_agent_calls": 0.3333333333333333,
+        "agent_calls_delta_ci95": [
+          0.0,
+          0.6666666666666667
+        ],
+        "agent_calls_ratio_ci95": [
+          1.0,
+          1.6666666666666667
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": -0.5857200273312628,
+        "latency_delta_ci95": [
+          -0.6183580690024731,
+          -0.5522387853336114
+        ],
+        "latency_ratio_ci95": [
+          0.015289587210128113,
+          0.017377154041121317
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+            ],
+            "candidate": [
+              "None"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      },
+      {
+        "baseline": "conductor_preference",
+        "candidate": "conductor_sft",
+        "paired_tasks": 6,
+        "baseline_only_tasks": 0,
+        "candidate_only_tasks": 0,
+        "status": "measured",
+        "categories": {
+          "code": {
+            "paired_tasks": 2,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.14024837550823577
+          },
+          "composed_math_string": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": -0.07225229195319116
+          },
+          "composed_retrieval_math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.30068099999334663
+          },
+          "math": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.07533283304655924
+          },
+          "retrieval": {
+            "paired_tasks": 1,
+            "mean_delta_task_success": 0.0,
+            "mean_delta_grader_score": 0.0,
+            "mean_delta_total_tokens": 0.0,
+            "mean_delta_agent_calls": 0.0,
+            "mean_delta_cost_usd": 0.0,
+            "mean_delta_wall_clock_seconds": 0.0774431680329144
+          }
+        },
+        "mean_delta_task_success": 0.0,
+        "success_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "success_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "token_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "token_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_agent_calls": 0.0,
+        "agent_calls_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "agent_calls_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_cost_usd": 0.0,
+        "cost_delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "cost_ratio_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta_wall_clock_seconds": 0.11028357668935011,
+        "latency_delta_ci95": [
+          0.023521714135858945,
+          0.19525625050300732
+        ],
+        "latency_ratio_ci95": [
+          1.0384365368114001,
+          1.3262141357490207
+        ],
+        "fingerprints": {
+          "data_sha256": {
+            "baseline": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ],
+            "candidate": [
+              "1835dd8e8f1caef358e0301561a689c91804f628c9e51d3e6466b1bc5386d63d"
+            ]
+          },
+          "specialist_sha256": {
+            "baseline": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ],
+            "candidate": [
+              "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+            ]
+          },
+          "experiment_sha256": {
+            "baseline": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ],
+            "candidate": [
+              "c5fad8271ca0640dbcc389c914a88a2743305d0c6f1d52cf73d1739ac65d3d1f"
+            ]
+          },
+          "checkpoint_sha256": {
+            "baseline": [
+              "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+            ],
+            "candidate": [
+              "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+            ]
+          },
+          "config_sha256": {
+            "baseline": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ],
+            "candidate": [
+              "a5c01f2e7fda60c20662ff70895fbe802c1ab0e89df108518fc4fddac257d73c"
+            ]
+          }
+        },
+        "comparable_fingerprints": true,
+        "unknown_cost_exclusions": 6,
+        "bootstrap": {
+          "unit": "unique_task_id",
+          "samples": 2000,
+          "seed": 42
+        },
+        "claim_gate": {
+          "status": "insufficient_evidence",
+          "reasons": [
+            "Fewer than 30 independent paired task IDs",
+            "Cost reduction is not established by the upper confidence bound",
+            "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+          ],
+          "cost_metric": "cost_usd",
+          "minimum_paired_tasks": 30,
+          "quality_noninferiority_margin": 0.0,
+          "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+        }
+      }
+    ],
+    "scope": "Deterministic development agents unless the agent configuration selects actual model backends."
+  }
+}

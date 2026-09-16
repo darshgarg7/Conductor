@@ -1,0 +1,12 @@
+{
+  "tests": 189,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 4,
+  "command": ".venv/bin/python -m pytest -q --junitxml=outputs/research/granite-pilot/validation/tests.xml",
+  "validated_source_commit": "4f5fa266cab868e859062ef9c12030ae6f5f75bd",
+  "test_run_git_dirty": true,
+  "ruff": "passed",
+  "pip_check": "passed",
+  "scope": "CPU suite; four CUDA tests skipped without NVIDIA hardware. Only untracked public result artifacts were present during the test run."
+}

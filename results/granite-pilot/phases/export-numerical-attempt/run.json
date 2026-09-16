@@ -1,0 +1,86 @@
+{
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 128,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": false,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      },
+      "resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "require_cuda": false
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": false,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "training": {
+      "stage": "dpo",
+      "data": "data/generated/granite-pilot/preferences.jsonl",
+      "checkpoint": "outputs/research/granite-pilot/sft",
+      "output": "outputs/research/granite-pilot/preference",
+      "epochs": 2,
+      "batch_size": 2,
+      "gradient_accumulation_steps": 2,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "validation_fraction": 0.25,
+      "max_grad_norm": 1.0,
+      "beta": 0.1,
+      "gradient_checkpointing": false,
+      "save_every_epochs": 1
+    },
+    "export_validation": {
+      "preserve_model": false,
+      "script_sha256": "78e99002167016438c84f47fa01617602da8b8662bf3adcbce8c93c2ff3f285b"
+    }
+  },
+  "git_commit": "b75568efad534005dd6ba3f991cb404f134f9bcf",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": "outputs/research/granite-pilot/preference",
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null
+}

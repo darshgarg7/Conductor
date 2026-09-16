@@ -1,0 +1,66 @@
+{
+  "identity": {
+    "stage": "dpo",
+    "seed": 42,
+    "world_size": 1,
+    "dataset_sha256": "f63e3e79fc55c1f34112c8e85be8ab6d7047786927f2625b94062af1d311f8da",
+    "filtered_records_sha256": "9b84826a4bbbd02420771f43b82d195ce33f1a06b0f740f3743723ea21c05e74",
+    "partition_sha256": "fe6681c7763ec546490073cf20d7eb9b6ac48548c9aee034ed75ffcf29f8bc56",
+    "reference_checkpoint_sha256": "3afeaf7ba951ccf789aa4c9bcd30b84f0338030552ee20de80249e086f567c7b",
+    "k": 2,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 2,
+    "beta": 0.1,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "scheduler": "constant",
+    "warmup_steps": 0,
+    "dtype": "torch.float32",
+    "gradient_checkpointing": false,
+    "router_auxiliary_weight": 0.0,
+    "device_type": "cpu",
+    "execution_device_type": "cpu",
+    "per_rank_execution_hardware": [
+      {
+        "device_type": "cpu",
+        "processor": "arm",
+        "machine": "arm64",
+        "cpu_kernel_capability": "DEFAULT",
+        "torch_threads": 1,
+        "torch_interop_threads": 11,
+        "float32_matmul_precision": "highest",
+        "deterministic_algorithms": false,
+        "cublas_workspace_config": null,
+        "cuda_runtime": null
+      }
+    ],
+    "model_sha256": "6ab906d141f8711bc4a1a3886377736fe42186e00a3fa63a368028622564ed01",
+    "hf_versions": {
+      "transformers": "4.57.6",
+      "peft": "0.21.0",
+      "tokenizers": "0.22.2"
+    }
+  },
+  "identity_sha256": "12fd3f9ca51778a75028748eb29a800697d4e444fde2c19b1d4fe8da3112994d",
+  "cursor": {
+    "epoch": 2,
+    "offset": 0,
+    "step": 82,
+    "epoch_loss": 0.0,
+    "epoch_count": 0,
+    "epoch_margin": 0.0,
+    "skipped_updates": 0
+  },
+  "world_size": 1,
+  "torch_version": "2.14.0",
+  "files_sha256": {
+    "adapter/README.md": "78a83233d1a45dc1439d4db56fc3c6c881eda6da523a31cf62a1250ed68d57e0",
+    "adapter/adapter_config.json": "52fcf03e1f5999841d9c03b92a28873abbb548d9489f0dd7440406d0bae32ce1",
+    "adapter/adapter_model.safetensors": "31fc1c07508c051ce0f1ce4cbe4eb3ba5c106ce8180a92365a7c84716fc446cf",
+    "controller.json": "a4ed2875073a904ba6a4629daafa0e744ecc9392b01a51d1c9009c2ac2fd2932",
+    "head.pt": "d175b45f5cf85bfe5b5ee49a3a952df74c36f16f1cb53970964833e2bb2d61f6",
+    "training_state.pt": "81e97c7e8539439b5842c5d15b572aabbd598d34f7224dff580de7530b57ea93"
+  },
+  "checkpoint_boundary": "after complete gradient-accumulation window; no partial gradients"
+}

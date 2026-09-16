@@ -1,0 +1,102 @@
+{
+  "sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+  "identities": {
+    "planner": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Decompose a task and suggest an execution plan; does not produce the answer.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "retriever": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Extract requested facts from reference material supplied with the task.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "researcher": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Inspect reference material and synthesize a supported factual answer.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "coder": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Perform bounded string transformations; no execution of generated programs.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "tool_executor": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Execute an allow-listed arithmetic or string tool, never arbitrary code.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "critic": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Identify missing evidence or contradictions in previous specialist answers.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "verifier": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Check existing answers against the public problem specification.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    },
+    "math": {
+      "class": "conductor.agents.deterministic.DeterministicAgent",
+      "frozen": true,
+      "capability": "Calculate arithmetic expressions, including quantities supplied by other agents.",
+      "implementations": [
+        {
+          "class": "conductor.agents.deterministic.DeterministicAgent",
+          "source_sha256": "efee5c0f60b2c19a693e8a31eb1a67e0e8eae59446eda219109c7798206cb2ad"
+        }
+      ],
+      "configuration_sha256": "6d7c1d90877dc8b0c07c0d30c9bc25cd8bcd66e35a9d2c557d24baab31e11f20"
+    }
+  },
+  "weight_hashing": "full_parameter_bytes"
+}

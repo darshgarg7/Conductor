@@ -1,0 +1,97 @@
+{
+  "train_count": 12,
+  "heldout_count": 6,
+  "splits": [
+    "eval"
+  ],
+  "train_overlap_ids": 0,
+  "train_overlap_texts": 0,
+  "heldout_task_ids": [
+    "48938588903be5f0",
+    "5e269f66a46c0c02",
+    "6f543ee6af6b8920",
+    "54dc4983ab578f2c",
+    "36d78af98d1b12b3",
+    "9d19d9e8716e934a"
+  ],
+  "tasks": [
+    {
+      "id": "48938588903be5f0",
+      "user_task": "Compute 1358 + 10.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "1368",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 42,
+        "grader": "exact",
+        "ood": false
+      }
+    },
+    {
+      "id": "5e269f66a46c0c02",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 8, \"Orion\": 1435, \"Vega\": 1443}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "1435",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 42,
+        "grader": "exact",
+        "ood": false
+      }
+    },
+    {
+      "id": "6f543ee6af6b8920",
+      "user_task": "Reverse the text \"cobalt signal o\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "o langis tlaboc",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 42,
+        "grader": "exact",
+        "ood": false
+      }
+    },
+    {
+      "id": "54dc4983ab578f2c",
+      "user_task": "Count vowels in the text \"river signal p\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "4",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 42,
+        "grader": "exact",
+        "ood": false
+      }
+    },
+    {
+      "id": "36d78af98d1b12b3",
+      "user_task": "Find Orion's value in reference, then multiply that value by 13. Reference: {\"Lyra\": 13, \"Orion\": 1764}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "22932",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 42,
+        "grader": "exact",
+        "ood": true
+      }
+    },
+    {
+      "id": "9d19d9e8716e934a",
+      "user_task": "Compute 1897 + 10. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "7091",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 42,
+        "grader": "exact",
+        "ood": true
+      }
+    }
+  ]
+}

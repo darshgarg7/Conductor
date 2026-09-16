@@ -1,0 +1,22 @@
+{
+  "tasks": 18,
+  "source_tasks": 18,
+  "train_tasks": 12,
+  "eval_tasks": 6,
+  "trajectories": 54,
+  "successes": 51,
+  "failures": 3,
+  "sft_records": 72,
+  "preference_records": 216,
+  "sft_excluded_non_sparse": 12,
+  "unavailable_policies": [],
+  "resumed_trajectories": 0,
+  "dataset_directory": "data/generated/granite-pilot",
+  "source_sha256": "ef6cbc18cdf949a9766fd87982c01f81afe651b9bf35cc30e85651357ecfe786",
+  "source_kind": "synthetic_development_templates",
+  "durable_preference_trials": 240,
+  "recovery_scope": "completed trajectories and counterfactual trials replay without execution; interrupted uncommitted invocations may repeat",
+  "scope": "Actual executions; synthetic development fixtures do not establish real language-task quality.",
+  "preference_protocol": "exact-state counterfactual action at configurable initial/late states, fixed continuation",
+  "training_split": "train only; source task IDs/public texts validated disjoint"
+}

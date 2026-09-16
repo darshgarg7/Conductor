@@ -1,0 +1,206 @@
+[
+  {
+    "source": "sft/checkpoint_pointer.json",
+    "bytes": 48,
+    "sha256": "c3a238865f93540ebdd998c380d4892ab491afcb19391a7a6272601fde8f2fd7",
+    "reason": "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived."
+  },
+  {
+    "source": "sft/expert_statistics.json",
+    "bytes": 70661,
+    "sha256": "6dc847ba015a6db7cd6a48cf7a47257cded1560753c36a6ce587cff77f5e99f6",
+    "reason": "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived."
+  },
+  {
+    "source": "sft/expert_statistics_before.json",
+    "bytes": 71309,
+    "sha256": "45cacbd0cc5a0432f6fd51aee98b2f25747d69d9ddef61e4f297dc73d2c35c92",
+    "reason": "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived."
+  },
+  {
+    "source": "sft/latest_resume.json",
+    "bytes": 48,
+    "sha256": "c3a238865f93540ebdd998c380d4892ab491afcb19391a7a6272601fde8f2fd7",
+    "reason": "Console logs, profiler traces and local pointers stay in the working output."
+  },
+  {
+    "source": "preference/checkpoint_pointer.json",
+    "bytes": 48,
+    "sha256": "e22999994208b13e882468217b3d8963dc25c5039d6650fbaa84354981a78d7e",
+    "reason": "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived."
+  },
+  {
+    "source": "preference/expert_statistics.json",
+    "bytes": 73421,
+    "sha256": "81d8e4573ec7a2abf66c884bbaf672da9bc65f9637e20bdcaea8305cc0b38f08",
+    "reason": "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived."
+  },
+  {
+    "source": "preference/expert_statistics_before.json",
+    "bytes": 73499,
+    "sha256": "516ee482d72ccabcd5b4e6c6922476f4c55b7d830ec4f7432f7a70c243c6abd2",
+    "reason": "Local checkpoint pointers and training-state expert diagnostics are omitted; matched held-out expert probes are archived."
+  },
+  {
+    "source": "preference/latest_resume.json",
+    "bytes": 48,
+    "sha256": "e22999994208b13e882468217b3d8963dc25c5039d6650fbaa84354981a78d7e",
+    "reason": "Console logs, profiler traces and local pointers stay in the working output."
+  },
+  {
+    "source": "inference/controller_trace.json",
+    "bytes": 13059695,
+    "sha256": "1d4a32b165cbf8dab557e28529ef20b6d8bea03c2f1c19d29ea612cc930ad301",
+    "reason": "Console logs, profiler traces and local pointers stay in the working output."
+  },
+  {
+    "source": "inference/report.md",
+    "bytes": 725,
+    "sha256": "8366c960f3853f7a77851d0a5c5c0857de52a8dd98d5eb19b87f78426cba98e6",
+    "reason": "The combined pilot report replaces separate generated phase reports."
+  },
+  {
+    "source": "analysis/report.md",
+    "bytes": 12016,
+    "sha256": "64ea9d7050bdcabde9a875e171b1f10890cd348a1279aaec3cc299eb3dcb47de",
+    "reason": "The combined pilot report replaces separate generated phase reports."
+  },
+  {
+    "source": "dense-sequential-evaluation/expert_stats.json",
+    "bytes": 202512,
+    "sha256": "7c74bde9b5e7c0337289249964fd870f4bced0df35d264f62d9cc98aad98ad18",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/expert_stats_rollout.json",
+    "bytes": 202512,
+    "sha256": "7c74bde9b5e7c0337289249964fd870f4bced0df35d264f62d9cc98aad98ad18",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/initial_state_probe.json",
+    "bytes": 227860,
+    "sha256": "e050a585ad67651669103192540092c63b4b81f523bd1c127956fc1446776841",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/paired_comparisons.json",
+    "bytes": 57036,
+    "sha256": "f2f1c94f1cda0d2cedae8493e2db31435e59039123a42792d6a390f15b3d0a77",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/per_category.csv",
+    "bytes": 7451,
+    "sha256": "d785bac3a36e1fac9b1450be839b287b9de69b533e7159820ace5c77aa4a67f4",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/per_policy.csv",
+    "bytes": 2297,
+    "sha256": "44a585d5bd67eed66b885834bf67136047a3b05c3ae4f41720ab9a558b8182ac",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/policy_status.json",
+    "bytes": 3177,
+    "sha256": "2244cfa75a21cf9fc68f6022f9d73e984c41962d1d2cc88aa6892baeb4c3f5c1",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/specialists.json",
+    "bytes": 4418,
+    "sha256": "db50dc4857dd0e5dcc332032ef89b3d0277af910275de5fbf5b1e81c515fd5b2",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "dense-sequential-evaluation/split_audit.json",
+    "bytes": 2453,
+    "sha256": "53c51193ab42916cbdb241659a6d8e71e5ce1e35e3f1208c5f992bd495c1b8b7",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/expert_stats.json",
+    "bytes": 202506,
+    "sha256": "6489df050c6d11b65ecdd15f279962761e02b924037352e083d7bd02503b0f04",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/expert_stats_rollout.json",
+    "bytes": 202506,
+    "sha256": "6489df050c6d11b65ecdd15f279962761e02b924037352e083d7bd02503b0f04",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/initial_state_probe.json",
+    "bytes": 227860,
+    "sha256": "e050a585ad67651669103192540092c63b4b81f523bd1c127956fc1446776841",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/paired_comparisons.json",
+    "bytes": 57238,
+    "sha256": "2c7a553f6d19ddc971f032f05511d8475720882c428b8f35dbaed0fef428bc8c",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/per_category.csv",
+    "bytes": 7459,
+    "sha256": "6b25802245c5028bba5c7be53cd6835c2a5ccc4b0a466ccefed7005689fe1ab5",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/per_policy.csv",
+    "bytes": 2327,
+    "sha256": "0288e16f3b6386d166d780eb8a9d9fea5bfe6442d35e71bc1bceaf9106ff0038",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/policy_status.json",
+    "bytes": 3177,
+    "sha256": "5b1fd62c366b0e71d16ed4f9aa832e67d957e511790f531d715c0bb416f4e6d3",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/specialists.json",
+    "bytes": 4418,
+    "sha256": "db50dc4857dd0e5dcc332032ef89b3d0277af910275de5fbf5b1e81c515fd5b2",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "strong-dense-evaluation/split_audit.json",
+    "bytes": 2453,
+    "sha256": "53c51193ab42916cbdb241659a6d8e71e5ce1e35e3f1208c5f992bd495c1b8b7",
+    "reason": "Supplementary dense controls retain raw trajectories, task metrics, configuration and identities; redundant summaries are omitted."
+  },
+  {
+    "source": "serving/server.log",
+    "bytes": 1936,
+    "sha256": "13d4947e45c8fef331c02e0f9bda49364abe447783a7a23b0d25fe7beeacd835",
+    "reason": "Console logs, profiler traces and local pointers stay in the working output."
+  },
+  {
+    "source": "export-copy-attempt/server.log",
+    "bytes": 611,
+    "sha256": "3a56ed0b500b458a305bd75ebf166de97a6ea683ce2dbe9493c0114109f5a66a",
+    "reason": "Console logs, profiler traces and local pointers stay in the working output."
+  },
+  {
+    "source": "export-numerical-attempt/export.log",
+    "bytes": 1786,
+    "sha256": "80a856c30c1f913d13d3bd6d1d9cb37cfc2948fac3c0f97de84c0da0bade7c91",
+    "reason": "Console logs, profiler traces and local pointers stay in the working output."
+  },
+  {
+    "source": "export/manifest.json",
+    "bytes": 4259,
+    "sha256": "6b7459c8707cf490f383dbd349a8afe6e80c0fbe1dbd0b5811780b34efc513d5",
+    "reason": "The original manifest contains a host-specific model path; unchanged validation fields and file hashes are published separately."
+  },
+  {
+    "source": "validation/tests.xml",
+    "bytes": 24562,
+    "sha256": "7e33c7dd33a25776aee8aed081f99d7c5619bab516968466f9dda4cebb744661",
+    "reason": "Pytest captured host-specific paths; parsed test counts are retained in checks.json."
+  }
+]

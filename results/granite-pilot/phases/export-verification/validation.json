@@ -1,0 +1,51 @@
+{
+  "source_manifest_sha256": "6b7459c8707cf490f383dbd349a8afe6e80c0fbe1dbd0b5811780b34efc513d5",
+  "files_sha256": {
+    "backbone/config.json": "1e25f54872ad6b22332e88236e49af1856e087b09021a010cf9eccf81693511c",
+    "backbone/merges.txt": "303127a244b0078878156c17229f36d11b7a3a3f8e47b7cfdbb304ff46be5030",
+    "backbone/model-00001-of-00002.safetensors": "ff8ea5d563d68fe61d122dbcbd5cf34c13ebb5200850bf19bfab31cf24d51549",
+    "backbone/model-00002-of-00002.safetensors": "04cb8214ecc50fe93b39655aef1f9daef171985484925bd69e09eb4b77d4a66d",
+    "backbone/model.safetensors.index.json": "bb9612868d42a5a885b9eead384ca22f675792fb4a22ecaa3f1759d089d40816",
+    "backbone/special_tokens_map.json": "2f2bba45146f073a7b8a097cb6133a6b4b66d5751e73f2a2aca81083288813e9",
+    "backbone/tokenizer.json": "defde371d093530237e5e5a15fbb23c222f0159974a519bc66836b2e803bf3e6",
+    "backbone/tokenizer_config.json": "a65886cabc33b82795df74cbcf99e88f4be3e93a72808eb7c006a8ae3d66afb3",
+    "backbone/vocab.json": "20175afb9f164fad4829aca2279f8df7eeff1e2e3f671378aaa287a740aff09f",
+    "controller.json": "f398c1ee393d5de71f7a70a4421e57f42f43a189dbc5ea29afe9f278446b313e",
+    "head.pt": "d175b45f5cf85bfe5b5ee49a3a952df74c36f16f1cb53970964833e2bb2d61f6",
+    "source_adapter/README.md": "78a83233d1a45dc1439d4db56fc3c6c881eda6da523a31cf62a1250ed68d57e0",
+    "source_adapter/adapter_config.json": "52fcf03e1f5999841d9c03b92a28873abbb548d9489f0dd7440406d0bae32ce1",
+    "source_adapter/adapter_model.safetensors": "31fc1c07508c051ce0f1ce4cbe4eb3ba5c106ce8180a92365a7c84716fc446cf"
+  },
+  "validation": {
+    "original_base_model": "ibm-granite/granite-3.1-1b-a400m-base",
+    "original_resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+    "source_checkpoint": "outputs/research/granite-pilot/preference/resume/step-00000082-epoch-0002",
+    "preserve_model": false,
+    "in_place_merge": true,
+    "validation_probe_count": 6,
+    "validation_tolerances": {
+      "logits": {
+        "rtol": 0.0001,
+        "atol": 0.0001
+      },
+      "probabilities": {
+        "rtol": 0.0001,
+        "atol": 1e-05
+      }
+    },
+    "validation_k_values": [
+      1,
+      2,
+      3
+    ],
+    "maximum_logit_difference": 0.0001220703125,
+    "maximum_probability_difference": 7.389644451905042e-13,
+    "probability_temperature": 1.0,
+    "routing_validation": "unchanged masked-logit and serving-probability greedy argmax for every supported k",
+    "action_catalog_size": 485,
+    "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+    "context_strategy": "task/type header capped at 1/3 context; newest serialized execution-state tail uses remainder",
+    "max_length": 128
+  },
+  "scope": "Derived subset of the original export manifest; local configuration paths are omitted."
+}

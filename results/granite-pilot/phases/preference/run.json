@@ -1,0 +1,189 @@
+{
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 128,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": false,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      }
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": true,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "training": {
+      "stage": "dpo",
+      "data": "data/generated/granite-pilot/preferences.jsonl",
+      "checkpoint": "outputs/research/granite-pilot/sft",
+      "output": "outputs/research/granite-pilot/preference",
+      "epochs": 2,
+      "batch_size": 2,
+      "gradient_accumulation_steps": 2,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "validation_fraction": 0.25,
+      "max_grad_norm": 1.0,
+      "beta": 0.1,
+      "gradient_checkpointing": false,
+      "save_every_epochs": 1
+    }
+  },
+  "git_commit": "9632dd3c495cba84c1a340b6cc6ae6db1b58987c",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": "outputs/research/granite-pilot/sft",
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "resolved_model": {
+    "backend": "hf",
+    "name": "ibm-granite/granite-3.1-1b-a400m-base",
+    "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+    "pretrained": true,
+    "max_agents": 3,
+    "max_length": 128,
+    "device": "cpu",
+    "dtype": "float32",
+    "attention_implementation": "sdpa",
+    "local_files_only": false,
+    "trust_remote_code": false,
+    "input_cost_per_million_tokens": 0.0,
+    "lora": {
+      "enabled": true,
+      "r": 4,
+      "alpha": 8,
+      "dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "v_proj",
+        "router.layer"
+      ]
+    },
+    "resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29"
+  },
+  "distributed": {
+    "rank": 0,
+    "world_size": 1
+  },
+  "resumed_from": null,
+  "data_identity": {
+    "stage": "dpo",
+    "seed": 42,
+    "world_size": 1,
+    "dataset_sha256": "f63e3e79fc55c1f34112c8e85be8ab6d7047786927f2625b94062af1d311f8da",
+    "filtered_records_sha256": "9b84826a4bbbd02420771f43b82d195ce33f1a06b0f740f3743723ea21c05e74",
+    "partition_sha256": "fe6681c7763ec546490073cf20d7eb9b6ac48548c9aee034ed75ffcf29f8bc56",
+    "reference_checkpoint_sha256": "3afeaf7ba951ccf789aa4c9bcd30b84f0338030552ee20de80249e086f567c7b",
+    "k": 2,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 2,
+    "beta": 0.1,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "scheduler": "constant",
+    "warmup_steps": 0,
+    "dtype": "torch.float32",
+    "gradient_checkpointing": false,
+    "router_auxiliary_weight": 0.0,
+    "device_type": "cpu",
+    "execution_device_type": "cpu",
+    "per_rank_execution_hardware": [
+      {
+        "device_type": "cpu",
+        "processor": "arm",
+        "machine": "arm64",
+        "cpu_kernel_capability": "DEFAULT",
+        "torch_threads": 1,
+        "torch_interop_threads": 11,
+        "float32_matmul_precision": "highest",
+        "deterministic_algorithms": false,
+        "cublas_workspace_config": null,
+        "cuda_runtime": null
+      }
+    ],
+    "model_sha256": "6ab906d141f8711bc4a1a3886377736fe42186e00a3fa63a368028622564ed01",
+    "hf_versions": {
+      "transformers": "4.57.6",
+      "peft": "0.21.0",
+      "tokenizers": "0.22.2"
+    }
+  },
+  "runtime_seconds": 601.1146787910257,
+  "metrics": {
+    "stage": "dpo",
+    "epochs": 2,
+    "completed": true,
+    "optimizer_windows": 82,
+    "skipped_amp_updates": 0,
+    "world_size": 1,
+    "gradient_accumulation_steps": 2,
+    "train_examples": 162,
+    "validation_examples": 54,
+    "source_examples": 216,
+    "excluded_actions_exceeding_k": 0,
+    "train_k": 2,
+    "initial_train": {
+      "loss": 0.6931471824645996,
+      "accuracy": 0.9135802469135802
+    },
+    "final_train": {
+      "loss": 0.18915993818847113,
+      "accuracy": 0.9259259259259259
+    },
+    "final_validation": {
+      "loss": 0.1509596459246512,
+      "accuracy": 0.9259259259259259
+    },
+    "trainable_parameters": 942565,
+    "total_controller_parameters": 1335567845,
+    "reference_checkpoint_sha256": "3afeaf7ba951ccf789aa4c9bcd30b84f0338030552ee20de80249e086f567c7b",
+    "dataset_sha256": "f63e3e79fc55c1f34112c8e85be8ab6d7047786927f2625b94062af1d311f8da",
+    "pretrained": true,
+    "checkpoint": "outputs/research/granite-pilot/preference",
+    "resume_checkpoint": "outputs/research/granite-pilot/preference/resume/step-00000082-epoch-0002",
+    "specialists_updated": false
+  }
+}

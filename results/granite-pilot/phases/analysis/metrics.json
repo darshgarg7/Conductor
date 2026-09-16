@@ -1,0 +1,9 @@
+{
+  "status": "derived_from_measurements",
+  "analysis_sha256": "aed708d2eea393caed30456265130aca1ffddf1cb3e8ba198d7e0e12d9c7ca08",
+  "input_sha256": {
+    "evaluation/metrics.json": "24c1f3713583093ba505f097270a0c00473b70fcd702cf1f23cb3d1fcc309c2f",
+    "evaluation/trajectories.jsonl": "b683fb78e0b64005116f58f905be78f64e5b88583ace612fbe9259d49f83c53b",
+    "inference/metrics.json": "0c0173044b6621fdd822ba2884e7f0e4040b4c43326825559e391e31340d82c8"
+  }
+}

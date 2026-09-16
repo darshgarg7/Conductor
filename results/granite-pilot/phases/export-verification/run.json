@@ -1,0 +1,124 @@
+{
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 128,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": false,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      },
+      "resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "require_cuda": false
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": false,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "training": {
+      "stage": "dpo",
+      "data": "data/generated/granite-pilot/preferences.jsonl",
+      "checkpoint": "outputs/research/granite-pilot/sft",
+      "output": "outputs/research/granite-pilot/preference",
+      "epochs": 2,
+      "batch_size": 2,
+      "gradient_accumulation_steps": 2,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "validation_fraction": 0.25,
+      "max_grad_norm": 1.0,
+      "beta": 0.1,
+      "gradient_checkpointing": false,
+      "save_every_epochs": 1
+    },
+    "export_validation": {
+      "preserve_model": false,
+      "script_sha256": "09a8d7346d0054e2d0fe735032451ff29f72dca1b19a608c7ad0842473505fc9"
+    }
+  },
+  "git_commit": "8f45a4647675bdb0547eae587d337354cfd994f4",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": "outputs/research/granite-pilot/preference",
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 91.95012400002452,
+  "metrics": {
+    "status": "measured",
+    "device": "cpu",
+    "probe_task_ids": [
+      "48938588903be5f0",
+      "5e269f66a46c0c02",
+      "6f543ee6af6b8920",
+      "54dc4983ab578f2c",
+      "36d78af98d1b12b3",
+      "9d19d9e8716e934a"
+    ],
+    "probe_count": 6,
+    "k_values": [
+      1,
+      2,
+      3
+    ],
+    "reload_actions_equal": true,
+    "maximum_reload_logit_difference": 0.0001354217529296875,
+    "maximum_reload_probability_difference": 3.694822225952521e-13,
+    "maximum_merge_probability_difference": 7.389644451905042e-13,
+    "source_checkpoint_unchanged": true,
+    "source_checkpoint_sha256": "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1",
+    "validation_tolerances": {
+      "logits": {
+        "rtol": 0.0001,
+        "atol": 0.0001
+      },
+      "probabilities": {
+        "rtol": 0.0001,
+        "atol": 1e-05
+      }
+    },
+    "maximum_merge_logit_difference": 0.0001220703125,
+    "export_file_count": 14,
+    "scope": "Six synthetic public initial-state probes; numerical equivalence, not task accuracy or GPU performance."
+  }
+}

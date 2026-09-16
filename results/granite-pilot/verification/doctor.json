@@ -1,0 +1,27 @@
+{
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true
+  },
+  "status": "compatible",
+  "validation": {
+    "requested_device": "cpu",
+    "compute_dtype": "float32",
+    "validated": true,
+    "nvidia_cuda": false,
+    "device": "cpu",
+    "name": "arm",
+    "cuda_runtime": null
+  },
+  "probe": {
+    "seconds": 0.0003220419748686254,
+    "finite": true,
+    "scope": "compatibility arithmetic probe, not a model performance benchmark"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "stage": "sft",
+  "epochs": 3,
+  "completed": true,
+  "optimizer_windows": 42,
+  "skipped_amp_updates": 0,
+  "world_size": 1,
+  "gradient_accumulation_steps": 2,
+  "train_examples": 54,
+  "validation_examples": 18,
+  "source_examples": 72,
+  "excluded_actions_exceeding_k": 0,
+  "train_k": 2,
+  "initial_train": {
+    "loss": 30.88150038542571,
+    "accuracy": 0.0
+  },
+  "final_train": {
+    "loss": 3.7073057713332,
+    "accuracy": 0.42592592592592593
+  },
+  "final_validation": {
+    "loss": 6.15597128868103,
+    "accuracy": 0.3888888888888889
+  },
+  "trainable_parameters": 942565,
+  "total_controller_parameters": 1335567845,
+  "reference_checkpoint_sha256": null,
+  "dataset_sha256": "dcd877af2d0f3eaf7bad17a39a4af63a4384fd830307850f473b39f3f0f059da",
+  "pretrained": true,
+  "checkpoint": "outputs/research/granite-pilot/sft",
+  "resume_checkpoint": "outputs/research/granite-pilot/sft/resume/step-00000042-epoch-0003",
+  "specialists_updated": false
+}

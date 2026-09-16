@@ -1,0 +1,66 @@
+{
+  "identity": {
+    "stage": "sft",
+    "seed": 42,
+    "world_size": 1,
+    "dataset_sha256": "dcd877af2d0f3eaf7bad17a39a4af63a4384fd830307850f473b39f3f0f059da",
+    "filtered_records_sha256": "0fbfc0bbcfd4cb0e45f2c4dad22a06e1f01994e866590e365254cdb7ebbe1b53",
+    "partition_sha256": "fe6681c7763ec546490073cf20d7eb9b6ac48548c9aee034ed75ffcf29f8bc56",
+    "reference_checkpoint_sha256": null,
+    "k": 2,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 2,
+    "beta": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "scheduler": "constant",
+    "warmup_steps": 0,
+    "dtype": "torch.float32",
+    "gradient_checkpointing": false,
+    "router_auxiliary_weight": 0.0,
+    "device_type": "cpu",
+    "execution_device_type": "cpu",
+    "per_rank_execution_hardware": [
+      {
+        "device_type": "cpu",
+        "processor": "arm",
+        "machine": "arm64",
+        "cpu_kernel_capability": "DEFAULT",
+        "torch_threads": 1,
+        "torch_interop_threads": 11,
+        "float32_matmul_precision": "highest",
+        "deterministic_algorithms": false,
+        "cublas_workspace_config": null,
+        "cuda_runtime": null
+      }
+    ],
+    "model_sha256": "6ab906d141f8711bc4a1a3886377736fe42186e00a3fa63a368028622564ed01",
+    "hf_versions": {
+      "transformers": "4.57.6",
+      "peft": "0.21.0",
+      "tokenizers": "0.22.2"
+    }
+  },
+  "identity_sha256": "155ce22a33df2f6bbbf0f67be9a3781503bb8695064902962e044f7e8a67a5ec",
+  "cursor": {
+    "epoch": 3,
+    "offset": 0,
+    "step": 42,
+    "epoch_loss": 0.0,
+    "epoch_count": 0,
+    "epoch_margin": 0.0,
+    "skipped_updates": 0
+  },
+  "world_size": 1,
+  "torch_version": "2.14.0",
+  "files_sha256": {
+    "adapter/README.md": "78a83233d1a45dc1439d4db56fc3c6c881eda6da523a31cf62a1250ed68d57e0",
+    "adapter/adapter_config.json": "a9a878e148de746673ab551d816d62e2966b89869f8fb296b5b490b55fcd9cba",
+    "adapter/adapter_model.safetensors": "174723d345d2fe7554798092dc38f55f167bdf943720f3ab6b430b18b84d137b",
+    "controller.json": "228793e0a020784b30447850806610fabd57b8030c8fa68bcee9bc6278364fc4",
+    "head.pt": "e1f5c70358ce00bc0efa5cee0e673e1b52df519f3b0b54a6c53ac4f8dbbf5899",
+    "training_state.pt": "5fa5d1bb2422e7dab604e19ad4de16b4a66f2694d388125c3184fae7ae0c7341"
+  },
+  "checkpoint_boundary": "after complete gradient-accumulation window; no partial gradients"
+}

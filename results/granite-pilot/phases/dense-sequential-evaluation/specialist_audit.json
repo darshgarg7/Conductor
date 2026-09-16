@@ -1,0 +1,112 @@
+{
+  "specialists": [
+    {
+      "agent": "coder",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "6554bf631f1144dd298ee5de4fc9b111054b766c7d668602ba4d929de4d656b4",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "critic",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "622d07e6af8b52b723fe7b0ff6a2fbe36b7ea1e6e961637286730b7c39e3ca31",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "math",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "9a35bbd9ee0eb08129bdc188164c90328e9892ed10e79edba499536c9c204862",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "planner",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "3243bad3ace4dd42d364ce6f9b611b788b847abfbb24e347fd55fa926d92348f",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "researcher",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "818dc19487762d77bd017baafe6397662b256142ac137b86d30945fba932aa2f",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "retriever",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "78ac22571901d1517c65136952a95012bc5b4cb5738754f5e7cefa29914cea9b",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "tool_executor",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "0eb2b969c8c731e5387d045d8f78533b71c893b41861fab2c4b7032626133938",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    },
+    {
+      "agent": "verifier",
+      "backend": "deterministic",
+      "frozen": true,
+      "model_name": null,
+      "resolved_model_revision": null,
+      "immutable_model_version": null,
+      "identity_verifiable": true,
+      "prompt_sha256": "c4c32b0e184d4b23f387a20e99a1d654002874a5c327c8bff564a0cc1a092173",
+      "corpus_sha256": null,
+      "configuration_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "implementation_sha256": "07e231ec6cfdaabadcac965170943bdd2f664de2acfd47ecec933ec7d8cc9b1a"
+    }
+  ],
+  "fingerprint": "3568efdd4abbce53c0838cb80d34ffc4024b5b52eb0a0a149c2fc8a95ad7e171",
+  "all_frozen": true,
+  "all_frozen_llm": false,
+  "all_identities_verifiable": true
+}

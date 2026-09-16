@@ -1,0 +1,255 @@
+{
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 128,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": false,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      }
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": false,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "checkpoint": "outputs/research/granite-pilot/preference",
+    "serving": {
+      "require_api_key": true,
+      "api_key_env": "CONDUCTOR_ROUTING_API_KEY",
+      "expected_stage": "preference",
+      "max_batch_size": 4,
+      "max_pending": 16,
+      "batch_wait_seconds": 0.005,
+      "request_timeout_seconds": 30,
+      "shutdown_timeout_seconds": 10,
+      "warmup": true
+    }
+  },
+  "git_commit": "3ce79ebc3c7ea5e5253db3bf996ad1eac8cbb333",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": "outputs/research/granite-pilot/preference",
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 21.913728874991648,
+  "metrics": {
+    "status": "measured",
+    "request_count": 8,
+    "responses": [
+      {
+        "request_id": "729082f4-837a-4331-864c-42446b3208e6",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 0.00947200000518933,
+        "batch_inference_seconds": 2.5667621670290828,
+        "latency_seconds": 2.578515667002648,
+        "batch_size": 2,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "d513cbb9-fd2a-4eb0-b968-20dc3ba154f8",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 0.005491666030138731,
+        "batch_inference_seconds": 2.5667621670290828,
+        "latency_seconds": 2.5745353330275975,
+        "batch_size": 2,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "cf5a62a5-8c2e-4825-8edd-73ed9996874c",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 2.5689279999933206,
+        "batch_inference_seconds": 3.418819749960676,
+        "latency_seconds": 5.988498457998503,
+        "batch_size": 4,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "5c08a846-f6ad-480d-bce6-ec38c27bbf48",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 2.5697521670372225,
+        "batch_inference_seconds": 3.418819749960676,
+        "latency_seconds": 5.989322625042405,
+        "batch_size": 4,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "b4db4a4d-86a7-439c-9bd8-13e5c2ffb407",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 2.56832637503976,
+        "batch_inference_seconds": 3.418819749960676,
+        "latency_seconds": 5.9878968330449425,
+        "batch_size": 4,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "9e3a3a2f-24d7-4603-aec0-31795e983126",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 2.56798783299746,
+        "batch_inference_seconds": 3.418819749960676,
+        "latency_seconds": 5.987558291002642,
+        "batch_size": 4,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "90a7e986-8e83-4fe1-9531-fa5612b538ec",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 5.992580958001781,
+        "batch_inference_seconds": 2.5478893340332434,
+        "latency_seconds": 8.54095012502512,
+        "batch_size": 2,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      },
+      {
+        "request_id": "f4be08ee-4e50-4672-8440-774c8b800399",
+        "decision": {
+          "selected_agents": [
+            "coder"
+          ],
+          "execution_mode": "parallel",
+          "confidence": 1.0,
+          "terminate": false
+        },
+        "controller_tokens": 79,
+        "estimated_cost_usd": 0.0,
+        "queue_seconds": 5.986797499994282,
+        "batch_inference_seconds": 2.5478893340332434,
+        "latency_seconds": 8.53516666701762,
+        "batch_size": 2,
+        "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+        "decision_source": "model",
+        "effective_k": 2,
+        "checkpoint_stage": "preference"
+      }
+    ],
+    "prometheus_metrics": "conductor_ready 1\nconductor_pending 0\nconductor_queue_depth 0\nconductor_accepted_total 8\nconductor_model_batches_total 3\nconductor_completed_total 8\nconductor_recent_latency_seconds_sum 46.18244399916148\nconductor_recent_latency_seconds_count 8\n",
+    "unauthorized_http_status": 401,
+    "scope": "Real checkpoint HTTP routing on localhost; no downstream execution, task-success or CUDA claim.",
+    "graceful_shutdown_returncode": -15
+  }
+}

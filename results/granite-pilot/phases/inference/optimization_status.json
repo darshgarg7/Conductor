@@ -1,0 +1,18 @@
+{
+  "mixed_precision": {
+    "status": "supported",
+    "benchmarked": false,
+    "actual_parameter_dtype": "torch.float32",
+    "actual_compute_precision": "float32 frozen backbone; float32 trainable head and adapters",
+    "reason": "Only actual configured forward dtype is measured; supported does not imply enabled."
+  },
+  "hf_kv_cache": {
+    "status": "unsupported",
+    "benchmarked": false,
+    "reason": "Controller route is classification; generation cache requires a supporting HF backend."
+  },
+  "cuda_memory": {
+    "status": "unavailable",
+    "reason": "CUDA allocator measurements are separate from process RSS."
+  }
+}

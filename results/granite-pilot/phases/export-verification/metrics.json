@@ -1,0 +1,37 @@
+{
+  "status": "measured",
+  "device": "cpu",
+  "probe_task_ids": [
+    "48938588903be5f0",
+    "5e269f66a46c0c02",
+    "6f543ee6af6b8920",
+    "54dc4983ab578f2c",
+    "36d78af98d1b12b3",
+    "9d19d9e8716e934a"
+  ],
+  "probe_count": 6,
+  "k_values": [
+    1,
+    2,
+    3
+  ],
+  "reload_actions_equal": true,
+  "maximum_reload_logit_difference": 0.0001354217529296875,
+  "maximum_reload_probability_difference": 3.694822225952521e-13,
+  "maximum_merge_probability_difference": 7.389644451905042e-13,
+  "source_checkpoint_unchanged": true,
+  "source_checkpoint_sha256": "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1",
+  "validation_tolerances": {
+    "logits": {
+      "rtol": 0.0001,
+      "atol": 0.0001
+    },
+    "probabilities": {
+      "rtol": 0.0001,
+      "atol": 1e-05
+    }
+  },
+  "maximum_merge_logit_difference": 0.0001220703125,
+  "export_file_count": 14,
+  "scope": "Six synthetic public initial-state probes; numerical equivalence, not task accuracy or GPU performance."
+}
