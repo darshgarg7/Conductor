@@ -1,0 +1,4 @@
+agents:
+  backend: deterministic
+  token_price_per_million: 0.0
+  names: [planner, retriever, researcher, coder, tool_executor, critic, verifier, math]

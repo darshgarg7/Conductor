@@ -1,0 +1,15 @@
+include:
+  - dev.yaml
+  - ../models/olmoe.yaml
+  - ../agents/hf.yaml
+output: outputs/evaluation/olmoe
+checkpoints:
+  conductor_sft: outputs/checkpoints/conductor-sft
+  conductor_preference: outputs/checkpoints/conductor-preference
+# Actual frozen prompting-only language model; no synthetic supervisor substitute.
+supervisor:
+  name: Qwen/Qwen2.5-0.5B-Instruct
+  device: cpu
+  max_new_tokens: 128
+  max_context: 2048
+  cost_per_million_tokens: 0.0

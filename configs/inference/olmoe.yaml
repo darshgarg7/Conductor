@@ -1,0 +1,14 @@
+include:
+  - dev.yaml
+  - ../models/olmoe.yaml
+  - ../agents/hf.yaml
+output: outputs/benchmarks/olmoe
+checkpoint: outputs/checkpoints/conductor-preference
+batch_sizes: [1, 2, 4]
+context_sizes: [128, 512, 1024]
+concurrency: [1, 4]
+warmup: 3
+repeats: 10
+requests: 16
+evaluation_metrics: outputs/evaluation/olmoe/metrics.json
+# CUDA/bfloat16 must be available; no hardware capability is fabricated.

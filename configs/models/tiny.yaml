@@ -1,0 +1,17 @@
+seed: 42
+model:
+  backend: tiny
+  pretrained: false
+  feature_dim: 256
+  hidden_dim: 64
+  num_experts: 4
+  expert_top_k: 2
+  max_agents: 3
+  device: cpu
+  dtype: float32
+routing:
+  k: 2
+inference:
+  instrument_experts: true
+  sample: false
+  feature_cache_size: 0

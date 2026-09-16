@@ -6,3 +6,22 @@
 .env.*
 !.env.example
 !.env.sample
+
+# Python environments and generated experiment outputs
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+outputs/*
+!outputs/.gitkeep
+!outputs/reports/
+outputs/reports/*
+!outputs/reports/dev/
+outputs/reports/dev/**
+data/dev/*.jsonl
+data/generated/
+*.pt
+*.safetensors
+wandb/

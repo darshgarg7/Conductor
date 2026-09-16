@@ -1,0 +1,21 @@
+seed: 42
+include: agents/dev.yaml
+dataset_output: data/dev
+output: outputs/generation/dev
+train_count: 36
+eval_count: 18
+policies: [all_agent, rule_based, random_top_k]
+orchestration:
+  k: 2
+  max_rounds: 3
+  token_budget: 8192
+  agent_call_budget: 12
+  routing_interval: 1
+reward:
+  token_weight: 0.05
+  latency_weight: 0.02
+  agent_call_weight: 0.04
+  communication_weight: 0.01
+  token_scale: 1000
+  latency_scale: 1
+  communication_scale: 20

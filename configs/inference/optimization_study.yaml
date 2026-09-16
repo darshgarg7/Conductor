@@ -1,0 +1,13 @@
+include: development.yaml
+output: outputs/benchmarks/optimizations
+batch_sizes: [1, 4]
+context_sizes: [128]
+concurrency: [1, 4]
+k_values: [2]
+routing_intervals: [1]
+requests: 16
+warmup: 2
+repeats: 10
+inference:
+  instrument_experts: false
+  feature_cache_size: 0

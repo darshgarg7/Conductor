@@ -1,0 +1,24 @@
+seed: 42
+model:
+  backend: hf
+  name: allenai/OLMoE-1B-7B-0924
+  revision: main  # Pin a resolved Hugging Face commit for published experiments.
+  pretrained: true
+  max_agents: 3
+  max_length: 1024
+  device: cuda
+  dtype: bfloat16
+  local_files_only: false
+  trust_remote_code: false
+  input_cost_per_million_tokens: 0.0  # Set your documented hardware cost model.
+  lora:
+    enabled: true
+    r: 8
+    alpha: 16
+    dropout: 0.0
+    target_modules: [q_proj, v_proj, gate]
+routing:
+  k: 2
+inference:
+  instrument_experts: true
+  sample: false

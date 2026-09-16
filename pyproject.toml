@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "conductor-research"
+version = "0.1.0"
+description = "Sparse learned MoE coordination: post-training and inference experiments"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = ["torch>=2.5,<3", "PyYAML>=6,<7", "numpy>=1.26,<3", "matplotlib>=3.8,<4"]
+
+[project.optional-dependencies]
+hf = ["transformers>=4.48,<5", "peft>=0.14,<1", "accelerate>=1,<2", "safetensors>=0.4"]
+dev = ["pytest>=8,<10", "ruff>=0.9"]
+tracking = ["wandb>=0.18"]
+
+[tool.setuptools.packages.find]
+include = ["conductor*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E9", "F"]

@@ -1,0 +1,9 @@
+# Frozen downstream parameters, shared backend weights; choose an academic-compute model.
+agents:
+  backend: hf
+  model_name: Qwen/Qwen2.5-0.5B-Instruct
+  revision: main  # pin an immutable model commit for archival experiments
+  device: cpu
+  dtype: float32
+  max_new_tokens: 128
+  token_price_per_million: 0.0

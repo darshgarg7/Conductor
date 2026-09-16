@@ -1,0 +1,9 @@
+# OpenAI-compatible inference endpoint; secrets come from environment, never YAML.
+agents:
+  backend: api
+  base_url: http://localhost:8000/v1
+  model_name: configurable-frozen-specialist
+  api_key_env: CONDUCTOR_AGENT_API_KEY
+  max_new_tokens: 128
+  timeout_seconds: 60
+  token_price_per_million: 0.0
