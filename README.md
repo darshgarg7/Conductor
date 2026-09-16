@@ -1,140 +1,250 @@
 # Conductor
 
-**Post-training a sparse MoE for multi-agent coordination, with measured controller inference.**
+**Post-training a sparse MoE to select specialists, coordinate their work, and stop execution.**
 
-Conductor tests whether a pretrained Mixture-of-Experts model can learn which
-frozen specialists a task needs. A coordination head predicts agent selection,
-execution mode and stopping; LoRA adapts attention and neural expert-router
-projections. Specialist parameters stay frozen. The study compares supervised
-post-training and categorical DPO with dense, rule-based, random and prompted
-orchestration.
+[![Tests](https://github.com/darshgarg7/Conductor/actions/workflows/tests.yml/badge.svg)](https://github.com/darshgarg7/Conductor/actions/workflows/tests.yml)
 
-```text
-Task + execution state → pretrained MoE + coordination head → constrained agent top-k
-                      → frozen specialists → updated state → controller
+Conductor asks whether a pretrained Mixture-of-Experts language model can learn
+to activate fewer agents while preserving task success. The coordinator receives
+a task and its execution state, predicts a constrained routing action, and
+repeats after the selected specialists return their outputs.
+
+Only the coordinator is post-trained. Specialist parameters stay frozen, so the
+experiment measures the effect of changing the routing policy. The repository
+contains an offline trajectory pipeline, LoRA SFT and categorical DPO, held-out
+baseline evaluation, controller inference benchmarks, and a bounded HTTP service.
+
+**Current evidence:** a completed pretrained Granite CPU pilot with deterministic
+specialists. Training works, but the pilot does not establish better task success
+or inference savings. CUDA, NCCL, SLURM execution, and the NVIDIA container still
+need validation on a GPU host.
+
+[Research report](results/granite-pilot/report.md) ·
+[Design decisions](docs/design_decisions.md) ·
+[Code review guide](docs/review_guide.md) ·
+[Cluster setup](docs/hpc.md)
+
+## Architecture
+
+```mermaid
+flowchart LR
+    T[Task + execution state] --> M[Pretrained MoE + coordination head]
+    M --> R[Masked routing action]
+    R --> A[Frozen specialists]
+    A --> S[Outputs + updated budgets]
+    S --> T
+    R -->|terminate| F[Final answer + independent grader]
 ```
 
-The recorded pilot uses a pinned Granite sparse MoE on a Mac CPU and inexpensive
-deterministic specialists. **NVIDIA execution, NCCL and the container image still
-need validation on a GPU host.** The CUDA/SLURM paths are implemented; CPU results
-are not GPU performance claims.
+The head predicts a distribution over complete actions: which specialists to
+call, their execution mode, and whether to terminate. Parallel actions select
+an unordered subset; sequential actions preserve order so later specialists can
+use earlier outputs. A mask enforces **at most k agents per step**, with k=1, 2,
+or 3. The eight-specialist, k≤3 catalog contains 485 actions, including stopping.
+Confidence is the selected action probability, not calibrated task-success probability.
 
-Read the [measured research report](results/granite-pilot/report.md),
-[design decisions](docs/design_decisions.md) or [code review guide](docs/review_guide.md).
+The public state contains the task/type, conversation history, previous agent
+outputs and calls, tool results, remaining budget, current step, and routing
+history. Answer keys belong to the independent grader and never enter controller
+inputs. [State serialization](conductor/schema.py) and
+[the action catalog](conductor/controller/actions.py) define this boundary.
 
-## What to inspect
+Eight interfaces cover planning, retrieval, research, coding, tool execution,
+criticism, verification, and math. Development uses fixed deterministic fixtures;
+[local HF](configs/agents/hf.yaml) and [API](configs/agents/api.yaml) specialist
+backends are configurable.
 
-| Area | Implementation | Evidence |
-| --- | --- | --- |
-| MoE post-training | [HF controller](conductor/controller/hf.py), [SFT/DPO loop](conductor/training/runner.py) | Pinned pretrained backbone, attention/router LoRA, frozen base parameters, action masks, exact SFT reference |
-| Data and evaluation | [Counterfactual trajectories](conductor/generate.py), [held-out evaluation](conductor/evaluate.py) | Task-level splits, initial/late stopping preferences, failures, fixed specialists/budgets, task-paired intervals |
-| Controller inference | [Benchmarks](conductor/benchmark.py), [stage profiling](conductor/inference/profiling.py) | Replayed execution states, queue-inclusive latency, native batches, actual HF tokens, device timing and allocator memory |
-| Serving and recovery | [Exclusive model worker](conductor/serving/engine.py), [checkpoint state](conductor/training/state.py) | Bounded admission, compatible dynamic batches, deadlines, atomic optimizer windows, per-rank RNG/cursor |
+**Agent top-k and neural expert top-k are independent.** Granite selects eight
+of 32 internal experts per token. Reducing the number of downstream agent calls
+does not reduce that internal expert count.
 
-## Recorded CPU pilot
+## Post-training
 
-| Measurement | Recorded scope |
+1. **Collect trajectories.** Dense, rule-based, and random policies produce
+   successes and failures with agent outputs, budgets, communication graphs, and
+   measured usage. Counterfactual replay compares candidate actions from the
+   same public state under a fixed continuation.
+2. **Supervised fine-tuning.** Train the coordination head and attention/router
+   LoRA adapters on successful sparse routing labels. Task IDs split fitting
+   data from internal validation; held-out evaluation tasks remain separate.
+3. **Preference optimization.** Categorical DPO compares chosen/rejected action
+   log probabilities against the exact frozen SFT checkpoint. Cached reference
+   probabilities avoid keeping a second pretrained backbone resident.
+
+Preference rewards trade task success against normalized token usage, latency,
+agent activations, and communication. Weights are configurable. The CPU pilot
+uses zero latency weight to avoid learning from noisy fixture timings.
+See the [experimental protocol](docs/research_protocol.md) for evaluation and
+claim requirements.
+
+## Measured CPU pilot
+
+The recorded run uses `ibm-granite/granite-3.1-1b-a400m-base` at a pinned revision,
+CPU float32 with SDPA, and a 128-token input cap. All comparisons use the same
+six held-out synthetic tasks, eight fixed specialists, and common total budgets.
+
+| Scope | Recorded measurement |
 | --- | --- |
-| Coordinator | Pinned Granite sparse MoE, 1.34B parameters including the action head |
-| Post-training | 942,565 trainable parameters (0.07%); attention/router LoRA and categorical SFT → DPO |
-| Development corpus | 36 training-task reference trajectories; 72 SFT labels and 216 preference pairs, including task-level validation |
-| Held-out evaluation | Seven policies on six synthetic tasks with eight frozen specialists |
-| Controller benchmark | 30 CPU configurations, 720 timed requests, eight replayed states; no reliable batching/cache speedup established |
-| Main finding | SFT and DPO each solved 2/6 tasks; Base MoE solved 3/6 and rules solved 6/6 |
+| Coordinator | 1,335,567,845 parameters including the action head |
+| Trainable parameters | 942,565 (0.07%): rank-4 attention/router LoRA and the head |
+| Reference data | 54 trajectories: 36 on training tasks, 18 on held-out tasks |
+| Optimizer fitting | 54 SFT examples and 162 DPO pairs over nine task IDs |
+| Internal validation | 18 SFT examples and 54 DPO pairs over three task IDs |
+| Inference benchmark | 30 CPU configurations, 720 timed requests, eight replayed states |
 
-Post-training reduced training loss but collapsed held-out routing to coder then
-stop. DPO improved preference ranking without improving task success. This
-pilot establishes an executable post-training and measurement pipeline; the
-research hypothesis remains unresolved. Stronger sequential dense controls and
-matched controller timing results are included in the report.
+| Primary routing policy | Held-out success |
+| --- | --- |
+| All-Agent: one parallel round | 4/6 |
+| Static Supervisor: prompted Qwen | 0/6* |
+| Rule-Based Router | 6/6 |
+| Random Top-K | 4/6 |
+| Base MoE with an untrained action head | 3/6 |
+| Conductor-SFT | 2/6 |
+| Conductor-Preference | 2/6 |
 
-The corpus uses arithmetic, lookup and string transformation tasks, plus held-out
-compositions. These fixtures make routing outcomes reproducible; they do not
-establish broad language-task accuracy or production LLM cost savings. The base
-MoE comparator has the same pretrained backbone and an untrained action head.
-Agent top-k and internal neural expert top-k are separate controls.
+\* The prompted supervisor returned invalid structured decisions on all six tasks
+and failed closed. Its result does not establish superiority over a reliable
+prompted supervisor.
 
-## Reproduce
+**The main finding is routing collapse.** SFT lowers training loss, but both
+post-trained controllers choose coder and then stop on every held-out task.
+DPO improves offline preference ranking without improving task success. Two
+additional sequential dense controls solve 6/6 and 5/6; they were added after
+inspecting the pilot and are reported as sensitivity analyses.
 
-Use Python 3.12. The recorded environment, configurations and per-phase Git
-commits are archived with the report. HF/PEFT versions are pinned to the tested
-API; install a suitable PyTorch build for your execution device.
+![Measured held-out task success, token units, and agent activations](results/granite-pilot/plots/quality_cost.png)
+
+The inference study also finds no reliable CPU batching/cache gain. At batch
+limit four, concurrency four, and k=2, dynamic batching records **0.843× throughput**
+and **1.133× p95 latency** relative to queued individual inference. Grouped repeats
+and host variation limit interpretation. Raw timings and matched comparisons are
+in the [report](results/granite-pilot/report.md) and
+[benchmark CSV](results/granite-pilot/phases/inference/benchmark.csv).
+
+These are feasibility results on arithmetic, lookup, string transformations, and
+held-out compositions that share synthetic template families. Six tasks cannot
+establish broad generalization. HF controller tokens are actual tokenizer counts;
+downstream tool tokens are estimates, and zero configured prices leave monetary
+costs unknown. The research hypothesis remains unresolved.
+
+## Run locally
+
+Use **Python 3.12** for the tested environment. Run commands from the repository
+root. Install the full test dependencies in a virtual environment:
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[dev,hf,serve,profiling]'
+ruff check .
 pytest -q
+```
+
+HF/PEFT versions are pinned to the tested API. Install a suitable PyTorch build
+for your target device; the local pilot uses CPU. Tests use small local model
+fixtures without downloading the pretrained pilot weights.
+
+### Start with the tiny demo
+
+```bash
+bash scripts/run_dev.sh
+```
+
+This runs generation → SFT → DPO → evaluation → inference benchmarks → analysis
+with a **randomly initialized tiny MoE** and deterministic tools. No model
+checkpoint download or API key is required. The prompted supervisor is unavailable
+in this configuration; six policies are measured. This validates the development
+pipeline separately from the pretrained experiment.
+
+Data goes to `data/dev/`; checkpoints go to `outputs/checkpoints/tiny-*`.
+Evaluation, benchmarks, and analysis go to `outputs/evaluation/dev/`,
+`outputs/benchmarks/dev/`, and `outputs/reports/dev/`. The script also runs a
+separate precision/feature-cache study. Set `CONDUCTOR_PYTHON` if your interpreter
+is outside `.venv/bin/python`.
+
+### Reproduce pretrained post-training
+
+```bash
 bash scripts/run_granite_pilot.sh
 ```
 
-The pretrained pilot downloads model weights and runs genuine CPU training.
-For the smaller randomly initialized controller, use `bash scripts/run_dev.sh`.
-Working datasets and weights are ignored; the report archives copies of pilot
-data, raw measurements and checkpoint metadata. Regenerate weights from the pinned base.
-Use a fresh output directory for a new experiment or `--resume` for compatible
-trusted checkpoints.
+This downloads pinned Granite and Qwen supervisor weights, then runs the CPU
+post-training, seven-policy evaluation, replay benchmark, and analysis. Working
+data goes to `data/generated/granite-pilot/`; runs and checkpoints go to
+`outputs/research/granite-pilot/`. The pretrained model needs substantially more
+memory than the tiny demo. Full merged export is an optional, memory-intensive check.
+
+Use **fresh working output directories** for a new experiment. Fresh training
+into an existing committed checkpoint directory is rejected. For an individual
+compatible training run, resume explicitly with `python -m conductor.train
+--config CONFIG --resume RESUME_DIRECTORY`. The convenience scripts do not
+forward resume options. If relocating an experiment, update linked data,
+checkpoint, evaluation, replay, and output paths together.
+
+For individual stages and supplementary checks:
 
 ```bash
+python -m conductor.generate --config configs/research/granite_generation.yaml
 python -m conductor.train --config configs/training/granite_sft.yaml
 python -m conductor.train --config configs/training/granite_preference.yaml
 python -m conductor.evaluate --config configs/evaluation/granite_pilot.yaml
 python -m conductor.benchmark --config configs/inference/granite_pilot.yaml
+python scripts/verify_pilot_adapters.py
 python scripts/smoke_serving.py --config configs/serving/granite_pilot.yaml
 ```
 
-For the supplementary controls and artifact checks:
+[Sequential dense controls](configs/evaluation/granite_dense_sequential.yaml),
+[the two-round control](configs/evaluation/granite_strong_dense.yaml), and
+`scripts/validate_pilot_export.py` are separate from the main pilot script.
+The archive contains data and metadata, not executable model weights.
+
+## Inference and NVIDIA validation
+
+The benchmark separates native offline batches, queued individual requests, and
+compatible dynamic batches. It measures input tokens/second, requests/second,
+queue-inclusive p50/p95, stage overhead, and process memory. CUDA paths add event
+timing, allocated/reserved memory, and NVTX ranges; profiler samples stay outside
+throughput timing. State/tokenization caches are bounded. Generative KV-cache
+reuse is not implemented for this classification path.
+
+The HTTP service gives one worker exclusive ownership of each model. Admission
+includes queued and in-flight work; compatible k values batch together.
+Authentication, body/state limits, deadlines, readiness, and shutdown are covered
+by [service tests](tests/test_serving.py). The trained CPU smoke verifies real
+routing, authentication, batching, and queue drain. A client timeout cannot
+preempt an already-running GPU kernel.
 
 ```bash
-python -m conductor.evaluate --config configs/evaluation/granite_dense_sequential.yaml
-python -m conductor.evaluate --config configs/evaluation/granite_strong_dense.yaml
-python scripts/verify_pilot_adapters.py
-python scripts/validate_pilot_export.py
-```
-
-The [results directory](results/granite-pilot/report.md) contains the measured
-pilot, sealed development data, request timings, expert probes and per-phase
-provenance. `scripts/report_pilot.py` rebuilds this recorded report and training
-plot; it rejects changed measurements so the interpretation cannot silently
-carry over to a new experiment. Use `conductor.analyze` for new runs.
-Working outputs, environments, weights and temporary
-files are excluded from the repository.
-
-## NVIDIA and SLURM
-
-[Cluster instructions](docs/hpc.md) cover OLMoE, GPU allocation, sharded
-trajectory generation, single-node torchrun, sweeps and recovery. The
-[NVIDIA container recipe](containers/Dockerfile.nvidia) preserves NGC's PyTorch
-stack. [Deployment notes](docs/deployment.md) describe authentication, artifact
-export, resource limits and the remaining validation boundary.
-
-```bash
+# On an actual NVIDIA host
 python -m conductor.doctor --device cuda:0 --dtype bfloat16 --require-cuda --probe
 bash scripts/validate_nvidia.sh configs/inference/nvidia.yaml CHECKPOINT
 sbatch scripts/slurm/distributed_sft.slurm configs/training/olmoe_sft.yaml
-python -m conductor.controller.export --checkpoint CHECKPOINT \
-  --output outputs/exports/controller --device cpu --dtype float32
 ```
 
-Serving owns one model worker per process. A client timeout cancels delivery,
-not an already-running accelerator kernel; a stalled process needs a supervisor
-restart. State/tokenization caches are bounded. The classification path does not
-claim validated generative KV-cache reuse.
+[SLURM scripts](scripts/slurm/) cover generation, SFT, DPO, evaluation, sweeps,
+and inference validation. [The container recipe](containers/Dockerfile.nvidia)
+preserves NGC's PyTorch stack. GPU correctness, mixed-precision performance,
+NCCL recovery, container builds, and serving capacity remain target-host validation
+work. See [deployment](docs/deployment.md) and [HPC setup](docs/hpc.md).
 
-## Measurement boundaries
+## Review the implementation
 
-Benchmarks distinguish input tokens/second from generated tokens/second,
-synchronized forward timing from queue-inclusive request latency, and allocated
-CUDA memory from reserved memory and process RSS. Profiler traces are diagnostic
-samples outside throughput timing. Configuration order is seeded and randomized;
-repeats are grouped within each configuration.
+| Area | Start here |
+| --- | --- |
+| Pretrained model, LoRA, and action masks | [HF controller](conductor/controller/hf.py), [action catalog](conductor/controller/actions.py) |
+| Exact-state preferences and task splits | [Trajectory generation](conductor/generate.py), [training data](conductor/training/data.py) |
+| SFT/DPO, accumulation, and recovery | [Training loop](conductor/training/runner.py), [checkpoint state](conductor/training/state.py) |
+| Measurement and model-worker ownership | [Benchmarks](conductor/benchmark.py), [profiling](conductor/inference/profiling.py), [serving engine](conductor/serving/engine.py) |
+| Paired evaluation and evidence gates | [Evaluation](conductor/evaluate.py), [metrics](conductor/metrics/aggregate.py), [artifact audit](conductor/audit.py) |
 
-Development-tool tokens are documented estimates. Zero price rates mean no
-monetary cost model is configured. Missing baselines, failed calls, uncertain
-billing and small paired corpora remain visible. The [research protocol](docs/research_protocol.md)
-and [evidence audit](docs/evidence.md) define what a reported improvement
-requires. Confidence is action probability, not calibrated task-success probability.
+The [results archive](results/README.md) preserves raw measurements, sealed
+records, per-phase configurations/commits, and file checksums. Rebuild the
+recorded report with `python scripts/report_pilot.py`; it rejects changed
+measurements so the original interpretation cannot silently carry over.
+Use `python -m conductor.analyze` for new runs. [Contributing](CONTRIBUTING.md)
+describes validation expectations.
 
-Future validation needs frozen LLM specialists, larger independent held-out
-corpora, multiple seeds and real NVIDIA measurements. Those experiments should
-answer the research hypothesis rather than assume it.
+The next study should compare reward-filtered supervision and context choices,
+then use multiple seeds, frozen LLM specialists, a larger locked test set, and
+real NVIDIA measurements. The six inspected pilot tasks should not be reused
+as a fresh test set after tuning.
