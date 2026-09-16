@@ -17,7 +17,7 @@ from conductor.inference.timing import memory_measurements, reset_peak_memory, s
 from conductor.metrics.aggregate import percentile
 from conductor.schema import ExecutionState
 from conductor.utils.config import load_config
-from conductor.utils.runs import Run, seed_everything, write_json
+from conductor.utils.runs import Run, log_event, seed_everything, write_json
 
 
 def make_state(context_size: int, index: int = 0) -> ExecutionState:
@@ -264,6 +264,10 @@ async def benchmark(config: dict[str, Any], checkpoint: str | None = None) -> di
                      "routing_calls_per_orchestration_step": 1 / interval,
                      "controller_overhead_fraction": controller_overhead, "controller_overhead_source": overhead_source,
                      **memory_measurements(getattr(policy, "device", None))})
+        log_event("benchmark_configuration_completed", configuration_order=order,
+                  strategy=strategy, batch_size=batch_size,
+                  concurrency=None if strategy == "batched" else concurrency, k=k,
+                  timed_requests=total_requests, wall_seconds=wall)
     # Paired serialization microbenchmarks use identical states and repeat counts.
     serialization = []
     states = [make_state(max(config.get("context_sizes", [128])), index) for index in range(request_count)]

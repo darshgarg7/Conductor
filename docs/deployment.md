@@ -45,6 +45,14 @@ unmerged inference under identical workloads before claiming a merge improves
 performance. Never treat randomly initialized smoke checkpoints as pretrained
 post-training evidence.
 
+For a dedicated export process on a memory-constrained host, pass `--in-place`
+to `python -m conductor.controller.export`. It consumes the loaded controller,
+merges coordinator adapters without copying the full backbone, and retains the
+original adapter from the immutable on-disk checkpoint. Numerical/action probes
+still gate publication. The default export preserves the in-memory model and
+requires room for a second backbone; neither path changes the saved source
+checkpoint.
+
 ## NVIDIA container recipe
 
 `containers/Dockerfile.nvidia` uses the NVIDIA PyTorch image selected by its

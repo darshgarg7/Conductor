@@ -21,7 +21,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from conductor.controller.actions import ActionCatalog
-from conductor.controller.artifacts import atomic_directory, atomic_json
+from conductor.controller.artifacts import atomic_directory, atomic_json, resolve_checkpoint
 from conductor.controller.experts import ExpertTracker
 from conductor.schema import ExecutionState, RoutingDecision
 from conductor.utils.runs import write_json
@@ -152,6 +152,8 @@ class HFController:
             raise ValueError("token_cache_size must be nonnegative")
         self._token_cache_hits = self._token_cache_misses = 0
         self.source_checkpoint = str(checkpoint) if checkpoint is not None else None
+        self._in_place_merged = False
+        self._in_place_merge_validated = False
         self.stage = "base-with-random-action-head"
         self.name = "base-moe-random-action-head" if self.pretrained else "hf-random-smoke"
         if checkpoint is not None:
@@ -229,12 +231,19 @@ class HFController:
                 "hits": self._token_cache_hits, "misses": self._token_cache_misses}
 
     def compile_for_inference(self, backend: str = "inductor", mode: str = "default", fullgraph: bool = False) -> None:
+        self._ensure_usable()
         if self.model.training:
             raise ValueError("compile_for_inference requires eval mode")
         self._compiled_model = torch.compile(self.model, backend=backend, mode=mode, fullgraph=fullgraph)
         self.compile_status = {"enabled": True, "validated": False, "backend": backend, "mode": mode, "fullgraph": fullgraph}
 
+    def _ensure_usable(self) -> None:
+        if self._in_place_merged and not self._in_place_merge_validated:
+            raise RuntimeError("in-place merge is unverified; discard this instance and reload the source checkpoint")
+
     def enable_training(self, gradient_checkpointing: bool = False) -> None:
+        if self._in_place_merged:
+            raise ValueError("in-place merged controller is consumed; reload the source adapter checkpoint for training")
         self._compiled_model = None
         for name, parameter in self.model.named_parameters():
             parameter.requires_grad_(name.startswith("head.") or "lora_" in name)
@@ -247,6 +256,7 @@ class HFController:
 
     def forward_encoded(self, inputs: dict[str, torch.Tensor], k: int | None = None,
                         track: bool = False, task_types: list[str] | None = None) -> torch.Tensor:
+        self._ensure_usable()
         auxiliary_weight = float(self.config.get("training", {}).get("router_auxiliary_weight", 0)) if self.model.training else 0.0
         if auxiliary_weight < 0:
             raise ValueError("router_auxiliary_weight cannot be negative")
@@ -336,6 +346,8 @@ class HFController:
         self.tracker.reset()
 
     def save(self, path: str | Path, stage: str) -> None:
+        if self._in_place_merged:
+            raise ValueError("in-place merged controller cannot save adapters; reload the source adapter checkpoint")
         directory = Path(path)
         directory.mkdir(parents=True, exist_ok=True)
         if self.lora_config.get("enabled", True):
@@ -348,26 +360,60 @@ class HFController:
                    "context_strategy": self.context_strategy, "max_length": self.max_length,
                    "method": "constrained categorical routing head with optional coordinator-backbone LoRA"})
 
-    def export_merged(self, path: str | Path, validation_states: list[ExecutionState] | None = None) -> dict[str, Any]:
+    def export_merged(self, path: str | Path, validation_states: list[ExecutionState] | None = None,
+                      *, preserve_model: bool = True) -> dict[str, Any]:
         """Self-contained inference artifact; preserve the original source adapter.
 
-        Merging clones the coordinator backbone and can temporarily double its
-        resident weight memory. Publication fails if measured logits/routes on
-        the supplied probes are not equivalent within numerical tolerances.
+        The default clones the backbone, temporarily increasing weight memory.
+        preserve_model=False merges the loaded eval controller in place instead:
+        it requires a saved adapter checkpoint and consumes this instance's
+        adapter training/save capability, including if validation later fails.
+        The on-disk source checkpoint remains unchanged. Safe merge still needs
+        temporary memory per adapted layer. Publication requires equivalent
+        logits and routing actions on the supplied validation probes. Discard
+        the instance after a failed merge or validation; inference is blocked.
         """
+        self._ensure_usable()
         if self.model.training:
             raise ValueError("merged export requires eval mode")
         target = Path(path).resolve()
+        if target.exists():
+            raise FileExistsError(f"immutable checkpoint directory already exists: {target}")
+        source = resolve_checkpoint(self.source_checkpoint).resolve() if self.source_checkpoint else None
+        source_adapter = source / "adapter" if source is not None else None
+        if source is not None and (target == source or source in target.parents):
+            raise ValueError("merged export must not publish inside its immutable source checkpoint")
+        if not preserve_model:
+            if (source is None or not (source / "controller.json").is_file()
+                    or source_adapter is None or not (source_adapter / "adapter_config.json").is_file()
+                    or not any(source_adapter.glob("*.safetensors")) and not any(source_adapter.glob("*.bin"))):
+                raise ValueError("in-place export requires an existing immutable source checkpoint with adapter files")
+            if self._in_place_merged or not hasattr(self.model.backbone, "merge_and_unload"):
+                raise ValueError("in-place export requires a loaded unmerged adapter controller")
         probes = validation_states or [ExecutionState("Calculate 2 plus 3", "math")]
-        backbone = copy.deepcopy(self.model.backbone)
-        if hasattr(backbone, "merge_and_unload"):
-            backbone = backbone.merge_and_unload(safe_merge=True)
-        merged = HFRoutingModel(backbone, self.model.head.in_features, len(self.catalog)).to(self.device)
-        merged.head.load_state_dict(self.model.head.state_dict())
-        merged.eval()
         inputs = self.encode_states(probes)
         with torch.inference_mode():
             before, _ = self.model(inputs, output_router_logits=False)
+        if not bool(torch.isfinite(before).all()):
+            raise FloatingPointError("source controller produced non-finite validation logits")
+        backbone = copy.deepcopy(self.model.backbone) if preserve_model else self.model.backbone
+        if not preserve_model:
+            # A requested safe merge may partially mutate layers before failing;
+            # invalidate adapter training/save and compiled aliases beforehand.
+            self._in_place_merged = True
+            self._compiled_model = None
+            self.compile_status = {"enabled": False, "validated": False}
+        if hasattr(backbone, "merge_and_unload"):
+            backbone = backbone.merge_and_unload(safe_merge=True)
+        if preserve_model:
+            merged = HFRoutingModel(backbone, self.model.head.in_features, len(self.catalog)).to(self.device)
+            merged.head.load_state_dict(self.model.head.state_dict())
+        else:
+            self.model.backbone = backbone
+            self.compute_precision = f"{str(self.dtype).removeprefix('torch.')} merged backbone; float32 action head"
+            merged = self.model
+        merged.eval()
+        with torch.inference_mode():
             after, _ = merged(inputs, output_router_logits=False)
         if not bool(torch.isfinite(after).all()):
             raise FloatingPointError("merged export produced non-finite validation logits")
@@ -375,6 +421,8 @@ class HFController:
                                    atol=2e-3 if self.dtype != torch.float32 else 1e-5)
         if not torch.equal(before.argmax(-1), after.argmax(-1)):
             raise ValueError("merged export changed a routing action on validation probes")
+        if not preserve_model:
+            self._in_place_merge_validated = True
         configuration = copy.deepcopy(self.config)
         configuration["model"].update(name=str(target / "backbone"), revision="local-export", local_files_only=True,
                                         lora={"enabled": False})
@@ -384,6 +432,7 @@ class HFController:
         metadata = {"backend": "hf", "configuration": configuration, "stage": self.stage, "pretrained": self.pretrained,
                     "format": "merged-hf-v1", "original_base_model": self.base_model_name,
                     "original_resolved_revision": self.resolved_revision, "source_checkpoint": self.source_checkpoint,
+                    "preserve_model": preserve_model, "in_place_merge": not preserve_model,
                     "validation_probe_count": len(probes), "maximum_logit_difference": float((before.float() - after.float()).abs().max()),
                     "action_catalog_size": len(self.catalog), "token_accounting": self.token_accounting,
                     "context_strategy": self.context_strategy, "max_length": self.max_length}
@@ -391,8 +440,8 @@ class HFController:
             backbone.save_pretrained(temporary / "backbone", safe_serialization=True)
             self.tokenizer.save_pretrained(temporary / "backbone")
             torch.save(self.model.head.state_dict(), temporary / "head.pt")
-            if self.source_checkpoint and (Path(self.source_checkpoint) / "adapter").exists():
-                shutil.copytree(Path(self.source_checkpoint) / "adapter", temporary / "source_adapter")
+            if source_adapter is not None and source_adapter.exists():
+                shutil.copytree(source_adapter, temporary / "source_adapter")
             elif self.lora_config.get("enabled", True):
                 self.model.backbone.save_pretrained(temporary / "source_adapter")
             atomic_json(temporary / "controller.json", metadata)

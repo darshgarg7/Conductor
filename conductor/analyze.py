@@ -68,16 +68,26 @@ def plot_results(rows: list[dict[str, Any]], output: Path, benchmarks: dict[str,
     summaries = aggregate_metrics(rows)
     if summaries:
         names = [row["policy"] for row in summaries]
-        labels = {row["policy"]: row.get("policy_label", row["policy"]) for row in rows}
-        fig, axes = plt.subplots(1, 3, figsize=(14, 4.8))
+        # Keep backend identities in the raw tables; compact display names make
+        # the figure readable without hiding the random coordination head.
+        short_names = {"all_agent": "All agents", "base_moe": "Base controller\n(random head)",
+                       "conductor_sft": "SFT", "conductor_preference": "DPO",
+                       "random_top_k": "Random\ntop-k", "rule_based": "Rules",
+                       "static_supervisor": "Prompted\nsupervisor"}
+        labels = {row["policy"]: short_names.get(row["policy"], row.get("policy_label", row["policy"])) for row in rows}
+        colors = {"conductor_sft": "#2563eb", "conductor_preference": "#7c3aed"}
+        fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.4))
         for axis, field, label in zip(axes, ("success_rate", "mean_total_tokens", "mean_agent_calls"),
-                                     ("Task success rate", "Mean observed tokens", "Mean downstream calls")):
-            axis.bar([labels[name] for name in names], [row[field] for row in summaries], color="#3e7cb1")
+                                     ("Task success fraction", "Mean token units\n(model tokens + tool estimates)", "Mean downstream calls")):
+            axis.bar([labels[name] for name in names], [row[field] for row in summaries],
+                     color=[colors.get(name, "#64748b") for name in names])
             axis.set_ylabel(label)
-            axis.tick_params(axis="x", rotation=55)
+            axis.tick_params(axis="x", rotation=0, labelsize=8)
             axis.grid(axis="y", alpha=0.25)
         axes[0].set_ylim(0, 1.05)
-        fig.suptitle("Heldout development tasks: identical task set and aggregate budgets")
+        counts = sorted({row["task_count"] for row in summaries})
+        sample_note = f"n={counts[0]} per policy" if len(counts) == 1 else "task counts in raw tables"
+        fig.suptitle(f"Held-out development tasks ({sample_note}); identical specialists and aggregate budgets")
         fig.tight_layout()
         for extension in ("png", "pdf"):
             path = output / f"quality_cost.{extension}"

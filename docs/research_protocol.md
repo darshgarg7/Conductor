@@ -3,8 +3,10 @@
 The hypothesis is that post-training a pretrained sparse MoE coordination
 model can preserve task quality while reducing specialist activations and
 communication. The smallest local experiment establishes correctness of the
-training and measurement pipeline. A GPU experiment is required to test the
-pretrained-model hypothesis.
+training and measurement pipeline. The compact Granite pilot performs genuine
+pretrained-model post-training on a CPU. Larger independent corpora and frozen
+LLM specialists are needed to test the broader hypothesis; NVIDIA performance
+requires a real device run.
 
 ## Data and objectives
 
@@ -12,7 +14,8 @@ Generate both successful and unsuccessful execution trajectories using
 multiple policies. SFT uses successful training trajectories. Preferences
 compare counterfactual first actions from identical serialized states under
 the same continuation policy. This controls continuation-policy confounding;
-it does not establish optimal actions for arbitrary late execution states.
+configurable late-state trials include stopping actions. Candidate coverage
+remains sampled and does not establish globally optimal coordination.
 Cost preference weights and normalization scales are configurable. DPO uses
 the exact saved SFT policy as its frozen reference.
 
@@ -62,6 +65,8 @@ identical probe set at initialization, SFT and preference checkpoints.
 Every published number must originate from a saved run and retain its config,
 code commit, dirty status, seed, hardware, checkpoint and runtime. Synthetic
 or tiny random-initialization results may justify an infrastructure claim.
-Resume claims about pretrained MoE post-training require an actual pretrained
-GPU run; claims about inference optimization require measured paired results
-under the claimed workload. Missing evidence stays an unanswered question.
+Claims about pretrained MoE post-training require completed training on pinned
+pretrained weights with linked SFT/DPO artifacts. Claims about inference
+optimization require matched measured results under the named workload and
+hardware. CPU post-training is valid evidence of model training; it cannot
+establish NVIDIA latency, throughput or cost improvements. Missing evidence stays an unanswered question.

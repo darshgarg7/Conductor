@@ -1,106 +1,94 @@
-# Resume claims and experiment evidence
+# Claims supported by measurements
 
-Conductor is a research implementation with local validation and a path to GPU
-experiments. The original resume numbers—50,000 trajectories, 84% to 91% task
-success, 35% inference cost reduction and 28% p95 routing latency reduction—have
-no supplied supporting experiment logs. Do not use them.
+The [recorded Granite pilot](../outputs/reports/granite-pilot/research_report.md)
+contains completed pretrained SFT, categorical DPO, held-out evaluation and
+controller inference measurements. The original tiny-model experiment is a
+separate development-path result. Neither run establishes NVIDIA performance.
 
-The checked-in development experiments use synthetic task templates and frozen,
-deterministic specialists. The tiny controller is randomly initialized; its
-results establish that the pipeline executes, not that a pretrained language
-model was post-trained. Downloading a pretrained checkpoint also does not
-establish a training result. A real pretrained run must save completed SFT and
-preference training artifacts, the immutable base revision and measured held-out
-outcomes before that claim becomes appropriate.
+## Completed model work
 
-## Wording supported by the implementation
+The coordinator uses a pinned pretrained Granite sparse MoE backbone and a
+categorical coordination head. SFT and DPO update 942,565 parameters: 445,440
+attention/router LoRA parameters and 497,125 head parameters, approximately
+0.07% of the 1,335,567,845-parameter coordinator. Saved adapter verification
+observed nonzero LoRA B tensors in all 24 expert-router layers; DPO changed the
+saved SFT adapters and head. Specialists are outside the training optimizer.
 
-Use these engineering statements while numerical and pretrained experiments are
-pending:
+The development inventory contains 36 reference trajectories for 12 training
+tasks, plus 18 reference trajectories for six held-out tasks. It produces 72
+SFT examples and 216 exact-state preference pairs. Task-level partitioning
+leaves nine optimizer-training tasks and three internal validation tasks:
+54 SFT fitting examples/18 validation examples and 162 DPO fitting pairs/54
+validation pairs. These counts are different units and must not be added.
 
-- Built a configurable sparse MoE coordination research system with categorical
-  SFT and DPO objectives, frozen specialist interfaces, counterfactual routing
-  preferences, held-out evaluation and expert utilization instrumentation.
-- Implemented bounded asynchronous routing serving, compatible request batching,
-  state tokenization caching, resumable training checkpoints, SLURM launch scripts
-  and machine-readable inference benchmarks with explicit device synchronization.
+SFT and DPO each solved two of six held-out tasks; the Base MoE with its random
+action head solved three and the Rule-Based router solved six. DPO's 92.6%
+internal-validation preference-ranking accuracy is **not task success**. This
+pilot supports a post-training claim, not an accuracy-improvement claim.
 
-Change “implemented” to “benchmarked” only when the corresponding raw timing
-records exist. “Reduced inference cost” requires meaningful model token billing
-or measured GPU time; synthetic whitespace token proxies and configured prices
-do not establish real savings. GPU deployment paths alone do not support
-“NVIDIA production validated.” No NVIDIA device was available for local validation.
+## Resume wording
 
-After completing a genuine pretrained run, a precise alternative is:
+- Post-trained a pretrained 1.3B-parameter sparse MoE as a coordination
+  controller using attention/router LoRA, supervised fine-tuning and categorical
+  DPO, updating 0.07% of parameters with frozen specialist interfaces and
+  task-level held-out evaluation.
+- Benchmarked pretrained-controller inference using replayed execution states,
+  native and dynamic batching, queue-inclusive p50/p95 latency and stage
+  profiling; implemented bounded asynchronous serving and resumable DDP/SLURM
+  experiment paths.
 
-> Post-trained a pinned open-weight MoE coordination backbone with LoRA and a
-> constrained routing head using SFT and DPO on **[actual training count]**
-> synthetic execution trajectories; evaluated agent activation and task success
-> on **[actual held-out count]** tasks with frozen development specialists.
+Add a performance number only with its device, precision, workload, matched
+baseline, independent sample count and raw timing evidence. NVIDIA deployment
+paths alone do not support NVIDIA validation. Lower external agent top-k does
+not reduce the base model's internal expert top-k.
 
-Replace the brackets from saved artifacts, and name the local device. If DPO
-lowers task quality, report the result rather than presenting the objective as a
-successful cost optimization. Training examples, preference pairs, tasks and
-trajectories are distinct counts.
+## Audit an experiment
 
-## Generate an evidence inventory
-
-Run the read-only auditor against the artifacts actually used:
+The read-only auditor inventories journals, checkpoints and run provenance:
 
 ```bash
 python -m conductor.audit \
-  --dataset data/dev \
-  --checkpoint outputs/checkpoints/tiny-sft \
-  --run outputs/evaluation/dev \
-  --resume-claims \
-  --output outputs/evidence/development.json
+  --dataset data/generated/granite-pilot \
+  --checkpoint outputs/research/granite-pilot/sft \
+  --checkpoint outputs/research/granite-pilot/preference \
+  --run outputs/research/granite-pilot/evaluation \
+  --run outputs/research/granite-pilot/inference \
+  --output outputs/evidence/granite-pilot.json
 ```
 
-`--dataset`, `--checkpoint`, `--run` and `--doctor` are repeatable. A directory
-containing multiple dataset shards is checked for duplicate record IDs and task
-ID/public-text collisions. Audit counts are unusable when an inventory is
-invalid. Independent inventories are not summed to manufacture a scale claim.
-Legacy unsealed JSONL is counted and explicitly distinguished from newly
-checksum-verified journals. The auditor does not modify or repair damaged data.
-
-For automation, `--strict` exits nonzero if an artifact is invalid or a declared
-claim is unsupported. The original resume claims are declarative inputs, never
-measurements. A successful CUDA arithmetic doctor probe establishes basic
-compatibility only; it does not count as model validation.
+`--dataset`, `--checkpoint`, `--run` and `--doctor` are repeatable. Dataset
+inventories check duplicate IDs, public task-text collisions and sealed record
+checksums. Invalid inventories cannot support a count claim. Independent
+inventories are not summed to manufacture scale. The auditor never repairs data.
 
 A JSON claim file can request narrow artifact checks:
 
 ```json
 [
-  {"kind": "training_trajectory_count", "minimum": 100},
+  {"kind": "training_trajectory_count", "minimum": 36},
   {"kind": "pretrained_post_training", "stages": ["sft", "preference"]}
 ]
 ```
 
-```bash
-python -m conductor.audit \
-  --dataset data/generated/YOUR_RUN \
-  --checkpoint outputs/checkpoints/YOUR_SFT \
-  --checkpoint outputs/checkpoints/YOUR_PREFERENCE \
-  --run outputs/evaluation/YOUR_RUN \
-  --claims YOUR_CLAIMS.json --strict \
-  --output outputs/evidence/YOUR_RUN.json
-```
+Pass it with `--claims CLAIMS.json --strict`; unsupported declarations or invalid
+artifacts produce a nonzero exit. `--resume-claims` is a negative-control audit
+of unsupported numerical declarations, not a source of measurements.
 
-Pretrained checks require HF metadata, a pinned base identity, inference weight
-files, completed positive training updates, saved run provenance and dataset
-hashes, unchanged specialists and a saved DPO reference fingerprint. This is an
-artifact consistency audit, not independent authentication of an experiment.
-Comparative performance claims receive no automatic endorsement: inspect paired
-raw measurements, matching task/specialist provenance, billing status,
-uncertainty intervals and the analysis claim gates.
+Pretrained checks require pinned base identity, local weight files, positive
+completed optimizer updates, saved provenance, dataset hashes, unchanged
+specialists and the DPO reference fingerprint. This checks artifact consistency;
+it does not independently authenticate an experiment. Metadata-only report
+archives are not executable checkpoints.
 
-## Keep the evidence with each claim
+## Comparative claims
 
-Archive the source commit, configuration, random seed, data/checkpoint hashes,
-run hardware, all raw measurements, failure counts and the exact comparison.
-Disclose whether held-out examples share template families with training and
-whether downstream agents are development fixtures or actual language models.
-Use repeated matched timing trials for latency claims and report the workload,
-context length, batch size, concurrency, precision and device. Keep CUDA event
-forward timings separate from wall-clock queue-inclusive service latency.
+Inspect task-paired raw measurements, common specialist/budget identities,
+failures, billing status and uncertainty intervals. A CUDA arithmetic doctor
+probe establishes compatibility only, not model performance. A six-task synthetic
+evaluation does not satisfy the default 30-independent-task evidence gate.
+
+Development-tool tokens are estimates. Zero price rates mean no monetary cost
+model was configured; neither establishes real inference savings. Tokenization
+and serialization caches need matched enabled/disabled measurements before an
+end-to-end cache speedup claim. Diagnostic profiler samples stay outside ordinary
+throughput timing. CPU measurements must retain the CPU label.

@@ -17,7 +17,7 @@ There are two different kinds of sparsity. **Internal expert top-k** selects
 neural experts inside the MoE. **Agent top-k** caps the number of specialists
 activated per coordination step. They are independent configuration parameters.
 The controller predicts a distribution over valid joint actions: an unordered
-agent subset, sequential or parallel execution, and termination. Confidence is
+parallel subset or ordered sequential sequence, plus termination. Confidence is
 the selected action probability, not a calibrated task-success estimate.
 
 The development backend is a small, randomly initialized sparse neural MoE.
@@ -25,8 +25,9 @@ It tests infrastructure and objectives without downloading model weights. It
 does not establish that a pretrained language model learns coordination.
 The Hugging Face backend loads a configurable pretrained MoE, pools its state
 representations, and adds a routing classifier. SFT updates the classifier and
-optional LoRA adapters; DPO compares policy action log probabilities against
-a frozen SFT reference. Specialist parameters never enter the optimizer.
+optional attention/router LoRA adapters; DPO compares policy action log probabilities against
+the exact frozen SFT reference. Cached reference probabilities avoid a second
+resident pretrained backbone during optimization. Specialist parameters never enter the optimizer.
 
 Task answer keys belong to the independent grader and dataset records. Only
 the public task and observed execution state enter model and specialist calls.
