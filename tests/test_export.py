@@ -11,7 +11,7 @@ import torch
 
 from conductor.controller.artifacts import atomic_directory
 from conductor.controller.factory import build_controller
-from conductor.schema import ExecutionState
+from conductor.schema import ExecutionState, RoutingDecision
 
 
 def _file_hashes(directory: Path) -> dict[str, str]:
@@ -87,6 +87,9 @@ def test_in_place_export_preserves_saved_adapter_and_reload_equivalence(saved_hf
     assert not any("lora_" in name for name, _ in controller.model.named_parameters())
     assert manifest["validation"]["preserve_model"] is False
     assert manifest["validation"]["in_place_merge"] is True
+    assert manifest["validation"]["validation_k_values"] == [1, 2]
+    assert manifest["validation"]["validation_tolerances"] == hf.MERGED_EXPORT_FP32_TOLERANCES
+    assert manifest["validation"]["maximum_probability_difference"] >= 0
     assert _file_hashes(source) == source_hashes
     assert _file_hashes(exported / "source_adapter") == _file_hashes(source / "adapter")
     reloaded = build_controller(configuration, str(exported))
@@ -135,6 +138,70 @@ def test_failed_in_place_merge_blocks_inference_and_publication(saved_hf_control
         controller.forward_states([ExecutionState("Calculate 2 plus 3", "math")])
     with pytest.raises(RuntimeError, match="discard this instance"):
         controller.compile_for_inference(backend="eager")
+
+
+def test_bounded_logit_drift_passes_with_equivalent_probabilities_and_all_budgets():
+    from conductor.controller.actions import ActionCatalog
+    from conductor.controller.hf import _validate_merged_logits, MERGED_EXPORT_FP32_TOLERANCES
+
+    catalog = ActionCatalog(3)
+    before = torch.zeros(1, len(catalog))
+    before[0, catalog.index(RoutingDecision(["math"]))] = 2.0
+    after = before + 6.5e-5  # A common shift preserves the decision distribution.
+    with pytest.raises(AssertionError):
+        torch.testing.assert_close(before, after, rtol=1e-4, atol=1e-5)
+    measured = _validate_merged_logits(before, after, catalog, torch.float32, 1.0)
+    assert measured["validation_tolerances"] == MERGED_EXPORT_FP32_TOLERANCES
+    assert measured["validation_k_values"] == [1, 2, 3]
+    assert measured["maximum_logit_difference"] == pytest.approx(6.5e-5, abs=1e-7)
+    assert measured["maximum_probability_difference"] < 1e-6
+
+
+def test_export_rejects_k1_action_change_with_unchanged_k2_winner(saved_hf_controller, tmp_path, monkeypatch):
+    from conductor.controller.hf import MERGED_EXPORT_FP32_TOLERANCES
+
+    configuration, source = saved_hf_controller
+    controller = build_controller(configuration, str(source))
+    before = torch.full((1, len(controller.catalog)), -10.0)
+    math = controller.catalog.index(RoutingDecision(["math"]))
+    pair = controller.catalog.index(RoutingDecision(["planner", "math"]))
+    before[0, 0], before[0, math], before[0, pair] = 3e-5, 0.0, 1.0
+    after = before.clone()
+    after[0, 0], after[0, math] = 0.0, 3e-5
+    torch.testing.assert_close(before, after, **MERGED_EXPORT_FP32_TOLERANCES["logits"])
+    assert before.argmax(-1).item() == after.argmax(-1).item() == pair
+    for k in (1, 2):
+        mask = controller.catalog.mask(k)
+        torch.testing.assert_close(before.masked_fill(~mask, float("-inf")).softmax(-1),
+                                   after.masked_fill(~mask, float("-inf")).softmax(-1),
+                                   **MERGED_EXPORT_FP32_TOLERANCES["probabilities"])
+    calls = []
+
+    def controlled_forward(inputs, output_router_logits=False):
+        calls.append(1)
+        return (before if len(calls) == 1 else after).clone(), None
+
+    monkeypatch.setattr(controller.model, "forward", controlled_forward)
+    source_hashes = _file_hashes(source)
+    exported = tmp_path / "changed-k1-export"
+    with pytest.raises(ValueError, match="routing action.*k=1"):
+        controller.export_merged(exported, preserve_model=False)
+    assert not exported.exists() and _file_hashes(source) == source_hashes
+    with pytest.raises(RuntimeError, match="discard this instance"):
+        controller.forward_states([ExecutionState("Calculate 2 plus 3", "math")])
+
+
+def test_probability_gate_uses_serving_temperature():
+    from conductor.controller.actions import ActionCatalog
+    from conductor.controller.hf import _validate_merged_logits, MERGED_EXPORT_FP32_TOLERANCES
+
+    catalog = ActionCatalog(1, agents=("planner", "math"))
+    before = torch.tensor([[0., .001, -2.]])
+    after = torch.tensor([[0., .00106, -2.]])
+    torch.testing.assert_close(before, after, **MERGED_EXPORT_FP32_TOLERANCES["logits"])
+    assert torch.equal(before.argmax(-1), after.argmax(-1))
+    with pytest.raises(AssertionError):
+        _validate_merged_logits(before, after, catalog, torch.float32, .001)
 
 
 @pytest.mark.parametrize("in_place", [False, True])

@@ -27,6 +27,53 @@ from conductor.schema import ExecutionState, RoutingDecision
 from conductor.utils.runs import write_json
 
 
+MERGED_EXPORT_FP32_TOLERANCES = {"logits": {"rtol": 1e-4, "atol": 1e-4},
+                                 "probabilities": {"rtol": 1e-4, "atol": 1e-5}}
+MERGED_EXPORT_LOW_PRECISION_TOLERANCES = {"logits": {"rtol": 2e-3, "atol": 2e-3},
+                                         "probabilities": {"rtol": 2e-3, "atol": 2e-3}}
+
+
+def _validate_merged_logits(before: torch.Tensor, after: torch.Tensor, catalog: ActionCatalog,
+                            dtype: torch.dtype, temperature: float) -> dict[str, Any]:
+    """Gate export on bounded logit drift, probabilities, and every legal budget.
+
+    FP32 permits absolute near-zero logit drift up to 1e-4 from rearranged
+    multi-layer sums. That allowance is independently constrained by tighter
+    probability tolerances and unchanged greedy decisions for every agent k.
+    This verifies supplied probes, not a universal floating-point error bound
+    or equivalence of individual stochastic sampling draws.
+    """
+    if not 0 < temperature < float("inf"):
+        raise ValueError("merged validation requires a finite positive temperature")
+    if not bool(torch.isfinite(before).all()) or not bool(torch.isfinite(after).all()):
+        raise FloatingPointError("merged export produced non-finite validation logits")
+    before, after = before.float(), after.float()
+    defaults = MERGED_EXPORT_FP32_TOLERANCES if dtype == torch.float32 else MERGED_EXPORT_LOW_PRECISION_TOLERANCES
+    tolerances = {key: dict(value) for key, value in defaults.items()}
+    torch.testing.assert_close(before, after, **tolerances["logits"])
+    k_values = list(range(1, catalog.max_agents + 1))
+    maximum_probability_difference = 0.0
+    for k in k_values:
+        mask = catalog.mask(k, before.device)
+        before_masked = before.masked_fill(~mask, float("-inf"))
+        after_masked = after.masked_fill(~mask, float("-inf"))
+        before_probability = (before_masked / temperature).softmax(-1)
+        after_probability = (after_masked / temperature).softmax(-1)
+        if not bool(torch.isfinite(before_probability).all()) or not bool(torch.isfinite(after_probability).all()):
+            raise FloatingPointError(f"merged export produced non-finite probabilities for k={k}")
+        torch.testing.assert_close(before_probability, after_probability, **tolerances["probabilities"])
+        if (not torch.equal(before_masked.argmax(-1), after_masked.argmax(-1))
+                or not torch.equal(before_probability.argmax(-1), after_probability.argmax(-1))):
+            raise ValueError(f"merged export changed a routing action on validation probes for k={k}")
+        maximum_probability_difference = max(maximum_probability_difference,
+                                             float((before_probability - after_probability).abs().max()))
+    return {"validation_tolerances": tolerances, "validation_k_values": k_values,
+            "maximum_logit_difference": float((before - after).abs().max()),
+            "maximum_probability_difference": maximum_probability_difference,
+            "probability_temperature": temperature,
+            "routing_validation": "unchanged masked-logit and serving-probability greedy argmax for every supported k"}
+
+
 def _file_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -370,8 +417,11 @@ class HFController:
         adapter training/save capability, including if validation later fails.
         The on-disk source checkpoint remains unchanged. Safe merge still needs
         temporary memory per adapted layer. Publication requires equivalent
-        logits and routing actions on the supplied validation probes. Discard
-        the instance after a failed merge or validation; inference is blocked.
+        logits, probabilities, and greedy routing actions for every supported
+        agent budget on the supplied validation probes. Named FP32 tolerances
+        permit logit rtol/atol 1e-4/1e-4 and probability 1e-4/1e-5; both are
+        2e-3/2e-3 for reduced precision. Discard the instance after a failed merge
+        or validation; inference is blocked.
         """
         self._ensure_usable()
         if self.model.training:
@@ -415,12 +465,7 @@ class HFController:
         merged.eval()
         with torch.inference_mode():
             after, _ = merged(inputs, output_router_logits=False)
-        if not bool(torch.isfinite(after).all()):
-            raise FloatingPointError("merged export produced non-finite validation logits")
-        torch.testing.assert_close(before.float(), after.float(), rtol=2e-3 if self.dtype != torch.float32 else 1e-4,
-                                   atol=2e-3 if self.dtype != torch.float32 else 1e-5)
-        if not torch.equal(before.argmax(-1), after.argmax(-1)):
-            raise ValueError("merged export changed a routing action on validation probes")
+        validation = _validate_merged_logits(before, after, self.catalog, self.dtype, self.temperature)
         if not preserve_model:
             self._in_place_merge_validated = True
         configuration = copy.deepcopy(self.config)
@@ -433,7 +478,7 @@ class HFController:
                     "format": "merged-hf-v1", "original_base_model": self.base_model_name,
                     "original_resolved_revision": self.resolved_revision, "source_checkpoint": self.source_checkpoint,
                     "preserve_model": preserve_model, "in_place_merge": not preserve_model,
-                    "validation_probe_count": len(probes), "maximum_logit_difference": float((before.float() - after.float()).abs().max()),
+                    "validation_probe_count": len(probes), **validation,
                     "action_catalog_size": len(self.catalog), "token_accounting": self.token_accounting,
                     "context_strategy": self.context_strategy, "max_length": self.max_length}
         with atomic_directory(target) as temporary:
