@@ -1,0 +1,75 @@
+{
+  "configuration": {
+    "agents": {
+      "backend": "deterministic",
+      "token_price_per_million": 0.0,
+      "names": [
+        "planner",
+        "retriever",
+        "researcher",
+        "coder",
+        "tool_executor",
+        "critic",
+        "verifier",
+        "math"
+      ]
+    },
+    "seed": 42,
+    "dataset_output": "data/dev",
+    "output": "outputs/generation/dev",
+    "train_count": 36,
+    "eval_count": 18,
+    "policies": [
+      "all_agent",
+      "rule_based",
+      "random_top_k"
+    ],
+    "orchestration": {
+      "k": 2,
+      "max_rounds": 3,
+      "token_budget": 8192,
+      "agent_call_budget": 12,
+      "routing_interval": 1
+    },
+    "reward": {
+      "token_weight": 0.05,
+      "latency_weight": 0.02,
+      "agent_call_weight": 0.04,
+      "communication_weight": 0.01,
+      "token_scale": 1000,
+      "latency_scale": 1,
+      "communication_scale": 20
+    }
+  },
+  "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": null,
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "processor": "arm",
+    "cpu_count": 11,
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "gpu": null
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 0.3233491249848157,
+  "metrics": {
+    "tasks": 54,
+    "train_tasks": 36,
+    "eval_tasks": 18,
+    "trajectories": 162,
+    "successes": 151,
+    "failures": 11,
+    "sft_records": 216,
+    "preference_records": 540,
+    "sft_excluded_non_sparse": 36,
+    "unavailable_policies": [],
+    "dataset_directory": "data/dev",
+    "scope": "Deterministic development agents validate mechanics; no pretrained MoE research claim.",
+    "preference_protocol": "exact-state counterfactual first action, identical rule-based continuation",
+    "training_split": "train only; heldout task IDs and texts are disjoint"
+  }
+}

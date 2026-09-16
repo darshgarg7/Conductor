@@ -1,0 +1,51 @@
+{
+  "layers": {
+    "0": {
+      "activation_counts": [
+        128,
+        0,
+        0,
+        128
+      ],
+      "activation_frequency": [
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "utilized_experts": 2,
+      "num_experts": 4,
+      "routing_entropy": 1.2002041023224592,
+      "normalized_routing_entropy": 0.865764253237601,
+      "load_coefficient_of_variation": 1.0,
+      "observations": 128
+    }
+  },
+  "task_type_activation_counts": {
+    "math": {
+      "0": [
+        38,
+        0,
+        0,
+        38
+      ]
+    },
+    "retrieval": {
+      "0": [
+        30,
+        0,
+        0,
+        30
+      ]
+    },
+    "code": {
+      "0": [
+        60,
+        0,
+        0,
+        60
+      ]
+    }
+  },
+  "scope": "controller internal MoE experts; tiny observes one gate per state; HF per non-padding token per layer"
+}

@@ -1,0 +1,3 @@
+cache_enabled,wall_seconds,operations,hits,misses,scope
+False,0.0002031670301221311,24,0,32,Serialization microbenchmark; not an end-to-end inference speedup claim
+True,0.00020854204194620252,24,24,8,Serialization microbenchmark; not an end-to-end inference speedup claim

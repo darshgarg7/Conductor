@@ -1,0 +1,16 @@
+{
+  "tasks": 54,
+  "train_tasks": 36,
+  "eval_tasks": 18,
+  "trajectories": 162,
+  "successes": 151,
+  "failures": 11,
+  "sft_records": 216,
+  "preference_records": 540,
+  "sft_excluded_non_sparse": 36,
+  "unavailable_policies": [],
+  "dataset_directory": "data/dev",
+  "scope": "Deterministic development agents validate mechanics; no pretrained MoE research claim.",
+  "preference_protocol": "exact-state counterfactual first action, identical rule-based continuation",
+  "training_split": "train only; heldout task IDs and texts are disjoint"
+}

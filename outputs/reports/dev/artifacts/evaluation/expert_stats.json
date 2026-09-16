@@ -1,0 +1,203 @@
+{
+  "base_moe": {
+    "layers": {
+      "0": {
+        "activation_counts": [
+          0,
+          40,
+          14,
+          54
+        ],
+        "activation_frequency": [
+          0.0,
+          0.37037035822868347,
+          0.12962962687015533,
+          0.5
+        ],
+        "utilized_experts": 3,
+        "num_experts": 4,
+        "routing_entropy": 1.386122657193078,
+        "normalized_routing_entropy": 0.9998761417981432,
+        "load_coefficient_of_variation": 0.7848007767288773,
+        "observations": 54
+      }
+    },
+    "task_type_activation_counts": {
+      "math": {
+        "0": [
+          0,
+          6,
+          3,
+          9
+        ]
+      },
+      "retrieval": {
+        "0": [
+          0,
+          6,
+          3,
+          9
+        ]
+      },
+      "code": {
+        "0": [
+          0,
+          16,
+          2,
+          18
+        ]
+      },
+      "composed_retrieval_math": {
+        "0": [
+          0,
+          6,
+          3,
+          9
+        ]
+      },
+      "composed_math_string": {
+        "0": [
+          0,
+          6,
+          3,
+          9
+        ]
+      }
+    },
+    "scope": "controller internal MoE experts; tiny observes one gate per state; HF per non-padding token per layer"
+  },
+  "conductor_sft": {
+    "layers": {
+      "0": {
+        "activation_counts": [
+          39,
+          0,
+          3,
+          36
+        ],
+        "activation_frequency": [
+          0.5,
+          0.0,
+          0.03846153989434242,
+          0.4615384638309479
+        ],
+        "utilized_experts": 3,
+        "num_experts": 4,
+        "routing_entropy": 0.8457305664435412,
+        "normalized_routing_entropy": 0.6100656470681555,
+        "load_coefficient_of_variation": 0.9262764759552784,
+        "observations": 39
+      }
+    },
+    "task_type_activation_counts": {
+      "math": {
+        "0": [
+          6,
+          0,
+          0,
+          6
+        ]
+      },
+      "retrieval": {
+        "0": [
+          6,
+          0,
+          3,
+          3
+        ]
+      },
+      "code": {
+        "0": [
+          12,
+          0,
+          0,
+          12
+        ]
+      },
+      "composed_retrieval_math": {
+        "0": [
+          9,
+          0,
+          0,
+          9
+        ]
+      },
+      "composed_math_string": {
+        "0": [
+          6,
+          0,
+          0,
+          6
+        ]
+      }
+    },
+    "scope": "controller internal MoE experts; tiny observes one gate per state; HF per non-padding token per layer"
+  },
+  "conductor_preference": {
+    "layers": {
+      "0": {
+        "activation_counts": [
+          46,
+          2,
+          1,
+          49
+        ],
+        "activation_frequency": [
+          0.4693877696990967,
+          0.020408162847161293,
+          0.010204081423580647,
+          0.5
+        ],
+        "utilized_experts": 4,
+        "num_experts": 4,
+        "routing_entropy": 0.6241988941114776,
+        "normalized_routing_entropy": 0.45026432453150195,
+        "load_coefficient_of_variation": 0.9398840300890864,
+        "observations": 49
+      }
+    },
+    "task_type_activation_counts": {
+      "math": {
+        "0": [
+          9,
+          0,
+          0,
+          9
+        ]
+      },
+      "retrieval": {
+        "0": [
+          6,
+          0,
+          0,
+          6
+        ]
+      },
+      "code": {
+        "0": [
+          17,
+          0,
+          1,
+          18
+        ]
+      },
+      "composed_retrieval_math": {
+        "0": [
+          5,
+          2,
+          0,
+          7
+        ]
+      },
+      "composed_math_string": {
+        "0": [
+          9,
+          0,
+          0,
+          9
+        ]
+      }
+    },
+    "scope": "controller internal MoE experts; tiny observes one gate per state; HF per non-padding token per layer"
+  }
+}

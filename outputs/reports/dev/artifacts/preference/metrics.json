@@ -1,0 +1,28 @@
+{
+  "stage": "dpo",
+  "epochs": 25,
+  "train_examples": 435,
+  "validation_examples": 105,
+  "source_examples": 540,
+  "excluded_actions_exceeding_k": 0,
+  "train_k": 2,
+  "initial_train": {
+    "loss": 0.6931471824645996,
+    "accuracy": 1.0
+  },
+  "final_train": {
+    "loss": 0.013102358866525792,
+    "accuracy": 1.0
+  },
+  "final_validation": {
+    "loss": 0.0162610602964248,
+    "accuracy": 1.0
+  },
+  "trainable_parameters": 81513,
+  "total_controller_parameters": 81513,
+  "reference_checkpoint_sha256": "8f11583be8f1afd7c9d512650d240a7a630b210823845a6edba72d3c4640fdf6",
+  "dataset_sha256": "252b9a198881601a5f98d2b63efa017b9f29efa2e5db48550f9a7b8c25090a49",
+  "pretrained": false,
+  "checkpoint": "outputs/checkpoints/tiny-preference",
+  "specialists_updated": false
+}

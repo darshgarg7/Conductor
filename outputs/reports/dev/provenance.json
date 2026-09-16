@@ -1,0 +1,32 @@
+{
+  "generation": {
+    "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+    "git_dirty": false,
+    "runtime_seconds": 0.3233491249848157
+  },
+  "sft": {
+    "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+    "git_dirty": false,
+    "runtime_seconds": 26.05561708303867
+  },
+  "preference": {
+    "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+    "git_dirty": false,
+    "runtime_seconds": 7.504357750003692
+  },
+  "evaluation": {
+    "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+    "git_dirty": false,
+    "runtime_seconds": 0.3397025419981219
+  },
+  "benchmarks": {
+    "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+    "git_dirty": false,
+    "runtime_seconds": 4.896304333989974
+  },
+  "optimizations": {
+    "git_commit": "8c1177526fbc25d630ab5e923332da3948aefc2a",
+    "git_dirty": false,
+    "runtime_seconds": 10.051396165974438
+  }
+}
