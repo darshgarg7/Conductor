@@ -5,7 +5,9 @@ import argparse
 import asyncio
 import itertools
 import json
+import random
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +28,9 @@ def make_state(context_size: int, index: int = 0) -> ExecutionState:
 
 def processed_token_counts(policy: Any, states: list[ExecutionState], k: int) -> tuple[list[int], str]:
     """Probe the same input path outside timing, including HF truncation/attention masks."""
+    if hasattr(policy, "tokenizer") and callable(getattr(policy, "tokenize_states", None)):
+        inputs = policy.tokenize_states(states)
+        return inputs["attention_mask"].sum(-1).tolist(), policy.token_accounting
     batch_route(policy, states, k)
     counts = getattr(policy, "last_batch_tokens", None)
     if counts is not None and len(counts) == len(states):
@@ -43,8 +48,9 @@ async def measure_requests(policy: Any, states: list[ExecutionState], *, strateg
                            concurrency: int, k: int, routing_interval: int, timeout: float,
                            batch_wait: float) -> dict[str, Any]:
     """A request contains routing_interval orchestration steps, with one actual routing call."""
-    latencies: list[float] = []
-    decisions: list[Any] = []
+    latencies: list[float] = [0.0] * len(states)
+    decisions: list[Any] = [None] * len(states)
+    request_samples: list[dict[str, Any]] = [{} for _ in states]
     semaphore = asyncio.Semaphore(concurrency)
     device = getattr(policy, "device", None)
     synchronize(device)
@@ -57,33 +63,57 @@ async def measure_requests(policy: Any, states: list[ExecutionState], *, strateg
             routed = batch_route(policy, states[offset:offset + batch_size], k)
             synchronize(device)
             finished = time.perf_counter()
-            decisions.extend(routed)
-            latencies.extend(finished - arrivals[index] for index in range(offset, min(offset + batch_size, len(states))))
+            for index, decision in enumerate(routed, offset):
+                decisions[index] = decision
+                latencies[index] = finished - arrivals[index]
+                request_samples[index] = {"request_index": index, "latency_seconds": latencies[index],
+                                          "queue_seconds": None, "service_seconds": None,
+                                          "actual_batch_size": len(routed), "semantics": "offline completion from common arrival"}
     else:
         batcher = DynamicBatcher(lambda items, top_k: batch_route(policy, items, top_k), batch_size, batch_wait)
+        executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="conductor-benchmark")
 
-        async def request(state: ExecutionState) -> None:
+        def individual(state: ExecutionState) -> tuple[Any, float, float]:
+            began = time.perf_counter()
+            synchronize(device)
+            decision = policy.route(state, k)
+            synchronize(device)
+            return decision, began, time.perf_counter() - began
+
+        async def request(index: int, state: ExecutionState) -> None:
             arrival = time.perf_counter()
             async with semaphore:
+                admitted = time.perf_counter()
                 if strategy == "dynamic":
-                    decision = await batcher.submit(state, k, timeout)
+                    measured = await batcher.submit_timed(state, k, timeout)
+                    decision = measured["decision"]
+                    queue_seconds = admitted - arrival + measured["queue_seconds"]
+                    service_seconds, actual_batch_size = measured["service_seconds"], measured["actual_batch_size"]
                 elif strategy == "single":
-                    decision = await asyncio.wait_for(asyncio.to_thread(policy.route, state, k), timeout)
+                    decision, began, service_seconds = await asyncio.wait_for(
+                        asyncio.get_running_loop().run_in_executor(executor, individual, state), timeout)
+                    queue_seconds = began - arrival
+                    actual_batch_size = 1
                 else:
                     raise ValueError(f"Unknown benchmark strategy: {strategy}")
                 # Reused decisions represent actual configured routing frequency, not fictitious controller forwards.
                 for _ in range(routing_interval - 1):
                     _ = decision
                 synchronize(device)
-                decisions.append(decision)
-                latencies.append(time.perf_counter() - arrival)
+                decisions[index] = decision
+                latencies[index] = time.perf_counter() - arrival
+                request_samples[index] = {"request_index": index, "latency_seconds": latencies[index],
+                                          "queue_seconds": queue_seconds, "service_seconds": service_seconds,
+                                          "actual_batch_size": actual_batch_size, "semantics": "queue-inclusive service request"}
         try:
-            await asyncio.gather(*(request(state) for state in states))
+            await asyncio.gather(*(request(index, state) for index, state in enumerate(states)))
         finally:
             await batcher.close()
+            executor.shutdown(wait=True, cancel_futures=True)
     synchronize(device)
     wall = time.perf_counter() - started
     return {"request_latencies_seconds": latencies, "wall_seconds": wall, "request_count": len(decisions),
+            "request_samples": request_samples,
             "request_per_second": len(decisions) / wall, "routing_calls": len(decisions),
             "orchestration_steps": len(decisions) * routing_interval,
             "routing_calls_per_orchestration_step": 1 / routing_interval,
@@ -180,16 +210,25 @@ async def benchmark(config: dict[str, Any], checkpoint: str | None = None) -> di
     if warmup < 0 or repeats < 1 or request_count < 1:
         raise ValueError("warmup must be nonnegative, repeats and requests positive")
     controller_overhead, overhead_source = _controller_overhead(config)
-    dimensions = itertools.product(config.get("batch_sizes", [1, 4]),
+    dimensions = list(itertools.product(config.get("batch_sizes", [1, 4]),
                                    config.get("context_sizes", config.get("sequence_lengths", [32, 128])),
                                    config.get("concurrency", [1, 4]), config.get("k_values", [1, 2]),
-                                   config.get("routing_intervals", [1, 2]), config.get("strategies", ["single", "batched", "dynamic"]))
-    for batch_size, context_size, concurrency, k, interval, strategy in dimensions:
+                                   config.get("routing_intervals", [1, 2]), config.get("strategies", ["single", "batched", "dynamic"])))
+    random.Random(config.get("seed", 42)).shuffle(dimensions)
+    replay = None
+    if config.get("replay_trajectories"):
+        from conductor.inference.workloads import replay_states
+        replay = replay_states(config["replay_trajectories"], request_count)
+    from conductor.evaluation.provenance import canonical_hash, checkpoint_sha256
+    for order, (batch_size, context_size, concurrency, k, interval, strategy) in enumerate(dimensions):
         if min(batch_size, context_size, concurrency, k, interval) < 1:
             raise ValueError("Benchmark dimensions must be positive")
         if strategy == "batched" and concurrency != config.get("concurrency", [1, 4])[0]:
             continue  # Offline batches have no request concurrency dimension.
-        states = [make_state(context_size, index) for index in range(request_count)]
+        states = replay[0] if replay else [make_state(context_size, index) for index in range(request_count)]
+        identities = replay[1] if replay else [{"request_id": f"synthetic-{index}",
+                      "state_sha256": canonical_hash(state.to_dict())} for index, state in enumerate(states)]
+        actual_requests = len(states)
         counts, token_basis = processed_token_counts(policy, states, k)
         for _ in range(warmup):
             await measure_requests(policy, states, strategy=strategy, batch_size=batch_size, concurrency=concurrency,
@@ -204,20 +243,21 @@ async def benchmark(config: dict[str, Any], checkpoint: str | None = None) -> di
                                               batch_wait=config.get("batch_wait_seconds", 0.002))
             wall += measured["wall_seconds"]
             samples.extend(measured["request_latencies_seconds"])
-            for request_index, latency in enumerate(measured["request_latencies_seconds"]):
+            for request_index, sample in enumerate(measured["request_samples"]):
                 requests.append({"batch_size": batch_size, "context_size": context_size,
                                  "concurrency": None if strategy == "batched" else concurrency,
                                  "k": k, "routing_interval": interval, "strategy": strategy,
-                                 "repeat": repeat, "request_index": request_index, "latency_seconds": latency})
+                                 "configuration_order": order, "repeat": repeat,
+                                 **sample, **identities[request_index]})
         tokens = sum(counts) / len(counts)
-        total_requests = request_count * repeats
+        total_requests = actual_requests * repeats
         rows.append({"batch_size": batch_size, "context_size_requested_words": context_size,
                      "serialized_input_tokens": tokens, "token_count_basis": token_basis,
                      "concurrency": None if strategy == "batched" else concurrency,
                      "concurrency_status": "not_applicable_offline_batch" if strategy == "batched" else "measured",
                      "k": k, "routing_interval": interval, "strategy": strategy,
                      "batch_route_implementation": "native" if callable(getattr(policy, "batch_route", None)) else "sequential_fallback",
-                     "warmup": warmup, "repeats": repeats, "request_count": total_requests,
+                     "configuration_order": order, "warmup": warmup, "repeats": repeats, "request_count": total_requests,
                      "wall_seconds": wall, "request_per_second": total_requests / wall,
                      "input_tokens_per_second": total_requests * tokens / wall,
                      "latency_p50_seconds": percentile(samples, 50), "latency_p95_seconds": percentile(samples, 95),
@@ -246,9 +286,21 @@ async def benchmark(config: dict[str, Any], checkpoint: str | None = None) -> di
     write_csv(run.output / "orchestration_tasks.csv", orchestration_rows)
     write_csv(run.output / "orchestration_summary.csv", orchestration_summary)
     optimization_pairs = paired_optimization_ratios(rows)
+    from conductor.inference.profiling import profile_stages
+    from conductor.inference.timing import nvml_measurements
+    stage_states = (replay[0] if replay else [make_state(config.get("stage_context_size", 32), i)
+                                            for i in range(config.get("stage_batch_size", 1))])[:config.get("stage_batch_size", 1)]
+    stages = profile_stages(policy, stage_states, config.get("k_values", [2])[0], repeats=config.get("stage_repeats", 3),
+                            nvtx=config.get("nvtx", False),
+                            trace_path=run.output / "controller_trace.json" if config.get("profiler_trace", False) else None)
+    write_json(run.output / "stages.json", stages)
     write_csv(run.output / "paired_optimizations.csv", optimization_pairs)
     result = {"benchmarks": rows, "serialization": serialization, "optimization_status": optimization_status,
               "paired_optimizations": optimization_pairs,
+              "stage_profile": stages, "nvml": nvml_measurements(getattr(policy, "device", None), config.get("nvml", False)),
+              "checkpoint_sha256": checkpoint_sha256(checkpoint or config.get("checkpoint")),
+              "workload": replay[2] if replay else {"kind": "synthetic_context_microbenchmark"},
+              "configuration_order": "seeded randomized configuration order; repeats grouped within each configuration",
               "orchestration": orchestration_summary, "orchestration_tasks": orchestration_rows,
               "orchestration_status": orchestration_status,
               "scope": "Controller routing only; no downstream agent quality or generated-token throughput measured.",

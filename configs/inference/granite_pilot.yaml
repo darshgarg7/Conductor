@@ -1,0 +1,21 @@
+include: ../models/granite.yaml
+inference:
+  instrument_experts: false
+output: outputs/research/granite-pilot/inference
+data: data/generated/granite-pilot/tasks.jsonl
+checkpoint: outputs/research/granite-pilot/preference
+replay_trajectories: outputs/research/granite-pilot/evaluation/trajectories.jsonl
+batch_sizes: [1, 4]
+context_sizes: [128]
+concurrency: [1, 4]
+k_values: [1, 2, 3]
+routing_intervals: [1]
+strategies: [single, batched, dynamic]
+requests: 8
+warmup: 1
+repeats: 3
+stage_repeats: 3
+stage_batch_size: 2
+profiler_trace: true
+request_timeout: 120
+batch_wait_seconds: 0.002

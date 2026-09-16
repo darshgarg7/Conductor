@@ -1,0 +1,16 @@
+include: ../models/granite.yaml
+training:
+  stage: dpo
+  data: data/generated/granite-pilot/preferences.jsonl
+  checkpoint: outputs/research/granite-pilot/sft
+  output: outputs/research/granite-pilot/preference
+  epochs: 2
+  batch_size: 2
+  gradient_accumulation_steps: 2
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  validation_fraction: 0.25
+  max_grad_norm: 1.0
+  beta: 0.1
+  gradient_checkpointing: false
+  save_every_epochs: 1

@@ -1,0 +1,16 @@
+include: ../models/granite.yaml
+checkpoint: outputs/research/granite-pilot/preference
+serving:
+  require_api_key: true
+  api_key_env: CONDUCTOR_ROUTING_API_KEY
+  expected_stage: preference
+  max_batch_size: 4
+  max_pending: 16
+  batch_wait_seconds: 0.005
+  request_timeout_seconds: 30
+  shutdown_timeout_seconds: 10
+  warmup: true
+inference:
+  instrument_experts: false
+  sample: false
+  token_cache_size: 128

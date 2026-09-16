@@ -39,3 +39,17 @@ All-Agent is deliberately exempt from the per-step sparse cap. Total token,
 activation and coordination-round budgets otherwise remain constant. A prompting
 supervisor must be supplied as a real frozen language model. Missing baselines
 are reported as unavailable, never replaced with synthetic scores.
+
+The serving boundary owns one model worker per process. Authenticated HTTP
+requests pass bounded body/state validation and admission, then wait in a
+bounded queue. Compatible requests share a per-k batch. Token and cost
+telemetry are captured with that batch before another forward can mutate them.
+Client deadlines cancel delivery; they cannot preempt a running GPU kernel.
+Health readiness reports stalled workers so a supervisor can restart them.
+
+Atomic training checkpoints contain immutable coordinator weights, optimizer,
+scheduler, scaler, per-rank RNG and cursor, with dataset/reference identities.
+Only complete optimizer windows publish. Single-node torchrun uses NCCL on CUDA
+and Gloo on CPU; no runtime path silently substitutes CPU for requested CUDA.
+Merged exports package the HF backbone, tokenizer and head, retain the source
+adapter, and check numerical equivalence on validation probes before publication.

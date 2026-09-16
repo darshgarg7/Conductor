@@ -1,0 +1,22 @@
+# NVIDIA's optimized PyTorch build is retained; CUDA image validation requires a GPU host.
+ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:26.07-py3
+FROM ${BASE_IMAGE}
+LABEL org.opencontainers.image.title="Conductor sparse MoE coordination"
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 \
+    HF_HOME=/var/cache/conductor/huggingface HOME=/home/conductor
+WORKDIR /opt/conductor
+COPY containers/requirements.nvidia.txt /tmp/requirements.conductor.txt
+RUN python -m pip install -c /etc/pip/constraint.txt -r /tmp/requirements.conductor.txt
+COPY pyproject.toml README.md /opt/conductor/
+COPY conductor /opt/conductor/conductor
+COPY configs /opt/conductor/configs
+RUN python -m pip install --no-deps --no-build-isolation . && python -m pip check && \
+    groupadd --gid 10001 conductor && useradd --uid 10001 --gid 10001 --create-home conductor && \
+    mkdir -p /var/cache/conductor/huggingface /opt/conductor/outputs && \
+    chown -R conductor:conductor /var/cache/conductor /opt/conductor/outputs
+USER 10001:10001
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3)"
+ENTRYPOINT ["python", "-m", "conductor.serve"]
+CMD ["--config", "configs/serving/nvidia.yaml", "--host", "0.0.0.0"]

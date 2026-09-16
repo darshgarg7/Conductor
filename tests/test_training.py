@@ -1,6 +1,12 @@
 from __future__ import annotations
 
 import json
+import copy
+import os
+import subprocess
+import sys
+import socket
+import platform
 from pathlib import Path
 
 import pytest
@@ -127,7 +133,7 @@ def test_hf_random_olmoe_local_sft_dpo_smoke(tmp_path) -> None:
     settings = config(sft_data, tmp_path / "hf-sft", backend="hf")
     settings["model"].update(name=str(base), pretrained=False, max_length=64, dtype="float32", local_files_only=True,
                             lora={"enabled": True, "r": 2, "alpha": 4, "target_modules": ["q_proj", "v_proj", "gate"]})
-    settings["training"].update(epochs=2, validation_fraction=0)
+    settings["training"].update(epochs=2, validation_fraction=0, gradient_checkpointing=True)
     controller = build_controller(settings)
     state = ExecutionState("Calculate 2+3", "math", previous_agent_outputs=[{"content": "large " * 500}])
     encoded = controller.encode_states([state])
@@ -150,3 +156,100 @@ def test_hf_random_olmoe_local_sft_dpo_smoke(tmp_path) -> None:
     assert optimized["initial_train"]["loss"] == pytest.approx(.693147, abs=1e-5)
     metadata = json.loads((tmp_path / "hf-dpo" / "controller.json").read_text())
     assert metadata["local_checkpoint_sha256"] and not metadata["pretrained"]
+    optimized_controller = build_controller(dpo_settings, str(tmp_path / "hf-dpo"))
+    exported = tmp_path / "merged"
+    manifest = optimized_controller.export_merged(exported, [state])
+    assert manifest["validation"]["validation_probe_count"] == 1
+    assert (exported / "source_adapter" / "adapter_config.json").exists()
+    reloaded = build_controller(settings, str(exported))
+    torch.testing.assert_close(optimized_controller.forward_states([state]), reloaded.forward_states([state]), rtol=1e-4, atol=1e-5)
+    assert not any(parameter.requires_grad for parameter in reloaded.model.parameters())
+    optimized_controller._token_cache_size = 2
+    optimized_controller.token_cache_clear()
+    optimized_controller.encode_states([state, state])
+    assert optimized_controller.token_cache_stats()["hits"] == 1
+    assert optimized_controller.token_cache_stats()["entries"] == 1
+    reference_logits = reloaded.forward_states([state])
+    reloaded.compile_for_inference(backend="eager")
+    torch.testing.assert_close(reference_logits, reloaded.forward_states([state]))
+    assert reloaded.compile_status["validated"]
+    training_controller = build_controller(settings, training=True)
+    training_controller.config["training"]["router_auxiliary_weight"] = .02
+    masks = torch.tensor([[1, 1, 0], [1, 1, 1]])
+    ids = torch.tensor([[3, 4, 0], [3, 4, 3]])
+    training_controller.forward_encoded({"input_ids": ids, "attention_mask": masks}, k=2)
+    auxiliary = training_controller.last_auxiliary_loss
+    changed = ids.clone()
+    changed[0, 2] = 6
+    training_controller.forward_encoded({"input_ids": changed, "attention_mask": masks}, k=2)
+    torch.testing.assert_close(auxiliary, training_controller.last_auxiliary_loss)
+    assert auxiliary.requires_grad and float(auxiliary.detach()) > 0
+
+
+def test_exact_resume_matches_uninterrupted_with_partial_accumulation_window(tmp_path) -> None:
+    path = tmp_path / "sft.jsonl"
+    write_records(path, records("sft")[:11])
+    settings = config(path, tmp_path / "uninterrupted")
+    settings["training"].update(epochs=3, batch_size=2, gradient_accumulation_steps=3, validation_fraction=0)
+    train(settings)
+    interrupted = copy.deepcopy(settings)
+    interrupted["training"].update(output=str(tmp_path / "resumed"), stop_after_updates=1)
+    partial = train(interrupted)
+    assert not partial["completed"]
+    interrupted["training"].pop("stop_after_updates")
+    resumed = train(interrupted, resume=partial["resume_checkpoint"])
+    assert resumed["completed"] and resumed["optimizer_windows"] == 6
+    expected = build_controller(settings, str(tmp_path / "uninterrupted"))
+    actual = build_controller(interrupted, str(tmp_path / "resumed"))
+    for name, tensor in expected.model.state_dict().items():
+        torch.testing.assert_close(tensor, actual.model.state_dict()[name], rtol=0, atol=0)
+    incompatible = copy.deepcopy(interrupted)
+    incompatible["training"]["learning_rate"] = .007
+    with pytest.raises(ValueError, match="identity changed"):
+        train(incompatible, resume=partial["resume_checkpoint"])
+
+
+def test_accumulation_matches_actual_large_batch_including_partial_final_batch(tmp_path) -> None:
+    path = tmp_path / "sft.jsonl"
+    write_records(path, records("sft")[:11])
+    large = config(path, tmp_path / "large")
+    large["training"].update(epochs=1, batch_size=6, validation_fraction=0)
+    accumulated = copy.deepcopy(large)
+    accumulated["training"].update(output=str(tmp_path / "accumulated"), batch_size=2, gradient_accumulation_steps=3)
+    train(large)
+    train(accumulated)
+    expected = build_controller(large, str(tmp_path / "large"))
+    actual = build_controller(accumulated, str(tmp_path / "accumulated"))
+    for name, tensor in expected.model.state_dict().items():
+        torch.testing.assert_close(tensor, actual.model.state_dict()[name], rtol=2e-5, atol=2e-7)
+
+
+def test_two_process_cpu_gloo_matches_single_process_with_uneven_shards(tmp_path) -> None:
+    import yaml
+    if not torch.distributed.is_gloo_available():
+        pytest.skip("PyTorch build has no Gloo")
+    path = tmp_path / "sft.jsonl"
+    write_records(path, records("sft")[:11])
+    single = config(path, tmp_path / "single")
+    single["training"].update(epochs=2, batch_size=4, validation_fraction=0)
+    train(single)
+    parallel = copy.deepcopy(single)
+    parallel["training"].update(output=str(tmp_path / "parallel"), batch_size=2)
+    source = tmp_path / "parallel.yaml"
+    source.write_text(yaml.safe_dump(parallel))
+    environment = {**os.environ, "CONDUCTOR_TORCH_THREADS": "1", "OMP_NUM_THREADS": "1",
+                   "GLOO_SOCKET_IFNAME": "lo0" if platform.system() == "Darwin" else "lo"}
+    with socket.socket() as available:
+        available.bind(("127.0.0.1", 0))
+        port = available.getsockname()[1]
+    process = subprocess.run([sys.executable, "-m", "torch.distributed.run", "--master_addr=127.0.0.1",
+                              f"--master_port={port}", "--nproc_per_node=2",
+                              "--module", "conductor.train", "--config", str(source)], env=environment,
+                             capture_output=True, text=True, timeout=90)
+    assert process.returncode == 0, process.stdout + process.stderr
+    metrics = json.loads((tmp_path / "parallel" / "metrics.json").read_text())
+    assert metrics["world_size"] == 2 and metrics["train_examples"] == 11
+    expected = build_controller(single, str(tmp_path / "single"))
+    actual = build_controller(parallel, str(tmp_path / "parallel"))
+    for name, tensor in expected.model.state_dict().items():
+        torch.testing.assert_close(tensor, actual.model.state_dict()[name], rtol=3e-5, atol=3e-7)

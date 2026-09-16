@@ -5,10 +5,12 @@ import asyncio
 import copy
 import json
 import time
+import math
 from dataclasses import asdict
 from typing import Any
 
 from conductor.agents.base import Agent, estimated_tokens
+from conductor.agents.audit import specialist_audit
 from conductor.schema import AgentOutput, ExecutionState, Policy, RoutingDecision, StepRecord, Task, Trajectory
 
 
@@ -34,15 +36,28 @@ def grade_answer(task: Task, answer: str) -> tuple[bool, float]:
 
 async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k: int = 2,
                          max_rounds: int = 3, token_budget: int = 8192,
-                         agent_call_budget: int = 12, routing_interval: int = 1) -> Trajectory:
+                         agent_call_budget: int = 12, routing_interval: int = 1,
+                         initial_execution_state: ExecutionState | None = None,
+                         hard_token_budget: bool = False, agent_timeout_seconds: float | None = None) -> Trajectory:
     if not agents or max_rounds < 1 or token_budget < 1 or agent_call_budget < 1 or routing_interval < 1:
         raise ValueError("positive rounds, budgets, interval, and available agents required")
     if any(not agent.frozen for agent in agents.values()):
         raise ValueError("specialists must remain frozen")
     if not 1 <= k <= len(agents):
         raise ValueError("k exceeds the available specialist set")
+    if agent_timeout_seconds is not None and (not math.isfinite(agent_timeout_seconds) or agent_timeout_seconds <= 0):
+        raise ValueError("agent_timeout_seconds must be a finite positive number")
     started = time.perf_counter()
-    state = initial_state(task, token_budget, agent_call_budget)
+    state = copy.deepcopy(initial_execution_state) if initial_execution_state is not None else initial_state(task, token_budget, agent_call_budget)
+    if state.user_task != task.user_task or state.task_type != task.task_type:
+        raise ValueError("resumed state must belong to the same public task")
+    if set(state.to_dict()) != set(ExecutionState("", "").to_dict()):
+        raise ValueError("private grading fields are forbidden in resumed states")
+    initial_calls = len(state.agents_already_called)
+    start_step = state.current_step if initial_execution_state is not None else 0
+    original_tokens = float(state.remaining_budget["tokens"])
+    audit = specialist_audit(agents)
+    admission_rejections: list[dict[str, Any]] = []
     steps: list[StepRecord] = []
     graph: list[dict[str, Any]] = []
     requested_decisions: list[dict[str, Any]] = []
@@ -51,7 +66,7 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
     stop_reason = "max_rounds"
     agent_tokens = controller_tokens = 0
     cost = 0.0
-    for step_index in range(max_rounds):
+    for step_index in range(start_step, start_step + max_rounds):
         if state.remaining_budget["agent_calls"] < 1 or state.remaining_budget["tokens"] < 1:
             stop_reason = "budget_exhausted"
             break
@@ -89,7 +104,8 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
         async def execute(name: str, supplied: ExecutionState) -> AgentOutput:
             call_started = time.perf_counter()
             try:
-                return await agents[name].execute(supplied)
+                invocation = agents[name].execute(supplied)
+                return await asyncio.wait_for(invocation, agent_timeout_seconds) if agent_timeout_seconds else await invocation
             except Exception as error:
                 return AgentOutput(name, f"Agent execution failed: {type(error).__name__}: {error}", 0,
                                    time.perf_counter() - call_started,
@@ -126,6 +142,19 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
                               "estimated_message_tokens": estimated_tokens(previous_output["content"]),
                               "transport": "forwarded_in_state"})
 
+        if hard_token_budget:
+            admitted, reserved = [], 0
+            for name in selected:
+                estimate = getattr(agents[name], "admission_tokens", lambda supplied: None)(state)
+                if estimate is None or estimate < 1 or reserved + estimate > state.remaining_budget["tokens"]:
+                    admission_rejections.append({"step": step_index, "agent": name,
+                                                 "reason": "unverifiable_token_bound" if estimate is None else "insufficient_reserved_tokens",
+                                                 "reservation_tokens": estimate})
+                else:
+                    admitted.append(name)
+                    if decision.execution_mode == "parallel":
+                        reserved += estimate
+            selected = admitted
         if decision.execution_mode == "parallel":
             supplied_states = [copy.deepcopy(state) for _ in selected]
             result = await asyncio.gather(*(execute(name, supplied) for name, supplied in zip(selected, supplied_states)))
@@ -136,6 +165,11 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
                 if state.remaining_budget["tokens"] < 1:
                     break
                 supplied = copy.deepcopy(state)
+                if hard_token_budget:
+                    bound = agents[name].admission_tokens(supplied)
+                    if bound is None or bound > state.remaining_budget["tokens"]:
+                        admission_rejections.append({"step": step_index, "agent": name, "reason": "sequential_updated_state_bound"})
+                        break
                 update(await execute(name, supplied), supplied)
         actual_decision = decision.to_dict()
         activated = [output["agent"] for output in outputs]
@@ -155,13 +189,16 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
                       time.perf_counter() - started, graph, cost,
                       metadata={"stop_reason": stop_reason, "controller_tokens": controller_tokens,
                                 "downstream_agent_tokens": agent_tokens, "total_tokens": controller_tokens + agent_tokens,
-                                "agent_activations": len(state.agents_already_called), "coordination_rounds": len(steps),
-                                "token_budget_overrun": max(0, controller_tokens + agent_tokens - token_budget),
+                                "agent_activations": len(state.agents_already_called) - initial_calls, "coordination_rounds": len(steps),
+                                "token_budget_overrun": max(0, controller_tokens + agent_tokens - original_tokens),
                                 "token_accounting": "backend_specific; deterministic specialists use estimated whitespace",
                                 "token_usage_known": not any(output.get("metadata", {}).get("token_usage_unknown", False)
                                                              for step in steps for output in step.agent_outputs),
                                 "inference_cost_known": not any(output.get("metadata", {}).get("cost_usage_unknown", False)
                                                                 for step in steps for output in step.agent_outputs),
+                                "specialist_audit": audit, "specialist_fingerprint": audit["fingerprint"],
+                                "resumed_from_step": start_step, "hard_token_budget": hard_token_budget,
+                                "admission_rejections": admission_rejections,
                                 "k": k, "routing_interval": routing_interval,
                                 "requested_routing_decisions": requested_decisions,
                                 "budget_clipped_steps": clipped_steps,

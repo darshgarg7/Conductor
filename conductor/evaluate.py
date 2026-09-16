@@ -10,6 +10,7 @@ from typing import Any
 
 from conductor.evaluation.io import write_csv, write_jsonl
 from conductor.evaluation.tasks import heldout_tasks
+from conductor.evaluation.provenance import canonical_hash, checkpoint_sha256, file_sha256, specialist_identity
 from conductor.metrics.aggregate import aggregate_metrics, trajectory_metrics
 from conductor.utils.config import load_config
 from conductor.utils.runs import Run, log_event, seed_everything, write_json
@@ -19,7 +20,8 @@ POLICIES = ("all_agent", "rule_based", "random_top_k", "static_supervisor", "bas
 
 
 def checkpoint_policy(checkpoint: str) -> str:
-    stage = json.loads((Path(checkpoint) / "controller.json").read_text()).get("stage")
+    from conductor.controller.artifacts import resolve_checkpoint
+    stage = json.loads((resolve_checkpoint(checkpoint) / "controller.json").read_text()).get("stage")
     mapping = {"sft": "conductor_sft", "preference": "conductor_preference", "dpo": "conductor_preference"}
     if stage not in mapping:
         raise ValueError(f"Evaluation checkpoint stage must be sft or preference; got {stage!r}")
@@ -42,8 +44,35 @@ async def evaluate(config: dict[str, Any], checkpoint: str | None = None) -> dic
     agents = build_agents(config)
     budgets = {key: config.get(key, default) for key, default in {
         "k": 2, "max_rounds": 3, "token_budget": 8192, "agent_call_budget": 12, "routing_interval": 1}.items()}
+    strict = bool(config.get("strict_mode", config.get("research", False)))
+    selected = list(config.get("policies", POLICIES))
+    mandatory = list(config.get("mandatory_policies", POLICIES if strict else []))
+    from conductor.controller.artifacts import resolve_checkpoint
+    missing = [name for name in mandatory if name not in selected]
+    for name in mandatory:
+        path = checkpoint if name == override_policy else config.get("checkpoints", {}).get(name)
+        if name in {"conductor_sft", "conductor_preference"} and (not path or not (resolve_checkpoint(path) / "controller.json").exists()):
+            missing.append(f"{name}: required checkpoint missing")
+        if name == "static_supervisor" and not config.get("supervisor", {}).get("name"):
+            missing.append("static_supervisor: actual frozen supervisor model missing")
+    if missing:
+        write_json(run.output / "policy_status.json", {"status": "failed_strict_preflight", "missing": missing})
+        raise ValueError("Strict research evaluation cannot omit mandatory policies: " + "; ".join(missing))
+    specialists = specialist_identity(agents, config, hash_weights=config.get("hash_specialist_weights", strict))
+    from conductor.agents.audit import specialist_audit
+    specialist_status = specialist_audit(agents)
+    write_json(run.output / "specialist_audit.json", specialist_status)
+    if strict and (not specialist_status["all_frozen"] or not specialist_status["all_identities_verifiable"]):
+        raise ValueError("Strict research evaluation requires frozen specialists with verifiable model identities")
+    provenance = {"data_sha256": file_sha256(config.get("data", "data/dev/tasks.jsonl")),
+                  "specialist_sha256": specialists["sha256"], "config_sha256": canonical_hash(config),
+                  "experiment_sha256": canonical_hash({"agents": config.get("agents", {}), "budgets": budgets,
+                    "seed": config.get("seed", 42), "heldout_task_ids": split_audit["heldout_task_ids"],
+                    "inference": config.get("inference", {})}), "strict_mode": strict}
+    write_json(run.output / "specialists.json", specialists)
+    write_json(run.output / "evaluation_provenance.json", provenance)
     statuses, trajectories, expert_stats, initial_probes = [], [], {}, {}
-    for name in config.get("policies", POLICIES):
+    for name in selected:
         policy_checkpoint = checkpoint if name == override_policy else None
         policy_checkpoint = policy_checkpoint or config.get("checkpoints", {}).get(name)
         label = name
@@ -61,7 +90,17 @@ async def evaluate(config: dict[str, Any], checkpoint: str | None = None) -> dic
             statuses.append({"policy": name, "label": label, "status": "unavailable", "reason": str(error),
                              "checkpoint": policy_checkpoint})
             log_event("policy_unavailable", policy=name, reason=str(error))
+            if strict and name in mandatory:
+                write_json(run.output / "policy_status.json", statuses)
+                raise RuntimeError(f"Mandatory research policy {name} is unavailable: {error}") from error
             continue
+        policy_digest = checkpoint_sha256(policy_checkpoint)
+        actual_model = getattr(policy, "config", config).get("model", {})
+        controller_metadata = {"controller_backend": actual_model.get("backend", "tiny") if name in {"base_moe", "conductor_sft", "conductor_preference"} else name,
+                               "controller_pretrained": bool(getattr(policy, "pretrained", config.get("model", {}).get("pretrained", False))) if name in {"base_moe", "conductor_sft", "conductor_preference"} else None,
+                               "specialist_backend": config.get("agents", {}).get("backend", "deterministic"),
+                               "checkpoint_sha256": policy_digest,
+                               "controller_token_accounting": getattr(policy, "token_accounting", "none"), **provenance}
         seed_everything(config.get("seed", 42))
         if name in {"base_moe", "conductor_sft", "conductor_preference"}:
             reset = getattr(policy, "reset_expert_stats", None)
@@ -87,20 +126,38 @@ async def evaluate(config: dict[str, Any], checkpoint: str | None = None) -> dic
             seed_everything(config.get("seed", 42))
         count = 0
         for task in tasks:
+            seed_everything(config.get("seed", 42) + int(hashlib.sha256(task.id.encode()).hexdigest()[:8], 16))
             trajectory = await run_trajectory(task, policy, agents, **budgets)
             item = trajectory.to_dict()
-            item["metadata"].update(policy_label=label, evaluation_budgets=budgets)
+            item["metadata"].update(policy_label=label, evaluation_budgets=budgets, **controller_metadata)
             trajectories.append(item)
             count += 1
         statuses.append({"policy": name, "label": label, "status": "measured", "task_count": count,
-                         "checkpoint": policy_checkpoint})
+                         "checkpoint": policy_checkpoint, **controller_metadata})
         stats = getattr(policy, "expert_stats", None)
         if callable(stats):
             expert_stats[name] = stats()
         log_event("policy_evaluated", policy=name, task_count=count)
+        # Release one policy before constructing the next large GPU backbone.
+        reset = native_batch = stats = None
+        del policy
+        import gc
+        gc.collect()
+        import torch
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    after = specialist_identity(agents, config, hash_weights=config.get("hash_specialist_weights", strict))
+    if after["sha256"] != specialists["sha256"]:
+        raise RuntimeError("Frozen specialist identity changed during evaluation; research comparisons are invalid")
     rows = [trajectory_metrics(item) for item in trajectories]
     per_policy = aggregate_metrics(rows)
     per_category = aggregate_metrics(rows, ("policy", "category", "split", "generalization"))
+    from conductor.metrics.aggregate import paired_differences
+    measured_names = [status["policy"] for status in statuses if status["status"] == "measured"]
+    comparisons = [paired_differences(rows, baseline, candidate,
+                    bootstrap_samples=config.get("bootstrap_samples", 2000), seed=config.get("seed", 42))
+                   for baseline in measured_names for candidate in measured_names if baseline != candidate]
+    write_json(run.output / "paired_comparisons.json", comparisons)
     write_jsonl(run.output / "trajectories.jsonl", trajectories)
     write_csv(run.output / "task_metrics.csv", rows)
     write_csv(run.output / "per_policy.csv", per_policy)
@@ -111,6 +168,8 @@ async def evaluate(config: dict[str, Any], checkpoint: str | None = None) -> dic
     write_json(run.output / "initial_state_probe.json", initial_probes)
     result = {"policies": per_policy, "categories": per_category, "policy_status": statuses,
               "fixed_budgets": budgets, "task_count": len(tasks),
+              "provenance": provenance, "specialists_unchanged": True,
+              "paired_comparisons": comparisons,
               "scope": "Deterministic development agents unless the agent configuration selects actual model backends."}
     run.finish(result)
     return result

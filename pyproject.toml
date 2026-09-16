@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "conductor-research"
-version = "0.1.0"
+version = "0.2.0"
 description = "Sparse learned MoE coordination: post-training and inference experiments"
 readme = "README.md"
 requires-python = ">=3.11,<3.15"
@@ -14,12 +14,15 @@ dependencies = ["torch>=2.5,<3", "PyYAML>=6,<7", "numpy>=1.26,<3", "matplotlib>=
 hf = ["transformers>=4.48,<5", "peft>=0.14,<1", "accelerate>=1,<2", "safetensors>=0.4"]
 dev = ["pytest>=8,<10", "ruff>=0.9"]
 tracking = ["wandb>=0.18"]
+serve = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "httpx>=0.27,<1"]
+profiling = ["psutil>=6,<8", "nvidia-ml-py>=12,<14"]
 
 [tool.setuptools.packages.find]
 include = ["conductor*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["cuda: requires a real NVIDIA CUDA device", "distributed: starts a local multi-process test"]
 
 [tool.ruff]
 line-length = 120

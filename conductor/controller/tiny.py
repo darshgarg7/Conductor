@@ -63,12 +63,17 @@ class TinyController:
         if precision == "float16" and self.device.type != "cuda":
             raise ValueError("tiny float16 autocast requires CUDA; use bfloat16 on CPU")
         self.dtype = getattr(torch, precision)
+        from conductor.utils.hardware import validate_device
+        self.hardware_validation = validate_device(str(self.device), precision, require_cuda=bool(model_config.get("require_cuda", False)))
         self.compute_precision = precision
         self.features = StateFeatures(int(model_config.get("feature_dim", 256)),
                                       int(config.get("inference", {}).get("feature_cache_size", 0)))
         self.model = SparseMoE(self.features.dimension, int(model_config.get("hidden_dim", 64)),
                                int(model_config.get("num_experts", 4)), int(model_config.get("expert_top_k", 2)),
                                len(self.catalog)).to(self.device)
+        self.actual_expert_top_k = self.model.expert_top_k
+        self._compiled_model: Any = None
+        self.compile_status: dict[str, Any] = {"enabled": False, "validated": False}
         self.name = "tiny-random-initialized"
         self.stage = "random_initialization"
         self.last_tokens = 0
@@ -91,17 +96,76 @@ class TinyController:
         return serialize_state(state)
 
     def encode_states(self, states: list[ExecutionState]) -> torch.Tensor:
-        return self.features.batch(states).to(self.device)
+        return self.move_inputs(self.tokenize_states(states))
 
-    def forward_states(self, states: list[ExecutionState], k: int | None = None,
-                       track: bool = False) -> torch.Tensor:
-        with torch.autocast(device_type=self.device.type, dtype=self.dtype, enabled=self.dtype != torch.float32):
-            logits, expert_logits = self.model(self.encode_states(states))
+    def tokenize_states(self, states: list[ExecutionState]) -> torch.Tensor:
+        return self.tokenize_serialized([self.serialize(state) for state in states])
+
+    def tokenize_serialized(self, texts: list[str]) -> torch.Tensor:
+        return torch.stack([self.features.encode_text(text) for text in texts])
+
+    def move_inputs(self, inputs: torch.Tensor) -> torch.Tensor:
+        return inputs.to(self.device)
+
+    def enable_training(self, gradient_checkpointing: bool = False) -> None:
+        if gradient_checkpointing:
+            raise ValueError("tiny controller has no transformer checkpointing; disable gradient_checkpointing")
+        self._compiled_model = None
+        self.model.requires_grad_(True)
+        self.model.train()
+
+    def compile_for_inference(self, backend: str = "inductor", mode: str = "default", fullgraph: bool = False) -> None:
+        if self.model.training:
+            raise ValueError("compile_for_inference requires eval mode")
+        self._compiled_model = torch.compile(self.model, backend=backend, mode=mode, fullgraph=fullgraph)
+        self.compile_status = {"enabled": True, "validated": False, "backend": backend, "mode": mode, "fullgraph": fullgraph}
+
+    def token_cache_clear(self) -> None:
+        if hasattr(self.features.encode_text, "cache_clear"):
+            self.features.encode_text.cache_clear()
+
+    def token_cache_stats(self) -> dict[str, Any]:
+        if hasattr(self.features.encode_text, "cache_info"):
+            value = self.features.encode_text.cache_info()
+            return {"entries": value.currsize, "max_entries": value.maxsize, "hits": value.hits, "misses": value.misses,
+                    "scope": "hashed feature cache; tiny backend has no language tokenizer"}
+        return {"entries": 0, "max_entries": 0, "hits": 0, "misses": 0}
+
+    def forward_encoded(self, inputs: torch.Tensor, k: int | None = None, track: bool = False,
+                        task_types: list[str] | None = None) -> torch.Tensor:
+        runner = self._compiled_model if not self.model.training and self._compiled_model is not None else self.model
+        try:
+            with torch.autocast(device_type=self.device.type, dtype=self.dtype, enabled=self.dtype != torch.float32):
+                logits, expert_logits = runner(inputs)
+            if runner is self._compiled_model:
+                self.compile_status["validated"] = True
+        except Exception as error:
+            if runner is self._compiled_model:
+                raise RuntimeError("requested torch.compile inference failed; no eager fallback was used") from error
+            raise
         if track and self.instrument_experts:
-            self.tracker.add(expert_logits, self.model.expert_top_k, [state.task_type for state in states])
+            self.tracker.add(expert_logits, self.actual_expert_top_k, task_types or ["unspecified"] * len(inputs))
         if k is not None:
             logits = logits.masked_fill(~self.catalog.mask(k, logits.device), float("-inf"))
         return logits
+
+    def forward_states(self, states: list[ExecutionState], k: int | None = None,
+                       track: bool = False) -> torch.Tensor:
+        return self.forward_encoded(self.encode_states(states), k, track, [state.task_type for state in states])
+
+    def decide(self, logits: torch.Tensor, k: int) -> list[RoutingDecision]:
+        probabilities = (logits.float().masked_fill(~self.catalog.mask(k, logits.device), float("-inf")) / self.temperature).softmax(-1)
+        decisions = []
+        self.last_invalid = False
+        for distribution in probabilities:
+            if not bool(torch.isfinite(distribution).all()):
+                self.last_invalid = True
+                self.invalid_decisions += 1
+                decisions.append(RoutingDecision([], confidence=0.0, terminate=True))
+            else:
+                index = int(torch.multinomial(distribution, 1)[0] if self.sample else distribution.argmax())
+                decisions.append(self.catalog.decision(index, float(distribution[index])).validate(k))
+        return decisions
 
     def batch_route(self, states: list[ExecutionState], k: int) -> list[RoutingDecision]:
         if not states:
@@ -111,21 +175,11 @@ class TinyController:
             return []
         self.model.eval()
         with torch.inference_mode():
-            probabilities = (self.forward_states(states, k=k, track=True) / self.temperature).softmax(-1)
-            ids = (torch.multinomial(probabilities, 1).squeeze(-1) if self.sample else probabilities.argmax(-1))
+            decisions = self.decide(self.forward_states(states, k=k, track=True), k)
         self.last_batch_tokens = [token_count(self.serialize(state)) for state in states]
         self.last_batch_costs = [0.0] * len(states)
         self.last_tokens = sum(self.last_batch_tokens)
         self.last_cost_usd = 0.0
-        decisions = []
-        self.last_invalid = False
-        for index, action in enumerate(ids):
-            if not bool(torch.isfinite(probabilities[index]).all()):
-                self.last_invalid = True
-                self.invalid_decisions += 1
-                decisions.append(RoutingDecision([], confidence=0.0, terminate=True))
-            else:
-                decisions.append(self.catalog.decision(int(action), float(probabilities[index, action])).validate(k))
         return decisions
 
     def route(self, state: ExecutionState, k: int) -> RoutingDecision:

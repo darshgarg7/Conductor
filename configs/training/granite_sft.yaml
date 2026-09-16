@@ -1,0 +1,15 @@
+include: ../models/granite.yaml
+training:
+  stage: sft
+  data: data/generated/granite-pilot/sft.jsonl
+  output: outputs/research/granite-pilot/sft
+  epochs: 3
+  batch_size: 2
+  gradient_accumulation_steps: 2
+  learning_rate: 0.001
+  weight_decay: 0.01
+  validation_fraction: 0.25
+  max_grad_norm: 1.0
+  gradient_checkpointing: false
+  scheduler: constant
+  save_every_epochs: 1

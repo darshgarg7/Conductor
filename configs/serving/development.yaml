@@ -1,0 +1,17 @@
+include: ../models/tiny.yaml
+checkpoint: outputs/checkpoints/tiny-sft
+serving:
+  require_api_key: false
+  allow_random_initialization: false
+  expected_stage: sft
+  max_batch_size: 8
+  max_pending: 32
+  batch_wait_seconds: 0.002
+  request_timeout_seconds: 30
+  shutdown_timeout_seconds: 10
+  max_body_bytes: 1000000
+  body_read_timeout_seconds: 5
+  warmup: true
+inference:
+  instrument_experts: false
+  sample: false

@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import json
 import os
-import platform
 import random
 import subprocess
 import time
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
 
@@ -42,14 +42,18 @@ class Run:
             dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], text=True).strip())
         except (subprocess.SubprocessError, FileNotFoundError):
             commit, dirty = None, None
-        import torch
+        from conductor.utils.hardware import hardware_info
+        library_versions = {}
+        for package in ("torch", "transformers", "peft", "accelerate", "numpy", "PyYAML", "fastapi", "uvicorn"):
+            try:
+                library_versions[package] = version(package)
+            except PackageNotFoundError:
+                library_versions[package] = None
         self.record = {
             "configuration": config, "git_commit": commit, "git_dirty": dirty,
             "seed": config.get("seed", 42), "checkpoint": checkpoint,
-            "hardware": {"platform": platform.platform(), "processor": platform.processor(),
-                         "cpu_count": os.cpu_count(), "python": platform.python_version(),
-                         "torch": torch.__version__, "cuda_available": torch.cuda.is_available(),
-                         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None},
+            "hardware": {**hardware_info(), "cpu_count": os.cpu_count()},
+            "library_versions": library_versions,
             "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
         }
         self.tracker = None

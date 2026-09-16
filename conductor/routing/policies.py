@@ -66,6 +66,7 @@ class RandomTopKPolicy(Baseline):
 
 class StaticSupervisorPolicy(Baseline):
     """Frozen prompting-only LLM, never replaced by a rule baseline."""
+    token_accounting = "HF tokenizer input and generated tokens"
     name = "static_supervisor"
 
     def __init__(self, config: dict[str, Any]) -> None:
@@ -73,14 +74,19 @@ class StaticSupervisorPolicy(Baseline):
             raise ValueError("static_supervisor unavailable: configure supervisor.name for a frozen HF LLM")
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        self.device = config.get("device", "cpu")
+        from conductor.utils.hardware import validate_device
+        self.device = torch.device(config.get("device", "cpu"))
+        precision = config.get("dtype", "float32")
+        validate_device(self.device, precision, bool(config.get("require_cuda", False)))
         self.tokenizer = AutoTokenizer.from_pretrained(config["name"], revision=config.get("revision", "main"))
-        self.model = AutoModelForCausalLM.from_pretrained(config["name"], revision=config.get("revision", "main"))
+        self.model = AutoModelForCausalLM.from_pretrained(config["name"], revision=config.get("revision", "main"),
+                                                       torch_dtype=getattr(torch, precision))
         self.model.to(self.device).eval()
         self.model.requires_grad_(False)
         self.max_new_tokens = int(config.get("max_new_tokens", 128))
         self.max_context = int(config.get("max_context", 2048))
         self.rate = float(config.get("cost_per_million_tokens", 0))
+        self.use_chat_template = bool(config.get("use_chat_template", True)) and bool(self.tokenizer.chat_template)
         self._torch = torch
 
     def route(self, state: ExecutionState, k: int) -> RoutingDecision:
@@ -90,6 +96,9 @@ class StaticSupervisorPolicy(Baseline):
             "confidence (0..1), terminate (boolean). Termination selects no agents.\n"
             f"Execution state: {serialize_state(state)}\nDecision: "
         )
+        if self.use_chat_template:
+            prompt = self.tokenizer.apply_chat_template([{"role": "user", "content": prompt}],
+                                                        tokenize=False, add_generation_prompt=True)
         inputs = self.tokenizer(prompt, return_tensors="pt", truncation=True, max_length=self.max_context).to(self.device)
         with self._torch.inference_mode():
             result = self.model.generate(**inputs, do_sample=False, max_new_tokens=self.max_new_tokens,

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -12,6 +13,8 @@ class _Request:
     state: Any
     k: int
     future: asyncio.Future
+    arrival: float
+    timed: bool = False
 
 
 class DynamicBatcher:
@@ -40,11 +43,17 @@ class DynamicBatcher:
             self.worker = asyncio.create_task(self._run())
 
     async def submit(self, state: Any, k: int, timeout: float | None = None) -> Any:
+        return await self._submit(state, k, timeout, False)
+
+    async def submit_timed(self, state: Any, k: int, timeout: float | None = None) -> Any:
+        return await self._submit(state, k, timeout, True)
+
+    async def _submit(self, state: Any, k: int, timeout: float | None, timed: bool) -> Any:
         self.start()
         future = asyncio.get_running_loop().create_future()
         self.pending.add(future)
         future.add_done_callback(self.pending.discard)
-        await self.queue.put(_Request(state, k, future))
+        await self.queue.put(_Request(state, k, future, time.perf_counter(), timed))
         return await asyncio.wait_for(future, timeout) if timeout is not None else await future
 
     async def close(self) -> None:
@@ -81,6 +90,7 @@ class DynamicBatcher:
                     if not request.future.cancelled():
                         groups[request.k].append(request)
                 for k, requests in groups.items():
+                    service_started = time.perf_counter()
                     try:
                         results = await asyncio.to_thread(self.batch_route, [request.state for request in requests], k)
                         if len(results) != len(requests):
@@ -90,9 +100,13 @@ class DynamicBatcher:
                             if not request.future.done():
                                 request.future.set_exception(error)
                     else:
+                        finished = time.perf_counter()
                         for request, decision in zip(requests, results):
                             if not request.future.done():
-                                request.future.set_result(decision)
+                                value = {"decision": decision, "queue_seconds": service_started - request.arrival,
+                                         "service_seconds": finished - service_started,
+                                         "actual_batch_size": len(requests)} if request.timed else decision
+                                request.future.set_result(value)
         finally:
             for future in list(self.pending):
                 if not future.done():

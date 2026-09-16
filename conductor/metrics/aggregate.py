@@ -37,6 +37,15 @@ def trajectory_metrics(trajectory: Any) -> dict[str, Any]:
     graph = item.get("communication_graph", [])
     physical_messages = [edge for edge in graph if edge.get("source") == "controller" or edge.get("target") == "controller"]
     trajectory_metadata = item.get("metadata", {})
+    accounts = [output.get("metadata", {}).get("token_accounting", "unknown") for output in outputs]
+    controller_account = trajectory_metadata.get("controller_token_accounting", "unknown")
+    billable_accounts = {"model_tokenizer", "provider_usage", "hf_tokenizer"}
+    actual_controller = controller_tokens == 0 or "HF tokenizer" in controller_account
+    usage_known = (trajectory_metadata.get("token_usage_known", True)
+                   and trajectory_metadata.get("inference_cost_known", True)
+                   and not any(output.get("metadata", {}).get("token_usage_unknown", False)
+                               or output.get("metadata", {}).get("cost_usage_unknown", False) for output in outputs))
+    cost_valid = bool(usage_known and all(account in billable_accounts for account in accounts) and actual_controller)
     unique_edges = {(str(edge.get("source", edge.get("from", ""))),
                      str(edge.get("target", edge.get("to", "")))) for edge in graph}
     # Forwarded state may include self messages; the controller is also a graph node.
@@ -45,6 +54,13 @@ def trajectory_metrics(trajectory: Any) -> dict[str, Any]:
     return {
         "task_id": task["id"], "policy": item["policy"],
         "policy_label": trajectory_metadata.get("policy_label", item["policy"]),
+        "data_sha256": trajectory_metadata.get("data_sha256"),
+        "specialist_sha256": trajectory_metadata.get("specialist_sha256"),
+        "experiment_sha256": trajectory_metadata.get("experiment_sha256"),
+        "checkpoint_sha256": trajectory_metadata.get("checkpoint_sha256"),
+        "config_sha256": trajectory_metadata.get("config_sha256"),
+        "cost_comparison_valid": cost_valid,
+        "token_billing_status": "actual_backend_tokens" if cost_valid else "unknown_or_proxy_tokens",
         "category": task.get("task_type", "unknown"), "split": task.get("split", "unknown"),
         "generalization": metadata.get("generalization", metadata.get("distribution",
                                         "unseen_composition" if metadata.get("ood") else "seen_family")),
@@ -94,10 +110,18 @@ def aggregate_metrics(rows: list[dict[str, Any]], group_by: tuple[str, ...] = ("
     return summaries
 
 
-def paired_differences(rows: list[dict[str, Any]], baseline: str, candidate: str) -> dict[str, Any]:
+def paired_differences(rows: list[dict[str, Any]], baseline: str, candidate: str,
+                       bootstrap_samples: int = 2000, seed: int = 42) -> dict[str, Any]:
     """Only compare the intersection of identical task IDs, and disclose coverage."""
-    left = {row["task_id"]: row for row in rows if row["policy"] == baseline}
-    right = {row["task_id"]: row for row in rows if row["policy"] == candidate}
+    def unique(policy: str) -> dict[str, dict[str, Any]]:
+        selected: dict[str, dict[str, Any]] = {}
+        for row in rows:
+            if row["policy"] == policy:
+                if row["task_id"] in selected:
+                    raise ValueError(f"Duplicate paired task ID for {policy}: {row['task_id']}; aggregate repeated trials explicitly")
+                selected[row["task_id"]] = row
+        return selected
+    left, right = unique(baseline), unique(candidate)
     common = sorted(left.keys() & right.keys())
     result: dict[str, Any] = {"baseline": baseline, "candidate": candidate, "paired_tasks": len(common),
                               "baseline_only_tasks": len(left.keys() - right.keys()),
@@ -107,8 +131,30 @@ def paired_differences(rows: list[dict[str, Any]], baseline: str, candidate: str
         result["reason"] = "No paired task trajectories are available."
         return result
     fields = ("task_success", "grader_score", "total_tokens", "agent_calls", "cost_usd", "wall_clock_seconds")
+    from conductor.metrics.statistics import conservative_claim_gate, paired_bootstrap
+    interval_names = {"task_success": "success", "total_tokens": "token", "agent_calls": "agent_calls",
+                      "cost_usd": "cost", "wall_clock_seconds": "latency"}
     for field in fields:
         result[f"mean_delta_{field}"] = float(np.mean([right[i][field] - left[i][field] for i in common]))
+        if field in interval_names:
+            estimate = paired_bootstrap([float(left[i][field]) for i in common], [float(right[i][field]) for i in common],
+                                        seed=seed, samples=bootstrap_samples)
+            name = interval_names[field]
+            result[f"{name}_delta_ci95"] = estimate["delta_ci95"]
+            result[f"{name}_ratio_ci95"] = estimate["ratio_ci95"]
+    fingerprints = {}
+    for field in ("data_sha256", "specialist_sha256", "experiment_sha256", "checkpoint_sha256", "config_sha256"):
+        fingerprints[field] = {"baseline": sorted({str(left[i].get(field)) for i in common}),
+                               "candidate": sorted({str(right[i].get(field)) for i in common})}
+    result["fingerprints"] = fingerprints
+    result["comparable_fingerprints"] = all(
+        len({left[i].get(field) for i in common} | {right[i].get(field) for i in common}) == 1
+        and all(left[i].get(field) and right[i].get(field) for i in common)
+        for field in ("data_sha256", "specialist_sha256", "experiment_sha256"))
+    result["unknown_cost_exclusions"] = sum(not left[i].get("cost_comparison_valid", False) or
+                                            not right[i].get("cost_comparison_valid", False) for i in common)
+    result["bootstrap"] = {"unit": "unique_task_id", "samples": bootstrap_samples, "seed": seed}
+    result["claim_gate"] = conservative_claim_gate(result)
     for category in sorted({left[i]["category"] for i in common}):
         ids = [i for i in common if left[i]["category"] == category]
         result["categories"][category] = {"paired_tasks": len(ids), **{

@@ -1,0 +1,25 @@
+include: ../agents/dev.yaml
+seed: 42
+dataset_output: data/generated/granite-pilot
+output: outputs/research/granite-pilot/generation
+train_count: 12
+eval_count: 6
+policies: [all_agent, rule_based, random_top_k]
+orchestration:
+  k: 2
+  max_rounds: 3
+  token_budget: 8192
+  agent_call_budget: 12
+  routing_interval: 1
+preference:
+  enabled: true
+  max_candidates: 10
+  max_states_per_task: 2
+reward:
+  token_weight: 0.05
+  latency_weight: 0.0
+  agent_call_weight: 0.04
+  communication_weight: 0.01
+  token_scale: 1000
+  latency_scale: 1
+  communication_scale: 20

@@ -12,11 +12,21 @@ Task + execution state → MoE coordination model → constrained agent top-k
                       → frozen specialists → updated state → controller
 ```
 
-The working local demonstration uses **a tiny randomly initialized neural
-MoE and deterministic specialists**. Its measured results verify the pipeline;
-they are not evidence about pretrained language-model post-training or realistic
-LLM inference economics. Configurations and a tested Hugging Face/LoRA backend
-provide the next GPU experiment. No benchmark number is supplied by a constant.
+Conductor has two reproducible local paths: a tiny neural MoE for cheap tests,
+and a pinned **pretrained Granite sparse MoE** for coordinator-only LoRA SFT
+and categorical DPO. Development specialists are frozen deterministic tools.
+The original [measured tiny-model report](outputs/reports/dev/report.md) remains
+a historical artifact with its original source commit. The new Granite pilot
+uses separate data and output directories; its scope is a small synthetic
+coordination experiment, not a realistic language-task benchmark.
+
+NVIDIA deployment paths include CUDA precision validation, single-node DDP,
+resumable optimizer checkpoints, SDPA, a bounded authenticated routing service,
+merged inference artifacts, CUDA-event stage profiling and NVTX traces.
+**NVIDIA execution and the container image require validation on a GPU host.**
+No measured CPU result establishes CUDA performance or production certification.
+The original resume numbers (50K trajectories, 84%→91%, 35% cost, 28% latency)
+have no supporting evidence; see the [evidence audit](docs/resume_evidence.md).
 
 ## Run the complete local experiment
 
@@ -25,7 +35,7 @@ Use Python 3.11–3.14; Python 3.12 is used for the recorded development run.
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[dev,hf,serve,profiling]'
 bash scripts/run_dev.sh
 pytest -q
 ```
@@ -52,7 +62,23 @@ Checkpoint tensors and large generated artifacts are ignored by Git; regenerate
 them with the commands above. Never treat checked-in development timings as
 portable performance guarantees.
 
-## Pretrained MoE experiment
+## Run a compact pretrained MoE on a CPU
+
+```bash
+python -m pip install -e '.[dev,hf,serve,profiling]'
+bash scripts/run_granite_pilot.sh
+```
+
+The pinned [Granite 3.1 sparse MoE](https://huggingface.co/ibm-granite/granite-3.1-1b-a400m-base)
+has about 1.3B total / 400M active parameters. The pilot uses 12 training tasks
+and 6 held-out tasks, including unseen compositions. It trains FP32 LoRA
+adapters in attention and neural expert-router projections plus the coordination
+head; base weights and specialists stay frozen. Results are written under
+`outputs/research/granite-pilot/` and are never filled in by configuration.
+A single tiny pilot cannot establish generalization or a cost-reduction claim.
+
+## Run on NVIDIA / SLURM
+
 
 ```bash
 python -m pip install -e '.[hf]'
@@ -85,8 +111,32 @@ SFT minimizes categorical cross entropy on successful training trajectories.
 [DPO](https://arxiv.org/abs/2305.18290) operates on categorical action log
 probabilities against the frozen SFT policy. Preferences compare exact-state
 counterfactual executions with configurable quality/cost reward weights and
-normalization scales. The local preference dataset covers initial states;
-late-state counterfactual coverage is future work.
+normalization scales. The historical tiny dataset covers initial states. Generation now supports
+late-state counterfactuals and stopping preferences with `max_states_per_task`.
+External JSONL task sources, stable hash shards, record checksums and locked,
+fsynced journals support interrupted generation and larger task inventories.
+
+## Training recovery and deployment
+
+```bash
+python -m conductor.train --config configs/training/granite_sft.yaml \
+  --resume outputs/research/granite-pilot/sft
+python -m conductor.doctor --device cuda:0 --dtype bfloat16 --require-cuda --probe
+bash scripts/validate_nvidia.sh configs/inference/nvidia.yaml CHECKPOINT
+python -m conductor.controller.export --checkpoint CHECKPOINT \
+  --output outputs/exports/controller --device cpu --dtype float32
+CONDUCTOR_ROUTING_API_KEY=YOUR_LOCAL_SECRET python -m conductor.serve \
+  --config configs/serving/nvidia.yaml --checkpoint CHECKPOINT
+```
+
+Checkpoints commit complete optimizer windows atomically and retain optimizer,
+scheduler, scaler, per-rank RNG, data/reference identity and cursor. Exact CPU
+resume and uneven two-worker Gloo training are tested. CUDA tests skip without
+an actual GPU. Serving uses one exclusive model worker, bounded admission,
+per-k dynamic batches, request deadlines and health/metrics endpoints. A client
+timeout cannot interrupt an already-running accelerator kernel; a stuck kernel
+requires a process supervisor. See [deployment limits](docs/deployment.md) and
+[cluster instructions](docs/hpc.md).
 
 ## Experimental controls and measurements
 
@@ -111,7 +161,12 @@ specialization evidence.
 Controller benchmarks measure real forwards under batching, concurrency,
 context sizes, top-k and routing-frequency workloads, plus queue-inclusive
 dynamic batching and bounded serialization caching. They export JSON/CSV and
-RSS/CUDA memory measurements. Unsupported optimizations, including prefix/KV
+RSS/CUDA allocated and reserved memory measurements. Workloads can replay
+recorded execution states with task/state fingerprints. HF diagnostics separate
+serialization, tokenization, transfer, forward and decision stages; CUDA events,
+NVTX and optional profiler traces are distinct from service timings. Seeded
+configuration ordering and task-paired bootstrap intervals expose uncertainty.
+Unsupported optimizations, including prefix/KV
 caching in the classification backend, are explicit. Improvements are only
 claimed from matched measured comparisons. Input-token processing throughput
 is distinct from generated-token throughput; the classifier emits no language
@@ -143,7 +198,7 @@ is enabled with `tracking.enabled: true` and defaults to offline mode. See
 [SLURM/MSI instructions](docs/hpc.md), the [architecture diagram](docs/architecture.md)
 and [research protocol](docs/research_protocol.md).
 
-This repository supports two future evidence-backed claims: pretrained MoE
-post-training and measured coordinator inference optimization. The development
-run alone supports implementation and pipeline validation; a real pretrained
-experiment with frozen LLM specialists is required for the broader claims.
+Use `python -m conductor.audit --help` to inspect actual evidence. Claims must
+name their measured corpus, checkpoint and hardware. Frozen LLM specialists,
+a fully configured supervisor, larger independent held-out corpora and GPU runs
+are required before drawing the broader research conclusion.

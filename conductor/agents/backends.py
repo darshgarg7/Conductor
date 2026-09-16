@@ -4,6 +4,9 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import random
+import hashlib
+import urllib.error
 import threading
 import time
 import urllib.request
@@ -37,6 +40,8 @@ class HFAgent:
 
     def __init__(self, name: str, config: dict[str, Any], shared: dict[str, Any]) -> None:
         self.name, self.capability, self.config = name, CAPABILITIES[name], config
+        if int(config.get("max_new_tokens", 128)) < 1 or int(config.get("max_prompt_tokens", 2048)) < 1:
+            raise ValueError("HF specialist prompt/output token limits must be positive")
         model_name = config["model_name"]
         self.revision = config.get("revision", "main")
         key = json.dumps([model_name, self.revision, config.get("device", "cpu"), config.get("dtype", "float32")])
@@ -65,6 +70,11 @@ class HFAgent:
                 text = self.tokenizer.apply_chat_template([{"role": "user", "content": text}],
                                                           tokenize=False, add_generation_prompt=True)
             inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
+            context = getattr(self.model.config, "max_position_embeddings", 2048)
+            context = context if isinstance(context, int) and context > 0 else 2048
+            maximum = min(int(self.config.get("max_prompt_tokens", 2048)), context - int(self.config.get("max_new_tokens", 128)))
+            if inputs["input_ids"].shape[1] > maximum:
+                raise ValueError("HF specialist input exceeds its bounded prompt/context budget before generation")
             generation = self.model.generate(**inputs, max_new_tokens=self.config.get("max_new_tokens", 128),
                                              do_sample=False, pad_token_id=self.tokenizer.pad_token_id)
             if self.model.device.type == "cuda":
@@ -103,8 +113,23 @@ class APIAgent:
             headers["Authorization"] = f"Bearer {key}"
         request = urllib.request.Request(self.config["base_url"].rstrip("/") + "/chat/completions",
                                          data=json.dumps(body).encode(), headers=headers)
-        with urllib.request.urlopen(request, timeout=self.config.get("timeout_seconds", 60)) as response:
-            result = json.load(response)
+        retries = int(self.config.get("max_retries", 2))
+        if retries < 0:
+            raise ValueError("max_retries must be nonnegative")
+        randomizer = random.Random(int(hashlib.sha256(text.encode()).hexdigest()[:8], 16))
+        retry_events = []
+        for attempt in range(retries + 1):
+            try:
+                with urllib.request.urlopen(request, timeout=self.config.get("timeout_seconds", 60)) as response:
+                    result = json.load(response)
+                break
+            except urllib.error.HTTPError as error:
+                if error.code not in {429, 500, 502, 503, 504} or attempt == retries:
+                    raise
+                delay = min(float(self.config.get("retry_max_delay_seconds", 4)), 0.25 * 2 ** attempt) * randomizer.uniform(0.5, 1.5)
+                retry_events.append({"attempt": attempt + 1, "status": error.code, "delay_seconds": delay,
+                                     "charged_tokens_unknown": True})
+                time.sleep(delay)
         content = result["choices"][0]["message"]["content"]
         if not isinstance(content, str):
             content = json.dumps(content)
@@ -117,4 +142,8 @@ class APIAgent:
                             "token_accounting": "provider_usage" if "total_tokens" in usage else "estimated_whitespace",
                             "model_name": result.get("model", self.config["model_name"]),
                             "max_new_tokens": self.config.get("max_new_tokens", 128),
-                            "provider_system_fingerprint": result.get("system_fingerprint")})
+                            "provider_system_fingerprint": result.get("system_fingerprint"),
+                            "retry_events": retry_events, "http_attempts": len(retry_events) + 1,
+                            "token_usage_unknown": bool(retry_events), "cost_usage_unknown": bool(retry_events),
+                            "immutable_model_version": self.config.get("immutable_model_version"),
+                            "identity_verifiable": bool(self.config.get("immutable_model_version"))})

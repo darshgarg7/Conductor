@@ -1,0 +1,21 @@
+include: ../models/olmoe.yaml
+model:
+  require_cuda: true
+checkpoint: outputs/checkpoints/conductor-preference
+serving:
+  require_api_key: true
+  api_key_env: CONDUCTOR_ROUTING_API_KEY
+  expected_stage: preference
+  max_batch_size: 8
+  max_pending: 128
+  batch_wait_seconds: 0.002
+  request_timeout_seconds: 30
+  shutdown_timeout_seconds: 10
+  max_body_bytes: 1000000
+  body_read_timeout_seconds: 5
+  warmup: true
+inference:
+  require_cuda: true
+  instrument_experts: false
+  sample: false
+  token_cache_size: 512

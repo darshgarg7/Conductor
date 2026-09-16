@@ -1,0 +1,26 @@
+include: ../models/olmoe.yaml
+model:
+  device: cuda:0
+  dtype: bfloat16
+  require_cuda: true
+  attention_implementation: sdpa
+inference:
+  instrument_experts: false
+  token_cache_size: 512
+output: outputs/benchmarks/nvidia
+data: data/dev/tasks.jsonl
+batch_sizes: [1, 4, 8]
+context_sizes: [32, 128, 512]
+concurrency: [1, 8, 32]
+k_values: [1, 2, 3]
+routing_intervals: [1, 2]
+strategies: [single, batched, dynamic]
+requests: 32
+warmup: 3
+repeats: 5
+request_timeout: 120
+stage_batch_size: 4
+stage_repeats: 5
+nvtx: true
+nvml: true
+profiler_trace: true

@@ -70,3 +70,32 @@ def test_hf_backend_pins_revision_and_shares_only_identical_source(monkeypatch) 
     assert model_factory.call_count == tokenizer_factory.call_count == 2
     assert {call.kwargs["revision"] for call in model_factory.call_args_list} == {"commit-a", "commit-b"}
     assert {call.kwargs["revision"] for call in tokenizer_factory.call_args_list} == {"commit-a", "commit-b"}
+
+
+def test_timeout_keeps_capacity_until_actual_work_finishes_and_cancels_queued_work() -> None:
+    from conductor.agents.limits import LimitedAgent
+    from conductor.schema import AgentOutput
+    async def scenario() -> None:
+        release = asyncio.Event()
+        class SlowAgent:
+            name, capability, frozen = "math", "arithmetic", True
+            calls = 0
+            async def execute(self, state):
+                self.calls += 1
+                await release.wait()
+                return AgentOutput("math", "done", 1, .01)
+        source = SlowAgent()
+        capacity = asyncio.Semaphore(1)
+        limited = LimitedAgent(source, {"timeout_seconds": .01, "max_concurrency": 2}, capacity)
+        state = ExecutionState("task", "math")
+        with pytest.raises(TimeoutError):
+            await limited.execute(state)
+        assert capacity.locked()
+        with pytest.raises(TimeoutError):
+            await limited.execute(state)
+        assert source.calls == 1
+        release.set()
+        await asyncio.gather(*limited._inflight, return_exceptions=True)
+        await asyncio.sleep(0)
+        assert not capacity.locked()
+    asyncio.run(scenario())

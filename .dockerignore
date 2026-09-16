@@ -1,0 +1,12 @@
+.git
+.venv
+outputs
+data
+.env
+.env.*
+.DS_Store
+__pycache__
+.pytest_cache
+.ruff_cache
+*.pt
+*.safetensors

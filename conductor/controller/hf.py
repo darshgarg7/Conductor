@@ -9,17 +9,30 @@ from __future__ import annotations
 import json
 import copy
 import hashlib
+import platform
+import shutil
+from importlib.metadata import version
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 
 from conductor.controller.actions import ActionCatalog
+from conductor.controller.artifacts import atomic_directory, atomic_json
 from conductor.controller.experts import ExpertTracker
-from conductor.controller.features import serialize_state
 from conductor.schema import ExecutionState, RoutingDecision
 from conductor.utils.runs import write_json
+
+
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while block := handle.read(1024 * 1024):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 class HFRoutingModel(nn.Module):
@@ -56,11 +69,15 @@ class HFController:
         self.revision = model_config.get("resolved_revision") or model_config.get("revision", "main")
         self.pretrained = bool(model_config.get("pretrained", True))
         self.catalog = ActionCatalog(int(model_config.get("max_agents", 3)))
-        self.device = torch.device(model_config.get("device", "cuda" if torch.cuda.is_available() else "cpu"))
+        self.device = torch.device(model_config.get("device", "cuda"))
         precision = model_config.get("dtype", "float32")
         if precision not in {"float32", "float16", "bfloat16"}:
             raise ValueError("dtype must be float32, float16, or bfloat16")
         self.dtype = getattr(torch, precision)
+        from conductor.utils.hardware import validate_device
+        self.hardware_validation = validate_device(str(self.device), precision, require_cuda=bool(model_config.get("require_cuda", False)))
+        if self.device.type == "cuda":
+            torch.cuda.set_device(self.device)
         self.compute_precision = f"{precision} frozen backbone; float32 trainable head and adapters"
         source_kwargs = {"revision": self.revision, "local_files_only": bool(model_config.get("local_files_only", False)),
                          "trust_remote_code": bool(model_config.get("trust_remote_code", False))}
@@ -97,7 +114,11 @@ class HFController:
         if self.max_length < 16:
             raise ValueError("HF max_length must be >=16")
         self.context_strategy = "task/type header capped at 1/3 context; newest serialized execution-state tail uses remainder"
-        backbone = AutoModel.from_pretrained(self.base_model_name, torch_dtype=self.dtype, **source_kwargs)
+        attention = model_config.get("attention_implementation", "sdpa")
+        if attention not in {"eager", "sdpa", "flash_attention_2"}:
+            raise ValueError("attention_implementation must be eager, sdpa, or flash_attention_2")
+        backbone = AutoModel.from_pretrained(self.base_model_name, torch_dtype=self.dtype,
+                                             attn_implementation=attention, **source_kwargs)
         for parameter in backbone.parameters():
             parameter.requires_grad_(False)
         self.lora_config = model_config.get("lora", {"enabled": True})
@@ -119,6 +140,18 @@ class HFController:
         # Float32 action head and adapters; pretrained backbone runs at selected
         # precision. Keep trainable parameters in float32 for stable optimization.
         self.model = HFRoutingModel(backbone, architecture.hidden_size, len(self.catalog)).to(device=self.device)
+        for parameter in self.model.parameters():
+            if parameter.requires_grad:
+                parameter.data = parameter.data.float()
+        self.actual_expert_top_k = int(getattr(architecture, "num_experts_per_tok", 1))
+        self._compiled_model: Any = None
+        self.compile_status: dict[str, Any] = {"enabled": False, "validated": False}
+        self._token_cache: OrderedDict[str, tuple[int, ...]] = OrderedDict()
+        self._token_cache_size = int(config.get("inference", {}).get("token_cache_size", 0))
+        if self._token_cache_size < 0:
+            raise ValueError("token_cache_size must be nonnegative")
+        self._token_cache_hits = self._token_cache_misses = 0
+        self.source_checkpoint = str(checkpoint) if checkpoint is not None else None
         self.stage = "base-with-random-action-head"
         self.name = "base-moe-random-action-head" if self.pretrained else "hf-random-smoke"
         if checkpoint is not None:
@@ -145,37 +178,128 @@ class HFController:
 
     @staticmethod
     def serialize(state: ExecutionState) -> str:
-        return serialize_state(state)
+        whole = state.to_dict()
+        fields = ("conversation_state", "agents_already_called", "remaining_budget", "current_step",
+                  "previous_routing_decisions", "tool_results", "previous_agent_outputs")
+        header = f"User task: {state.user_task}\nTask type: {state.task_type}\nExecution state:\n"
+        tail = json.dumps({key: whole[key] for key in fields}, separators=(",", ":"), ensure_ascii=False)
+        return header + "\0CONDUCTOR_STATE\0" + tail
 
-    def encode_states(self, states: list[ExecutionState]) -> dict[str, torch.Tensor]:
+    def tokenize_serialized(self, texts: list[str]) -> dict[str, torch.Tensor]:
         items = []
         reserve = self.tokenizer.num_special_tokens_to_add(pair=False)
         budget = self.max_length - reserve
-        for state in states:
-            header = self.tokenizer.encode(f"User task: {state.user_task}\nTask type: {state.task_type}\nExecution state:\n", add_special_tokens=False)
+        for text in texts:
+            cached = self._token_cache.get(text)
+            if cached is not None:
+                self._token_cache_hits += 1
+                self._token_cache.move_to_end(text)
+                items.append(list(cached))
+                continue
+            self._token_cache_misses += 1
+            header_text, tail_text = text.rsplit("\0CONDUCTOR_STATE\0", 1)
+            header = self.tokenizer.encode(header_text, add_special_tokens=False)
             header = header[:max(1, budget // 3)]
-            whole = state.to_dict()
-            fields = ("conversation_state", "agents_already_called", "remaining_budget", "current_step",
-                      "previous_routing_decisions", "tool_results", "previous_agent_outputs")
-            tail = self.tokenizer.encode(json.dumps({key: whole[key] for key in fields}, separators=(",", ":"), ensure_ascii=False), add_special_tokens=False)
+            tail = self.tokenizer.encode(tail_text, add_special_tokens=False)
             inputs = self.tokenizer.build_inputs_with_special_tokens(header + tail[-(budget - len(header)):])
             items.append(inputs)
+            if self._token_cache_size:
+                self._token_cache[text] = tuple(inputs)
+                while len(self._token_cache) > self._token_cache_size:
+                    self._token_cache.popitem(last=False)
         encoded = self.tokenizer.pad({"input_ids": items}, padding=True, return_tensors="pt")
         self._last_encoded_tokens = encoded["attention_mask"].sum(-1).tolist()
-        return {key: value.to(self.device) for key, value in encoded.items() if key in {"input_ids", "attention_mask"}}
+        return {key: value for key, value in encoded.items() if key in {"input_ids", "attention_mask"}}
 
-    def forward_states(self, states: list[ExecutionState], k: int | None = None,
-                       track: bool = False) -> torch.Tensor:
-        inputs = self.encode_states(states)
-        logits, router_logits = self.model(inputs, output_router_logits=track and self.instrument_experts)
+    def tokenize_states(self, states: list[ExecutionState]) -> dict[str, torch.Tensor]:
+        return self.tokenize_serialized([self.serialize(state) for state in states])
+
+    def move_inputs(self, inputs: dict[str, torch.Tensor]) -> dict[str, torch.Tensor]:
+        return {key: value.to(self.device, non_blocking=self.device.type == "cuda" and value.is_pinned()) for key, value in inputs.items()}
+
+    def encode_states(self, states: list[ExecutionState]) -> dict[str, torch.Tensor]:
+        return self.move_inputs(self.tokenize_states(states))
+
+    def token_cache_clear(self) -> None:
+        self._token_cache.clear()
+        self._token_cache_hits = self._token_cache_misses = 0
+
+    def token_cache_stats(self) -> dict[str, int]:
+        return {"entries": len(self._token_cache), "max_entries": self._token_cache_size,
+                "hits": self._token_cache_hits, "misses": self._token_cache_misses}
+
+    def compile_for_inference(self, backend: str = "inductor", mode: str = "default", fullgraph: bool = False) -> None:
+        if self.model.training:
+            raise ValueError("compile_for_inference requires eval mode")
+        self._compiled_model = torch.compile(self.model, backend=backend, mode=mode, fullgraph=fullgraph)
+        self.compile_status = {"enabled": True, "validated": False, "backend": backend, "mode": mode, "fullgraph": fullgraph}
+
+    def enable_training(self, gradient_checkpointing: bool = False) -> None:
+        self._compiled_model = None
+        for name, parameter in self.model.named_parameters():
+            parameter.requires_grad_(name.startswith("head.") or "lora_" in name)
+            if parameter.requires_grad:
+                parameter.data = parameter.data.float()
+        if gradient_checkpointing:
+            self.model.backbone.enable_input_require_grads()
+            self.model.backbone.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+        self.model.train()
+
+    def forward_encoded(self, inputs: dict[str, torch.Tensor], k: int | None = None,
+                        track: bool = False, task_types: list[str] | None = None) -> torch.Tensor:
+        auxiliary_weight = float(self.config.get("training", {}).get("router_auxiliary_weight", 0)) if self.model.training else 0.0
+        if auxiliary_weight < 0:
+            raise ValueError("router_auxiliary_weight cannot be negative")
+        needs_router = (track and self.instrument_experts) or auxiliary_weight > 0
+        runner = self._compiled_model if not self.model.training and self._compiled_model is not None else self.model
+        try:
+            logits, router_logits = runner(inputs, output_router_logits=needs_router)
+            if runner is self._compiled_model:
+                self.compile_status["validated"] = True
+        except Exception as error:
+            if runner is self._compiled_model:
+                raise RuntimeError("requested torch.compile inference failed; no eager fallback was used") from error
+            raise
+        self.last_auxiliary_loss = None
+        if auxiliary_weight and router_logits:
+            losses = []
+            valid = inputs["attention_mask"].reshape(-1).float()
+            for raw in router_logits:
+                probabilities = raw.reshape(-1, raw.shape[-1]).float().softmax(-1)
+                selected = probabilities.topk(self.actual_expert_top_k, -1).indices
+                fraction = F.one_hot(selected, probabilities.shape[-1]).float().mean(1)
+                loads = (fraction * valid[:, None]).sum(0) / valid.sum().clamp_min(1)
+                mean_probability = (probabilities * valid[:, None]).sum(0) / valid.sum().clamp_min(1)
+                losses.append(probabilities.shape[-1] * (loads.detach() * mean_probability).sum())
+            self.last_auxiliary_loss = torch.stack(losses).mean()
+        elif auxiliary_weight:
+            raise ValueError("requested router auxiliary loss, but this HF backbone returned no router logits")
         if track and self.instrument_experts and router_logits:
             batch_size, sequence_length = inputs["input_ids"].shape
             for layer, raw in enumerate(router_logits):
-                values = raw.reshape(batch_size, sequence_length, -1)
-                self.tracker.add(values, self.expert_top_k, [state.task_type for state in states], str(layer), inputs["attention_mask"])
+                self.tracker.add(raw.reshape(batch_size, sequence_length, -1), self.expert_top_k,
+                                 task_types or ["unspecified"] * batch_size, str(layer), inputs["attention_mask"])
         if k is not None:
             logits = logits.masked_fill(~self.catalog.mask(k, logits.device), float("-inf"))
         return logits
+
+    def decide(self, logits: torch.Tensor, k: int) -> list[RoutingDecision]:
+        probabilities = (logits.float().masked_fill(~self.catalog.mask(k, logits.device), float("-inf")) / self.temperature).softmax(-1)
+        decisions = []
+        self.last_invalid = False
+        for distribution in probabilities:
+            if not bool(torch.isfinite(distribution).all()):
+                self.last_invalid = True
+                self.invalid_decisions += 1
+                decisions.append(RoutingDecision([], confidence=0.0, terminate=True))
+            else:
+                index = int(torch.multinomial(distribution, 1)[0] if self.sample else distribution.argmax())
+                decisions.append(self.catalog.decision(index, float(distribution[index])).validate(k))
+        return decisions
+
+    def forward_states(self, states: list[ExecutionState], k: int | None = None,
+                       track: bool = False) -> torch.Tensor:
+        return self.forward_encoded(self.encode_states(states), k, track, [state.task_type for state in states])
 
     def batch_route(self, states: list[ExecutionState], k: int) -> list[RoutingDecision]:
         if not states:
@@ -224,14 +348,77 @@ class HFController:
                    "context_strategy": self.context_strategy, "max_length": self.max_length,
                    "method": "constrained categorical routing head with optional coordinator-backbone LoRA"})
 
+    def export_merged(self, path: str | Path, validation_states: list[ExecutionState] | None = None) -> dict[str, Any]:
+        """Self-contained inference artifact; preserve the original source adapter.
+
+        Merging clones the coordinator backbone and can temporarily double its
+        resident weight memory. Publication fails if measured logits/routes on
+        the supplied probes are not equivalent within numerical tolerances.
+        """
+        if self.model.training:
+            raise ValueError("merged export requires eval mode")
+        target = Path(path).resolve()
+        probes = validation_states or [ExecutionState("Calculate 2 plus 3", "math")]
+        backbone = copy.deepcopy(self.model.backbone)
+        if hasattr(backbone, "merge_and_unload"):
+            backbone = backbone.merge_and_unload(safe_merge=True)
+        merged = HFRoutingModel(backbone, self.model.head.in_features, len(self.catalog)).to(self.device)
+        merged.head.load_state_dict(self.model.head.state_dict())
+        merged.eval()
+        inputs = self.encode_states(probes)
+        with torch.inference_mode():
+            before, _ = self.model(inputs, output_router_logits=False)
+            after, _ = merged(inputs, output_router_logits=False)
+        if not bool(torch.isfinite(after).all()):
+            raise FloatingPointError("merged export produced non-finite validation logits")
+        torch.testing.assert_close(before.float(), after.float(), rtol=2e-3 if self.dtype != torch.float32 else 1e-4,
+                                   atol=2e-3 if self.dtype != torch.float32 else 1e-5)
+        if not torch.equal(before.argmax(-1), after.argmax(-1)):
+            raise ValueError("merged export changed a routing action on validation probes")
+        configuration = copy.deepcopy(self.config)
+        configuration["model"].update(name=str(target / "backbone"), revision="local-export", local_files_only=True,
+                                        lora={"enabled": False})
+        configuration["model"].pop("resolved_revision", None)
+        configuration["model"].pop("local_checkpoint_sha256", None)
+        configuration["inference"] = {**configuration.get("inference", {}), "compile": {"enabled": False}}
+        metadata = {"backend": "hf", "configuration": configuration, "stage": self.stage, "pretrained": self.pretrained,
+                    "format": "merged-hf-v1", "original_base_model": self.base_model_name,
+                    "original_resolved_revision": self.resolved_revision, "source_checkpoint": self.source_checkpoint,
+                    "validation_probe_count": len(probes), "maximum_logit_difference": float((before.float() - after.float()).abs().max()),
+                    "action_catalog_size": len(self.catalog), "token_accounting": self.token_accounting,
+                    "context_strategy": self.context_strategy, "max_length": self.max_length}
+        with atomic_directory(target) as temporary:
+            backbone.save_pretrained(temporary / "backbone", safe_serialization=True)
+            self.tokenizer.save_pretrained(temporary / "backbone")
+            torch.save(self.model.head.state_dict(), temporary / "head.pt")
+            if self.source_checkpoint and (Path(self.source_checkpoint) / "adapter").exists():
+                shutil.copytree(Path(self.source_checkpoint) / "adapter", temporary / "source_adapter")
+            elif self.lora_config.get("enabled", True):
+                self.model.backbone.save_pretrained(temporary / "source_adapter")
+            atomic_json(temporary / "controller.json", metadata)
+            files = {str(file.relative_to(temporary)): _file_sha256(file)
+                     for file in sorted(temporary.rglob("*")) if file.is_file()}
+            manifest = {"format": "merged-hf-v1", "files_sha256": files, "validation": metadata,
+                        "versions": {"python": platform.python_version(), "torch": torch.__version__,
+                                     "transformers": version("transformers"), "peft": version("peft")}}
+            atomic_json(temporary / "manifest.json", manifest)
+        return manifest
+
     @classmethod
     def load(cls, path: str | Path, overrides: dict[str, Any] | None = None) -> HFController:
         from conductor.utils.config import merge
         metadata = json.loads((Path(path) / "controller.json").read_text())
+        if metadata.get("format") == "merged-hf-v1":
+            manifest = json.loads((Path(path) / "manifest.json").read_text())
+            for relative, expected in manifest["files_sha256"].items():
+                if _file_sha256(Path(path) / relative) != expected:
+                    raise ValueError(f"merged export checksum mismatch: {relative}")
         config = metadata["configuration"]
+        if metadata.get("format") == "merged-hf-v1":
+            config["model"]["name"] = str((Path(path) / "backbone").resolve())
         if overrides:
             config = merge(config, {"inference": overrides.get("inference", {})})
-            for key in ("device", "dtype", "max_length"):
+            for key in ("device", "dtype", "max_length", "attention_implementation", "require_cuda"):
                 if key in overrides.get("model", {}):
                     config["model"][key] = overrides["model"][key]
         return cls(config, checkpoint=path)

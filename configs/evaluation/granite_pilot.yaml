@@ -1,0 +1,25 @@
+include: [../models/granite.yaml, ../agents/dev.yaml]
+seed: 42
+output: outputs/research/granite-pilot/evaluation
+data: data/generated/granite-pilot/tasks.jsonl
+splits: [eval]
+policies: [all_agent, rule_based, random_top_k, static_supervisor, base_moe, conductor_sft, conductor_preference]
+mandatory_policies: [all_agent, rule_based, random_top_k, static_supervisor, base_moe, conductor_sft, conductor_preference]
+supervisor:
+  name: Qwen/Qwen2.5-0.5B-Instruct
+  revision: 7ae557604adf67be50417f59c2c2f167def9a775
+  device: cpu
+  dtype: float32
+  use_chat_template: true
+  max_new_tokens: 96
+  max_context: 2048
+checkpoints:
+  conductor_sft: outputs/research/granite-pilot/sft
+  conductor_preference: outputs/research/granite-pilot/preference
+k: 2
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12
+probe_batch_size: 2
+strict_mode: true
+bootstrap_samples: 2000

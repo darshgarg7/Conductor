@@ -7,7 +7,9 @@ model:
   max_agents: 3
   max_length: 1024
   device: cuda
+  require_cuda: true
   dtype: bfloat16
+  attention_implementation: sdpa
   local_files_only: false
   trust_remote_code: false
   input_cost_per_million_tokens: 0.0  # Set your documented hardware cost model.
