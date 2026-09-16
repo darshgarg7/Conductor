@@ -1,0 +1,16 @@
+include: granite_pilot.yaml
+# Dense control with one fixed capability order for every task.
+# It never branches on category or private grading labels.
+output: outputs/research/granite-pilot/dense-sequential-evaluation
+policies: [all_agent, rule_based, conductor_sft, conductor_preference]
+mandatory_policies: [all_agent, rule_based, conductor_sft, conductor_preference]
+strict_mode: false
+all_agent:
+  rounds: 1
+  execution_mode: sequential
+  order: [planner, retriever, researcher, math, coder, tool_executor, critic, verifier]
+k: 2
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12
+routing_interval: 1

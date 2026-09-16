@@ -1,0 +1,15 @@
+include: granite_pilot.yaml
+# Focused robustness control. Check checkpoints and all task IDs, without
+# presenting this four-policy study as the complete seven-baseline suite.
+output: outputs/research/granite-pilot/strong-dense-evaluation
+policies: [all_agent, rule_based, conductor_sft, conductor_preference]
+mandatory_policies: [all_agent, rule_based, conductor_sft, conductor_preference]
+strict_mode: false
+all_agent:
+  rounds: 2
+  execution_mode: sequential
+k: 2
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12
+routing_interval: 1

@@ -62,6 +62,7 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
     graph: list[dict[str, Any]] = []
     requested_decisions: list[dict[str, Any]] = []
     clipped_steps: list[int] = []
+    invalid_routes: list[dict[str, Any]] = []
     previous: RoutingDecision | None = None
     stop_reason = "max_rounds"
     agent_tokens = controller_tokens = 0
@@ -82,6 +83,8 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
             tokens = int(getattr(policy, "last_tokens", 0))
             controller_cost = float(getattr(policy, "last_cost_usd", 0.0))
         controller_latency = time.perf_counter() - route_started
+        if not reused and getattr(policy, "last_invalid", False):
+            invalid_routes.append({"step": step_index, "error": getattr(policy, "last_error", "nonfinite routing probabilities")})
         is_all_agent = policy.name in {"all_agent", "All-Agent"}
         decision.validate(len(agents) if is_all_agent else k, tuple(agents))
         requested_decisions.append(copy.deepcopy(decision.to_dict()))
@@ -201,6 +204,7 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
                                 "admission_rejections": admission_rejections,
                                 "k": k, "routing_interval": routing_interval,
                                 "requested_routing_decisions": requested_decisions,
+                                "invalid_routing_decisions": invalid_routes,
                                 "budget_clipped_steps": clipped_steps,
                                 "controller_agent_messages": sum(edge.get("transport") != "forwarded_in_state" for edge in graph),
                                 "logical_inter_agent_edges": sum(edge.get("transport") == "forwarded_in_state" for edge in graph),

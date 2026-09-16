@@ -15,14 +15,27 @@ class Baseline:
 
 
 class AllAgentPolicy(Baseline):
+    """Dense comparator with fixed rounds/mode, independent of private grading.
+
+    The historical default remains one parallel round. Sequential repeated
+    rounds permit within-round dependencies and another pass over specialists;
+    the shared runner still clips dispatch to the same total task budgets.
+    """
     name = "all_agent"
-    def __init__(self, available: tuple[str, ...] = AGENT_NAMES) -> None:
-        self.available = available
+    def __init__(self, available: tuple[str, ...] = AGENT_NAMES, rounds: int = 1,
+                 execution_mode: str = "parallel", order: list[str] | None = None) -> None:
+        if type(rounds) is not int or rounds < 1:
+            raise ValueError("all_agent.rounds must be a positive integer")
+        if execution_mode not in {"parallel", "sequential"}:
+            raise ValueError("all_agent.execution_mode must be parallel or sequential")
+        if order is not None and (len(order) != len(available) or set(order) != set(available)):
+            raise ValueError("all_agent.order must contain each available specialist exactly once")
+        self.available, self.rounds, self.execution_mode = tuple(order or available), rounds, execution_mode
 
     def route(self, state: ExecutionState, k: int) -> RoutingDecision:
-        if state.current_step > 0:
+        if state.current_step >= self.rounds:
             return RoutingDecision([], terminate=True)
-        return RoutingDecision(list(self.available), "parallel")
+        return RoutingDecision(list(self.available), self.execution_mode)
 
 
 class RuleBasedPolicy(Baseline):
@@ -106,18 +119,26 @@ class StaticSupervisorPolicy(Baseline):
         self.last_tokens = int(inputs["attention_mask"].sum()) + result.shape[1] - inputs["input_ids"].shape[1]
         self.last_cost_usd = self.last_tokens * self.rate / 1_000_000
         output = self.tokenizer.decode(result[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-        start, end = output.find("{"), output.rfind("}")
-        if start < 0 or end < start:
-            raise ValueError("static supervisor produced no valid JSON")
-        decision = RoutingDecision(**json.loads(output[start:end + 1]))
-        return decision.validate(k)
+        self.last_invalid, self.last_error = False, None
+        try:
+            start, end = output.find("{"), output.rfind("}")
+            if start < 0 or end < start:
+                raise ValueError("static supervisor produced no valid JSON")
+            decision = RoutingDecision(**json.loads(output[start:end + 1]))
+            return decision.validate(k)
+        except (ValueError, TypeError) as error:
+            self.last_invalid, self.last_error = True, str(error)
+            self.invalid_decisions = getattr(self, "invalid_decisions", 0) + 1
+            return RoutingDecision([], confidence=0, terminate=True)
 
 
 def build_policy(name: str, config: dict[str, Any], checkpoint: str | None = None) -> Policy:
     normalized = name.lower().replace("-", "_")
     available = tuple(config.get("agents", {}).get("names", AGENT_NAMES))
     if normalized == "all_agent":
-        return AllAgentPolicy(available)
+        dense = config.get("all_agent", {})
+        return AllAgentPolicy(available, rounds=dense.get("rounds", 1),
+                              execution_mode=dense.get("execution_mode", "parallel"), order=dense.get("order"))
     if normalized == "rule_based":
         return RuleBasedPolicy(config.get("routing", {}).get("rules"), available)
     if normalized == "random_top_k":
