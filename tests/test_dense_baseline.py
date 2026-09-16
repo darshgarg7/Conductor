@@ -79,7 +79,7 @@ def test_fixed_capability_order_handles_heldout_dependencies_without_category_br
     from conductor.datasets.tasks import make_tasks
     order = ['planner', 'retriever', 'researcher', 'math', 'coder', 'tool_executor', 'critic', 'verifier']
     policy = build_policy('all_agent', {'all_agent': {'order': order, 'execution_mode': 'sequential'}})
-    for task in make_tasks(train_count=0, eval_count=6):
+    for task in (task for task in make_tasks(train_count=1, eval_count=6) if task.split == 'eval'):
         trajectory = asyncio.run(run_trajectory(task, policy, build_agents(), k=2, agent_call_budget=12))
         assert trajectory.task_success
         assert len(trajectory.steps[0].agent_outputs) == 8
