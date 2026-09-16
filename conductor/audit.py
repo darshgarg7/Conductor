@@ -170,7 +170,13 @@ def audit_run(path: str | Path) -> dict[str, Any]:
         configuration = record.get("configuration", {})
         requested_device = configuration.get("model", {}).get("device", "")
         hardware = record.get("hardware", {})
-        cuda_model_run = complete and provenance and str(requested_device).startswith("cuda") and hardware.get("cuda_available") is True and bool(hardware.get("gpu"))
+        # Current Run records use visible_nvidia_devices; older records used gpu.
+        # An explicitly empty current inventory remains authoritative, even if a
+        # stale legacy field is present. This recognizes metadata, not a device.
+        devices = hardware.get("visible_nvidia_devices", hardware.get("gpu"))
+        cuda_model_run = (complete and provenance and record.get("metrics", {}).get("completed", True) is not False
+                          and re.fullmatch(r"cuda(?::[0-9]+)?", str(requested_device)) is not None
+                          and hardware.get("cuda_available") is True and bool(devices))
         return {"path": str(source.resolve()), "status": "valid", "sha256": file_digest(source),
                 "completed": complete, "provenance_present": provenance, "git_commit": record.get("git_commit"),
                 "git_dirty": record.get("git_dirty"), "seed": record.get("seed"), "hardware": hardware,

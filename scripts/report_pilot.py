@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -11,7 +12,18 @@ from conductor.datasets.integrity import file_digest
 from conductor.utils.runs import write_json
 
 
+# The narrative interprets this recorded pilot. New experiments use conductor.analyze
+# and need their own interpretation rather than inheriting these observations.
+RECORDED_METRICS_SHA256 = "9f6ace1b5601ce7b507eaad36937857bcbab6d7df9e92f402b2748b5458b0e7d"
+
+
 def report(root: Path) -> None:
+    phases = ("generation", "sft", "preference", "evaluation", "inference", "dense-sequential-evaluation",
+              "strong-dense-evaluation", "serving", "export-verification")
+    inputs = {phase: file_digest(root / "phases" / phase / "metrics.json") for phase in phases}
+    fingerprint = hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
+    if fingerprint != RECORDED_METRICS_SHA256:
+        raise ValueError("This report interprets the recorded Granite pilot only. Use conductor.analyze for new measurements.")
     def load(phase: str, name: str = "metrics.json") -> dict[str, Any]:
         return json.loads((root / "phases" / phase / name).read_text())
 
@@ -186,6 +198,8 @@ measurements. The research hypothesis remains unresolved.
 [expert probes](phases/evaluation/initial_state_probe.json),
 [HTTP smoke](phases/serving/metrics.json) and
 [export checks](phases/export-verification/metrics.json) are retained.
+The [export validation subset](phases/export-verification/validation.json) preserves
+numerical fields and file hashes without the original host-specific model path.
 Expert counts describe load changes on matched states; they do not establish
 semantic specialization. Raw records preserve original working paths and commits.
 Weights, optimizer/RNG state, console logs and the large profiler trace remain
@@ -205,6 +219,7 @@ python scripts/report_pilot.py --archive results/granite-pilot
     plot_training(root)
     write_json(root / "measurement_summary.json", {"training": training, "policies": policies,
                "dense_controls": dense, "paired_inference": inference["paired_optimizations"],
+               "recorded_metrics_sha256": fingerprint,
                "scope": "CPU synthetic pilot; NVIDIA validation and improvement claims remain unestablished"})
     write_json(root / "checksums.json", {str(path.relative_to(root)): file_digest(path)
                for path in sorted(root.rglob("*")) if path.is_file() and path.name != "checksums.json"})

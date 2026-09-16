@@ -73,10 +73,23 @@ def archive(source: Path, data: Path, output: Path) -> None:
     for name in ("post_training_verification.json", "post_training_sft_verification.json",
                  "supervision_diagnostics.json", "doctor.json", "verify_post_training.py"):
         copy(source / name, output / "verification" / name)
-    copy(source / "export" / "manifest.json", output / "phases" / "export-verification" / "manifest.json")
+    manifest_path = source / "export" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    validation_fields = ("original_base_model", "original_resolved_revision", "source_checkpoint", "preserve_model",
+                         "in_place_merge", "validation_probe_count", "validation_tolerances", "validation_k_values",
+                         "maximum_logit_difference", "maximum_probability_difference", "probability_temperature",
+                         "routing_validation", "action_catalog_size", "token_accounting", "context_strategy", "max_length")
+    write_json(output / "phases" / "export-verification" / "validation.json",
+               {"source_manifest_sha256": file_digest(manifest_path), "files_sha256": manifest["files_sha256"],
+                "validation": {key: manifest["validation"][key] for key in validation_fields},
+                "scope": "Derived subset of the original export manifest; local configuration paths are omitted."})
+    omit(manifest_path, "The original manifest contains a host-specific model path; unchanged validation fields and file hashes are published separately.")
     for path in sorted((source / "validation").iterdir()):
         if path.is_file() and "before_probability_gates" not in path.name:
-            copy(path, output / "verification" / path.name)
+            if path.suffix == ".xml":
+                omit(path, "Pytest captured host-specific paths; parsed test counts are retained in checks.json.")
+            else:
+                copy(path, output / "verification" / path.name)
     write_json(output / "provenance.json", provenance)
     write_json(output / "omitted_artifacts.json", omitted)
 

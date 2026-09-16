@@ -82,7 +82,9 @@ def plot_results(rows: list[dict[str, Any]], output: Path, benchmarks: dict[str,
             axis.bar([labels[name] for name in names], [row[field] for row in summaries],
                      color=[colors.get(name, "#64748b") for name in names])
             axis.set_ylabel(label)
-            axis.tick_params(axis="x", rotation=0, labelsize=8)
+            axis.tick_params(axis="x", rotation=25, labelsize=8)
+            for tick in axis.get_xticklabels():
+                tick.set_ha("right")
             axis.grid(axis="y", alpha=0.25)
         axes[0].set_ylim(0, 1.05)
         counts = sorted({row["task_count"] for row in summaries})

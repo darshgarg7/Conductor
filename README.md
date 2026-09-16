@@ -85,8 +85,10 @@ python scripts/smoke_serving.py --config configs/serving/granite_pilot.yaml
 
 The [results directory](results/granite-pilot/report.md) contains the measured
 pilot, sealed development data, request timings, expert probes and per-phase
-provenance. `scripts/report_pilot.py` rebuilds its report and training plot from
-the archived measurements. Working outputs, environments, weights and temporary
+provenance. `scripts/report_pilot.py` rebuilds this recorded report and training
+plot; it rejects changed measurements so the interpretation cannot silently
+carry over to a new experiment. Use `conductor.analyze` for new runs.
+Working outputs, environments, weights and temporary
 files are excluded from the repository.
 
 ## NVIDIA and SLURM

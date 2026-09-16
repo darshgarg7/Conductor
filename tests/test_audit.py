@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from conductor.audit import audit, audit_checkpoint, audit_dataset, audit_run
 from conductor.datasets.integrity import seal
 
@@ -96,3 +98,52 @@ def test_malformed_run_metrics_and_nonfinite_data_fail_closed(tmp_path: Path) ->
     assert audit_run(tmp_path)["status"] == "invalid"
     (tmp_path / "trajectories.jsonl").write_text(' {"task": {"id": "x"}, "task_success": true, "score": NaN}\n')
     assert audit_dataset(tmp_path)["status"] == "invalid"
+
+
+def cuda_metadata() -> dict:
+    """Synthetic schema fixture, never actual CUDA execution evidence."""
+    return {"git_commit": "d" * 40, "git_dirty": False, "seed": 42, "runtime_seconds": 1.0,
+            "configuration": {"model": {"backend": "hf", "device": "cuda:0"}},
+            "hardware": {"cuda_available": True, "visible_nvidia_devices": [{"name": "synthetic GPU metadata"}]},
+            "metrics": {"completed": True, "status": "synthetic fixture"}}
+
+
+@pytest.mark.parametrize("schema", ["current", "legacy"])
+def test_completed_cuda_run_metadata_recognizes_both_hardware_schemas(tmp_path: Path, schema: str) -> None:
+    record = cuda_metadata()
+    if schema == "legacy":
+        record["hardware"]["gpu"] = record["hardware"].pop("visible_nvidia_devices")
+    write(tmp_path / "run.json", record)
+    result = audit_run(tmp_path)
+    assert result["completed"] and result["provenance_present"] and result["cuda_model_run_observed"]
+    assert audit(runs=[str(tmp_path)])["nvidia_model_validation"] == "recorded_cuda_run_present"
+    assert "independently authenticate" in result["scope"]
+
+
+@pytest.mark.parametrize("missing", ["runtime", "metrics", "provenance", "inventory", "availability", "completion"])
+def test_incomplete_cuda_metadata_cannot_establish_recorded_model_run(tmp_path: Path, missing: str) -> None:
+    record = cuda_metadata()
+    if missing == "runtime":
+        record.pop("runtime_seconds")
+    elif missing == "metrics":
+        record.pop("metrics")
+    elif missing == "provenance":
+        record.pop("git_commit")
+    elif missing == "inventory":
+        record["hardware"]["visible_nvidia_devices"] = []
+        record["hardware"]["gpu"] = ["stale legacy fixture"]
+    elif missing == "availability":
+        record["hardware"]["cuda_available"] = False
+    else:
+        record["metrics"]["completed"] = False
+    write(tmp_path / "run.json", record)
+    assert not audit_run(tmp_path)["cuda_model_run_observed"]
+    assert audit(runs=[str(tmp_path)])["nvidia_model_validation"] == "absent"
+
+
+@pytest.mark.parametrize("device", ["cpu", "mps", "cuda-mock", "cuda:-1"])
+def test_visible_gpu_metadata_does_not_turn_another_device_into_cuda_evidence(tmp_path: Path, device: str) -> None:
+    record = cuda_metadata()
+    record["configuration"]["model"]["device"] = device
+    write(tmp_path / "run.json", record)
+    assert not audit_run(tmp_path)["cuda_model_run_observed"]
