@@ -7,6 +7,7 @@ import subprocess
 import sys
 import socket
 import platform
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -207,6 +208,52 @@ def test_exact_resume_matches_uninterrupted_with_partial_accumulation_window(tmp
     incompatible["training"]["learning_rate"] = .007
     with pytest.raises(ValueError, match="identity changed"):
         train(incompatible, resume=partial["resume_checkpoint"])
+
+
+def test_fresh_training_rejects_committed_output_before_overwriting_provenance(tmp_path, monkeypatch) -> None:
+    from conductor.training import runner
+
+    path = tmp_path / "sft.jsonl"
+    write_records(path, records("sft")[:7])
+    output = tmp_path / "existing-empty-output"
+    output.mkdir()
+    settings = config(path, output)
+    # Update, epoch, and final saves legitimately revisit the same boundary.
+    settings["training"].update(epochs=1, batch_size=2, validation_fraction=0,
+                                 save_every_updates=1, save_every_epochs=1)
+    metrics = train(settings)
+    assert metrics["completed"] and metrics["optimizer_windows"] == 4
+    before = {str(file.relative_to(output)): hashlib.sha256(file.read_bytes()).hexdigest()
+              for file in output.rglob("*") if file.is_file()}
+    changed = copy.deepcopy(settings)
+    changed["training"]["learning_rate"] = .007
+
+    def provenance_must_not_be_replaced(*args, **kwargs):
+        raise AssertionError("fresh output guard must run before constructing Run")
+
+    monkeypatch.setattr(runner, "Run", provenance_must_not_be_replaced)
+    with pytest.raises(FileExistsError, match="committed checkpoint.*--resume"):
+        train(changed)
+    after = {str(file.relative_to(output)): hashlib.sha256(file.read_bytes()).hexdigest()
+             for file in output.rglob("*") if file.is_file()}
+    assert after == before
+
+
+@pytest.mark.parametrize("marker", ["controller.json", "checkpoint_pointer.json", "latest_resume.json",
+                                    "resume/step-00000001-epoch-0000/resume_manifest.json"])
+def test_fresh_training_rejects_compatibility_or_unpublished_commit_without_reading_data(tmp_path, marker) -> None:
+    output = tmp_path / "previous-output"
+    committed = output / marker
+    committed.parent.mkdir(parents=True)
+    committed.write_text("retained checkpoint marker")
+    provenance = output / "run.json"
+    provenance.write_text("retained experiment provenance")
+    settings = config(tmp_path / "deliberately-missing-data.jsonl", output)
+    settings["training"]["resume"] = ""  # A blank config value is a fresh run.
+    with pytest.raises(FileExistsError, match="committed checkpoint"):
+        train(settings)
+    assert provenance.read_text() == "retained experiment provenance"
+    assert committed.read_text() == "retained checkpoint marker"
 
 
 def test_accumulation_matches_actual_large_batch_including_partial_final_batch(tmp_path) -> None:

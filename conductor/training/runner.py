@@ -29,7 +29,8 @@ from conductor.controller.artifacts import atomic_json, resolve_checkpoint
 from conductor.controller.factory import build_controller
 from conductor.schema import AGENT_NAMES, ExecutionState, RoutingDecision
 from conductor.training.data import batches, read_records, split_by_task
-from conductor.training.state import canonical_hash, load_training_state, restore_rng, save_training_checkpoint
+from conductor.training.state import (canonical_hash, load_training_state, require_fresh_training_output,
+                                      restore_rng, save_training_checkpoint)
 from conductor.utils.runs import Run, log_event, seed_everything, write_json
 
 
@@ -227,6 +228,8 @@ def _train(config: dict[str, Any], checkpoint: str | None, resume: str | None, r
     output = Path(training.get("output", f"outputs/checkpoints/conductor-{stage}"))
     if checkpoint is not None and Path(checkpoint).resolve() == output.resolve():
         raise ValueError("training output must not overwrite its input/reference checkpoint")
+    if not resume:
+        require_fresh_training_output(output)
     output.mkdir(parents=True, exist_ok=True)
     run = Run(output, config, checkpoint) if rank == 0 else None
     records = read_records(training["data"], stage)

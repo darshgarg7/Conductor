@@ -14,14 +14,6 @@ from conductor.controller.artifacts import resolve_checkpoint
 from conductor.datasets.integrity import file_digest, record_checksum
 from conductor.utils.runs import write_json
 
-RESUME_CLAIMS = (
-    {"id": "50k-trajectories", "kind": "training_trajectory_count", "minimum": 50000},
-    {"id": "84-to-91-success", "kind": "success_improvement", "baseline": 0.84, "candidate": 0.91},
-    {"id": "35-percent-inference-cost", "kind": "inference_cost_reduction", "fraction": 0.35},
-    {"id": "28-percent-p95-routing-latency", "kind": "p95_routing_latency_reduction", "fraction": 0.28},
-)
-
-
 def _reject_constant(value: str) -> Any:
     raise ValueError(f"non-finite JSON constant: {value}")
 
@@ -239,15 +231,12 @@ def main() -> None:
     parser.add_argument("--run", action="append", default=[], help="Run directory or run.json")
     parser.add_argument("--doctor", action="append", default=[])
     parser.add_argument("--claims", help="JSON list of declarative claims; no measurement values are synthesized")
-    parser.add_argument("--resume-claims", action="store_true", help="Audit the originally supplied, unsupported numeric resume claims")
     parser.add_argument("--output", default="outputs/evidence/audit.json")
     parser.add_argument("--strict", action="store_true", help="Exit nonzero for invalid artifacts or unsupported claims")
     args = parser.parse_args()
     claims = json.loads(Path(args.claims).read_text()) if args.claims else []
     if not isinstance(claims, list) or any(not isinstance(value, dict) for value in claims):
         parser.error("claims must be a JSON list of objects")
-    if args.resume_claims:
-        claims.extend(RESUME_CLAIMS)
     result = audit(datasets=args.dataset, checkpoints=args.checkpoint, runs=args.run, doctors=args.doctor, claims=claims)
     write_json(args.output, result)
     print(json.dumps({"output": str(Path(args.output).resolve()), "unsupported_claims": result["unsupported_claims"],

@@ -1,1 +1,16 @@
-include: dev.yaml
+include:
+  - ../models/tiny.yaml
+  - ../agents/dev.yaml
+seed: 42
+data: data/dev/tasks.jsonl
+output: outputs/evaluation/dev
+splits: [eval, test]
+policies: [all_agent, rule_based, random_top_k, static_supervisor, base_moe, conductor_sft, conductor_preference]
+k: 2
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12
+routing_interval: 1
+checkpoints:
+  conductor_sft: outputs/checkpoints/tiny-sft
+  conductor_preference: outputs/checkpoints/tiny-preference

@@ -1,1 +1,13 @@
-include: tiny_dpo.yaml
+include: ../models/tiny.yaml
+training:
+  stage: dpo
+  data: data/dev/preferences.jsonl
+  checkpoint: outputs/checkpoints/tiny-sft
+  output: outputs/checkpoints/tiny-preference
+  epochs: 25
+  batch_size: 32
+  learning_rate: 0.0005
+  weight_decay: 0.01
+  validation_fraction: 0.2
+  max_grad_norm: 1.0
+  beta: 0.1

@@ -53,6 +53,12 @@ python scripts/make_sweep.py --config configs/training/tiny_sft.yaml \
 sbatch --array=0-8%3 scripts/slurm/sweep.slurm configs/sweeps/dev/manifest.txt
 ```
 
+Select `--module conductor.evaluate` or `--module conductor.benchmark` for those
+sweeps. The generated configs set the consumer's actual k field and declare the
+module to the array launcher. A conflicting `CONDUCTOR_MODULE` override fails.
+Use `--run-root` to isolate experiment artifacts; existing sweep manifests and
+fresh training into committed checkpoint directories are rejected.
+
 For trajectory generation, set `jobshards` and `shard_index` in each independent
 configuration. Stable task-ID hashing assigns tasks to shards; per-task/policy
 seeds preserve isolation from scheduler ordering. Shards write separate
@@ -109,5 +115,5 @@ performance forecast.
 Use `squeue` for pending/running jobs and `sacct` for completed-job accounting,
 including exit state, elapsed time and memory. OOM, deadline and failed grader
 outcomes belong in experiment reports. See [deployment](deployment.md) for
-serving admission and shutdown limits, and [resume evidence](resume_evidence.md)
+serving admission and shutdown limits, and [measurement evidence](evidence.md)
 for truthful claim wording.

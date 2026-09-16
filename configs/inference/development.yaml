@@ -1,1 +1,24 @@
-include: dev.yaml
+include:
+  - ../models/tiny.yaml
+  - ../agents/dev.yaml
+seed: 42
+output: outputs/benchmarks/dev
+checkpoint: outputs/checkpoints/tiny-preference
+batch_sizes: [1, 4]
+context_sizes: [32, 128]
+concurrency: [1, 4]
+k_values: [1, 2]
+routing_intervals: [1, 2]
+strategies: [single, batched, dynamic]
+warmup: 1
+repeats: 3
+requests: 8
+batch_wait_seconds: 0.002
+request_timeout: 30
+evaluation_metrics: outputs/evaluation/dev/metrics.json
+evaluation_policy: conductor_preference
+data: data/dev/tasks.jsonl
+tasks_per_category: 1
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12

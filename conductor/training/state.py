@@ -40,6 +40,26 @@ def restore_rng(state: dict[str, Any]) -> None:
         torch.cuda.set_rng_state_all([value.cpu() for value in state["cuda"]])
 
 
+def require_fresh_training_output(path: str | Path) -> None:
+    """Reject existing weights/commits before a new run can replace provenance.
+
+    Resume callers bypass this guard after explicitly selecting trusted resume
+    state. A committed directory can precede publication of root pointers after
+    a crash, so inspect immutable resume manifests as well as compatibility
+    files. Existing empty or uncommitted output directories remain usable.
+    """
+    output = Path(path)
+    markers = ("checkpoint_pointer.json", "latest_resume.json", "controller.json", "model.pt",
+               "head.pt", "optimizer.pt", "training_state.pt", "resume_manifest.json")
+    committed = next((output / name for name in markers
+                      if (output / name).exists() or (output / name).is_symlink()), None)
+    if committed is None:
+        committed = next((output / "resume").glob("*/resume_manifest.json"), None)
+    if committed is not None:
+        raise FileExistsError(f"fresh training output contains committed checkpoint artifacts: {committed}; "
+                              "use a new output directory or explicit --resume")
+
+
 def save_training_checkpoint(output: Path, controller: Any, optimizer: Any, scheduler: Any, scaler: Any,
                              cursor: dict[str, Any], identity: dict[str, Any], rank: int, world_size: int,
                              reference_cache: dict[str, Any] | None = None) -> Path:

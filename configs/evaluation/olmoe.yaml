@@ -1,5 +1,5 @@
 include:
-  - dev.yaml
+  - heldout.yaml
   - ../models/olmoe.yaml
   - ../agents/hf.yaml
 output: outputs/evaluation/olmoe

@@ -1,5 +1,0 @@
-batch_size,context_size_requested_words,concurrency,k,routing_interval,request_count,baseline,candidate,status,request_throughput_ratio,p95_latency_ratio,interpretation
-1,128,1,2,1,160,single,dynamic,measured,0.9765391334165348,1.0286648667258291,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
-1,128,4,2,1,160,single,dynamic,measured,4.059726559873277,0.23944935766452247,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
-4,128,1,2,1,160,single,dynamic,measured,0.24107076586689735,4.184865742121783,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.
-4,128,4,2,1,160,single,dynamic,measured,4.983312627928036,0.1997905094338798,Ratios are measured for this workload/checkpoint only; >1 means more throughput or more latency respectively.

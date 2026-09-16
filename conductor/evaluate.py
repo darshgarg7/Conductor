@@ -177,7 +177,7 @@ async def evaluate(config: dict[str, Any], checkpoint: str | None = None) -> dic
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/evaluation/dev.yaml")
+    parser.add_argument("--config", default="configs/evaluation/heldout.yaml")
     parser.add_argument("--checkpoint", help="Override checkpoint for trained conductor policies")
     args = parser.parse_args()
     asyncio.run(evaluate(load_config(args.config), args.checkpoint))

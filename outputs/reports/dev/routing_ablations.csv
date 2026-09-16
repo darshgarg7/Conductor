@@ -1,5 +1,0 @@
-baseline,candidate,paired_tasks,baseline_only_tasks,candidate_only_tasks,status,mean_delta_task_success,mean_delta_grader_score,mean_delta_total_tokens,mean_delta_agent_calls,mean_delta_cost_usd,mean_delta_wall_clock_seconds
-k1_interval1,k2_interval1,5,0,0,measured,0.0,0.0,1.6,0.0,0.0,-0.0001400246168486774
-k1_interval2,k2_interval2,5,0,0,measured,0.2,0.2,85.2,0.8,0.0,9.24582127481699e-05
-k1_interval1,k1_interval2,5,0,0,measured,0.0,0.0,-47.2,0.4,0.0,-0.0005157334147952497
-k2_interval1,k2_interval2,5,0,0,measured,0.2,0.2,36.4,1.2,0.0,-0.0002832505851984024

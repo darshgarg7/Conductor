@@ -15,12 +15,7 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 outputs/*
-!outputs/.gitkeep
-!outputs/reports/
-outputs/reports/*
-!outputs/reports/dev/
-outputs/reports/dev/**
-data/dev/*.jsonl
+data/dev/
 data/generated/
 *.pt
 *.safetensors

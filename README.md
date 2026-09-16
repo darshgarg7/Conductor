@@ -19,7 +19,7 @@ deterministic specialists. **NVIDIA execution, NCCL and the container image stil
 need validation on a GPU host.** The CUDA/SLURM paths are implemented; CPU results
 are not GPU performance claims.
 
-Read the [measured research report](outputs/reports/granite-pilot/research_report.md),
+Read the [measured research report](results/granite-pilot/report.md),
 [design decisions](docs/design_decisions.md) or [code review guide](docs/review_guide.md).
 
 ## What to inspect
@@ -54,10 +54,6 @@ establish broad language-task accuracy or production LLM cost savings. The base
 MoE comparator has the same pretrained backbone and an untrained action head.
 Agent top-k and internal neural expert top-k are separate controls.
 
-The [original tiny-model run](outputs/reports/dev/report.md) is preserved with
-its original source provenance. It validates the cheap development path and is
-not a pretrained-model result.
-
 ## Reproduce
 
 Use Python 3.12. The recorded environment, configurations and per-phase Git
@@ -86,6 +82,12 @@ python -m conductor.evaluate --config configs/evaluation/granite_pilot.yaml
 python -m conductor.benchmark --config configs/inference/granite_pilot.yaml
 python scripts/smoke_serving.py --config configs/serving/granite_pilot.yaml
 ```
+
+The [results directory](results/granite-pilot/report.md) contains the measured
+pilot, sealed development data, request timings, expert probes and per-phase
+provenance. `scripts/report_pilot.py` rebuilds its report and training plot from
+the archived measurements. Working outputs, environments, weights and temporary
+files are excluded from the repository.
 
 ## NVIDIA and SLURM
 
@@ -119,7 +121,7 @@ repeats are grouped within each configuration.
 Development-tool tokens are documented estimates. Zero price rates mean no
 monetary cost model is configured. Missing baselines, failed calls, uncertain
 billing and small paired corpora remain visible. The [research protocol](docs/research_protocol.md)
-and [evidence audit](docs/resume_evidence.md) define what a reported improvement
+and [evidence audit](docs/evidence.md) define what a reported improvement
 requires. Confidence is action probability, not calibrated task-success probability.
 
 Future validation needs frozen LLM specialists, larger independent held-out

@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from conductor.audit import RESUME_CLAIMS, audit, audit_checkpoint, audit_dataset, audit_run
+from conductor.audit import audit, audit_checkpoint, audit_dataset, audit_run
 from conductor.datasets.integrity import seal
 
 
@@ -77,9 +77,9 @@ def test_pretrained_checkpoint_requires_completed_training_and_pinned_identity(t
 def test_cuda_probe_cannot_be_mistaken_for_model_validation(tmp_path: Path) -> None:
     path = tmp_path / "doctor.json"
     write(path, {"status": "compatible", "validation": {"device": "cuda:0"}, "probe": {"finite": True}})
-    result = audit(doctors=[str(path)], claims=list(RESUME_CLAIMS))
+    result = audit(doctors=[str(path)], claims=[{"kind": "p95_routing_latency_reduction", "fraction": 0.1}])
     assert result["nvidia_model_validation"] == "absent"
-    assert result["unsupported_claims"] == 4
+    assert result["unsupported_claims"] == 1
 
 
 def test_independent_inventories_are_not_summed_to_manufacture_scale(tmp_path: Path) -> None:

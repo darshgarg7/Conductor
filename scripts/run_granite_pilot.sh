@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 CONDUCTOR_PILOT_PYTHON="${CONDUCTOR_PYTHON:-.venv/bin/python}"
 "$CONDUCTOR_PILOT_PYTHON" -m conductor.doctor --device cpu --dtype float32 --probe --output outputs/research/granite-pilot/doctor.json
 "$CONDUCTOR_PILOT_PYTHON" -m conductor.generate --config configs/research/granite_generation.yaml

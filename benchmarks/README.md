@@ -1,6 +1,6 @@
 # Measured inference benchmarks
 
-Run `python -m conductor.benchmark --config configs/inference/dev.yaml` after training. Use `--checkpoint` to select another trained controller.
+Run `python -m conductor.benchmark --config configs/inference/development.yaml` after training. Use `--checkpoint` to select another trained controller.
 
 Each workload varies batch size, requested context word count, request concurrency, top-k, and routing interval. Warmup runs are excluded. Real synchronized timings produce request throughput, input processing throughput, queue-inclusive request p50/p95, and separate process RSS/CUDA allocator memory. Input accounting comes from the same backend path, including truncated HF attention-mask token counts; tiny models report a lexical proxy. Generated-token throughput is not measured.
 
@@ -11,7 +11,7 @@ Each workload varies batch size, requested context word count, request concurren
 Artifacts include configuration/checkpoint/git/hardware provenance, raw `requests.csv`, aggregate `benchmark.csv`, `serialization.csv`, optimization statuses, and a human-readable report. `python -m conductor.analyze` exports plots and paired heldout quality/cost analysis. Compare matched workloads and checkpoints before claiming a gain. Local CPU results establish no GPU or cluster performance improvement.
 
 The recorded Granite pilot replays real execution states with per-request hashes.
-See [the measured report](../outputs/reports/granite-pilot/research_report.md).
+See [the measured report](../results/granite-pilot/report.md).
 HF `stages.json` separates host serialization/tokenization, transfer, model
 forward and decision timing. Optional Chrome profiler traces and NVTX ranges
 are diagnostic runs outside ordinary timing samples. Allocated and reserved

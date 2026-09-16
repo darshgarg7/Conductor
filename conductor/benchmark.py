@@ -326,7 +326,7 @@ async def benchmark(config: dict[str, Any], checkpoint: str | None = None) -> di
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/inference/dev.yaml")
+    parser.add_argument("--config", default="configs/inference/development.yaml")
     parser.add_argument("--checkpoint")
     args = parser.parse_args()
     asyncio.run(benchmark(load_config(args.config), args.checkpoint))

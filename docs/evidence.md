@@ -1,6 +1,6 @@
 # Claims supported by measurements
 
-The [recorded Granite pilot](../outputs/reports/granite-pilot/research_report.md)
+The [recorded Granite pilot](../results/granite-pilot/report.md)
 contains completed pretrained SFT, categorical DPO, held-out evaluation and
 controller inference measurements. The original tiny-model experiment is a
 separate development-path result. Neither run establishes NVIDIA performance.
@@ -25,17 +25,6 @@ SFT and DPO each solved two of six held-out tasks; the Base MoE with its random
 action head solved three and the Rule-Based router solved six. DPO's 92.6%
 internal-validation preference-ranking accuracy is **not task success**. This
 pilot supports a post-training claim, not an accuracy-improvement claim.
-
-## Resume wording
-
-- Post-trained a pretrained 1.3B-parameter sparse MoE as a coordination
-  controller using attention/router LoRA, supervised fine-tuning and categorical
-  DPO, updating 0.07% of parameters with frozen specialist interfaces and
-  task-level held-out evaluation.
-- Benchmarked pretrained-controller inference using replayed execution states,
-  native and dynamic batching, queue-inclusive p50/p95 latency and stage
-  profiling; implemented bounded asynchronous serving and resumable DDP/SLURM
-  experiment paths.
 
 Add a performance number only with its device, precision, workload, matched
 baseline, independent sample count and raw timing evidence. NVIDIA deployment
@@ -71,8 +60,8 @@ A JSON claim file can request narrow artifact checks:
 ```
 
 Pass it with `--claims CLAIMS.json --strict`; unsupported declarations or invalid
-artifacts produce a nonzero exit. `--resume-claims` is a negative-control audit
-of unsupported numerical declarations, not a source of measurements.
+artifacts produce a nonzero exit. Claim inputs are declarations to verify,
+not a source of measurements.
 
 Pretrained checks require pinned base identity, local weight files, positive
 completed optimizer updates, saved provenance, dataset hashes, unchanged
