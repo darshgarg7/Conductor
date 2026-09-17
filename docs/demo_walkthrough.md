@@ -43,6 +43,18 @@ strict flag requires the service, diagnostic, and illustrative load gates to
 pass together. Inspect `metrics.json` rather than treating exit zero as a model
 quality result.
 
+## Archived checkpoints and fresh preparation
+
+The published CPU report uses the existing local tiny SFT and Granite preference
+artifacts, identified by their checkpoint hashes. A fresh bootstrap trains a new
+tiny artifact; its routing outcomes need not match the archived checkpoint.
+The [Linux CI run](https://github.com/darshgarg7/Conductor/actions/runs/35275229939)
+passed service checks and completed 48 valid HTTP load requests. Its new tiny
+checkpoint solved 3/12 fixtures, versus 0/12 for the archived local tiny artifact.
+The workload hashes match and the checkpoint hashes differ. Both fail diagnostic
+acceptance. Compare checkpoint, data, and environment identities before treating
+two executions as reproductions of the same trained model.
+
 ## What to inspect
 
 1. **One ticket.** Read its observed error, the agents selected, the evidence
