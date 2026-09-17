@@ -167,6 +167,14 @@ instead. See the [walkthrough](docs/demo_walkthrough.md),
 [recorded results](results/support-demo/report.md), and
 [operations guide](docs/support_operations.md).
 
+In the recorded CPU runs, rules satisfy **12/12** diagnostic contracts; both
+learned candidates satisfy **0/12**. All **96** load requests return valid model
+responses, but Granite's concurrency-four client p95 is **2.34 seconds**, above
+the illustrative two-second target. `--require-model-acceptance` rejects a
+candidate when service, diagnostic, or configured load acceptance fails. The
+rules remain the recommendation for this fixed fixture; these results do not
+establish independent customer accuracy or GPU capacity.
+
 ### Start with the tiny demo
 
 ```bash

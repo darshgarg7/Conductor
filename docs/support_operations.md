@@ -25,7 +25,7 @@ external deployment's capacity.
 | --- | --- | --- |
 | Child exits before readiness | Local `server.log`, checkpoint stage, model revision, available memory | Fix the startup cause. Never substitute a random controller to make readiness pass. |
 | HTTP 401 | Key configured at startup and supplied header | Correct the credential path without logging the secret. |
-| HTTP 422 | Public state schema, budget, checkpoint k | Fix the request. Private grader fields are intentionally rejected. |
+| HTTP 422 | Public state schema, invalid budget, checkpoint k | Fix the request. Private grader fields are intentionally rejected. Valid exhausted budgets return HTTP 200 with `budget_guard`. |
 | HTTP 429 | Admission limit and pending work | Reduce offered work or back off. Do not add unbounded retries. |
 | HTTP 503 | Readiness, worker availability, model failure | Stop sending work until the component is ready; a stalled worker may need process replacement. |
 | HTTP 504 | Queue time, batch time, request deadline | Determine whether waiting or execution dominated. A cancelled response does not preempt an executing kernel. |

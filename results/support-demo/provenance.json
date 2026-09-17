@@ -1,0 +1,44 @@
+{
+  "scope": "CPU support fixtures and localhost HTTP, not NVIDIA validation",
+  "runs": {
+    "tiny": {
+      "git_commit": "e0c40cf5da2c541e1f4e7241f26ec1c4a68a4c17",
+      "checkpoint": {
+        "sha256": "e2ae56a6a06e15c34444ec26df31ffa80b7631dcb64401b53c6486f09019f718",
+        "stage": "sft",
+        "pretrained": false,
+        "backend": "tiny"
+      },
+      "omitted": {
+        "server.log": {
+          "sha256": "91af672e5bde8d941413b4c9a44a5f40aca6c9193911d1626dadb576a69cd2ed",
+          "bytes": 6679
+        },
+        "serving_config.yaml": {
+          "sha256": "e83bf9d9641adf891a2dd36bc42ff334caf77d58d5cb4958a6bda97c212a6056",
+          "bytes": 635
+        }
+      }
+    },
+    "granite": {
+      "git_commit": "e0c40cf5da2c541e1f4e7241f26ec1c4a68a4c17",
+      "checkpoint": {
+        "sha256": "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1",
+        "stage": "preference",
+        "pretrained": true,
+        "backend": "hf"
+      },
+      "omitted": {
+        "server.log": {
+          "sha256": "417fe314a11bbea622a3850dc7303c9b7e9ccf0ccfeaa85682561b52f60e8ba6",
+          "bytes": 6241
+        },
+        "serving_config.yaml": {
+          "sha256": "936d708393337aadcdb184d087d8a0e44fb5da11ee09ac9da5382e82c8c32398",
+          "bytes": 894
+        }
+      }
+    }
+  },
+  "renderer_sha256": "b144b35ce1a12e43a3b5740911d083f6a5f25bb629b830b2100f77357c411afe"
+}

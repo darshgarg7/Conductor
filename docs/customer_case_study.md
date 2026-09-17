@@ -48,7 +48,8 @@ flowchart LR
     A --> R[Runbook evidence + diagnostic response]
     R -->|updated public state| C
     C --> O[Human operator]
-    C --> G[Independent contract grader]
+    C --> E[Public evidence contract check]
+    C --> G[Private exact-answer grader]
     L[Private expected response] --> G
 ```
 
@@ -110,9 +111,11 @@ The coordination head predicts categorical actions rather than generated text.
 The current serving implementation uses PyTorch directly. No TensorRT-LLM, NIM,
 or other NVIDIA inference-platform integration is claimed.
 
-Public diagnostic references include NVIDIA's
-[Container Toolkit troubleshooting](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/troubleshooting.html),
-[container capability and compatibility configuration](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html),
+The hashed fixture runbooks cite NVIDIA's device visibility, driver/runtime
+compatibility, container configuration, memory observation, and NCCL guidance;
+their exact sources are preserved in
+[the corpus](../conductor/demos/support.py). Additional operational reading
+includes [Container Toolkit troubleshooting](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/troubleshooting.html)
 and [Xid interpretation](https://docs.nvidia.com/deploy/xid-errors/introduction.html).
-They support collecting discriminating evidence; an error string alone is not a
-universal root-cause diagnosis.
+Those additional pages are outside the fixture corpus. An error string alone
+is not a universal root-cause diagnosis.

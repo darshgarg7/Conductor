@@ -1,0 +1,891 @@
+{
+  "configuration": {
+    "seed": 42,
+    "checkpoint": "outputs/checkpoints/tiny-sft",
+    "serving_config": "configs/serving/support.yaml",
+    "output": "outputs/demos/support-tiny",
+    "orchestration": {
+      "k": 2,
+      "max_rounds": 4,
+      "token_budget": 8192,
+      "agent_call_budget": 8,
+      "routing_interval": 1
+    },
+    "lifecycle": {
+      "startup_seconds": 120,
+      "shutdown_seconds": 15,
+      "request_timeout_seconds": 35
+    },
+    "load": {
+      "concurrency": [
+        1,
+        4
+      ],
+      "requests_per_level": 24,
+      "timeout_seconds": 35,
+      "max_phase_seconds": 180
+    },
+    "illustrative_targets": {
+      "minimum_model_success_rate": 1.0,
+      "load_client_p95_seconds": 2.0,
+      "maximum_load_failure_rate": 0.0
+    },
+    "resolved_serving_config": {
+      "seed": 42,
+      "model": {
+        "backend": "tiny",
+        "pretrained": false,
+        "feature_dim": 256,
+        "hidden_dim": 64,
+        "num_experts": 4,
+        "expert_top_k": 2,
+        "max_agents": 3,
+        "device": "cpu",
+        "dtype": "float32"
+      },
+      "routing": {
+        "k": 2
+      },
+      "inference": {
+        "instrument_experts": false,
+        "sample": false,
+        "feature_cache_size": 0
+      },
+      "checkpoint": "outputs/checkpoints/tiny-sft",
+      "serving": {
+        "require_api_key": true,
+        "api_key_env": "CONDUCTOR_DEMO_API_KEY",
+        "allow_random_initialization": false,
+        "expected_stage": "sft",
+        "max_batch_size": 4,
+        "max_pending": 16,
+        "batch_wait_seconds": 0.005,
+        "request_timeout_seconds": 30,
+        "shutdown_timeout_seconds": 10,
+        "max_body_bytes": 1000000,
+        "body_read_timeout_seconds": 5,
+        "warmup": true
+      }
+    },
+    "support_task_inventory_sha256": "75478101935390552396ab3ce93dfeeca82ca7e87b41ce4208f7347f4343486c",
+    "support_runbook_corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+    "specialist_fingerprint": "97b1c0d838ecec671baebca520d240660c001b3e385a672ff6a30fd1fec1bdbe",
+    "support_workload_sha256": "6596a876876d90ea2cf1f9196ce7c828ff039dc8fb4ac15478cee7488464250c",
+    "specialist_audit": {
+      "specialists": [
+        {
+          "agent": "coder",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "6554bf631f1144dd298ee5de4fc9b111054b766c7d668602ba4d929de4d656b4",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "d978a9a78884a06791e2576bece03cf7e9c2cebfdfb0369b3fee269983471a8e",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "critic",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "622d07e6af8b52b723fe7b0ff6a2fbe36b7ea1e6e961637286730b7c39e3ca31",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "447467ea41d83d303c87790a21804ce451de0ca44215c95cc1828f99be11fa18",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "math",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "9a35bbd9ee0eb08129bdc188164c90328e9892ed10e79edba499536c9c204862",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "4cdc340197281e10eeaead03ad2c7110d54e30a9b2a7a52a734344e9c14b4e9d",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "planner",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "3243bad3ace4dd42d364ce6f9b611b788b847abfbb24e347fd55fa926d92348f",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "ba4608d35df55d363b3f9fd03e2832f2870b1fce5c81fd146bdd32d9e409ec24",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "researcher",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "818dc19487762d77bd017baafe6397662b256142ac137b86d30945fba932aa2f",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "40c7ecf9d770299b3e22b37bbd9466de232adbbf203d571afdb5d00e0a2c9cb8",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "retriever",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "78ac22571901d1517c65136952a95012bc5b4cb5738754f5e7cefa29914cea9b",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "9397a357d0d3e3af91a9d598057606dae633e8d75da70a432da16bdcf2b1b9c0",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "tool_executor",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "0eb2b969c8c731e5387d045d8f78533b71c893b41861fab2c4b7032626133938",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "b830d7508deb8d78e545dfff3f633737e74e1e585ac6265a701211d323afd7db",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        },
+        {
+          "agent": "verifier",
+          "backend": "deterministic",
+          "frozen": true,
+          "model_name": null,
+          "resolved_model_revision": null,
+          "immutable_model_version": null,
+          "identity_verifiable": true,
+          "prompt_sha256": "c4c32b0e184d4b23f387a20e99a1d654002874a5c327c8bff564a0cc1a092173",
+          "corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+          "configuration_sha256": "1af91f586619f0674675249bc5dbdcdbc068137df545114fa1937eb6f8863630",
+          "implementation_sha256": "61631a035e062c15a5710558ed08f95e74dd87c1f4e7b13835f30b694efd8f54"
+        }
+      ],
+      "fingerprint": "97b1c0d838ecec671baebca520d240660c001b3e385a672ff6a30fd1fec1bdbe",
+      "all_frozen": true,
+      "all_frozen_llm": false,
+      "all_identities_verifiable": true
+    },
+    "checkpoint_sha256": "e2ae56a6a06e15c34444ec26df31ffa80b7631dcb64401b53c6486f09019f718"
+  },
+  "git_commit": "e0c40cf5da2c541e1f4e7241f26ec1c4a68a4c17",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": "outputs/checkpoints/tiny-sft",
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 2.4537644590018317,
+  "metrics": {
+    "status": "measured",
+    "support_task_inventory_sha256": "75478101935390552396ab3ce93dfeeca82ca7e87b41ce4208f7347f4343486c",
+    "support_runbook_corpus_sha256": "6fa8dad168bc0b56627863696a32903d575740a7c115c8ada3a5f4a6a16f152f",
+    "specialist_fingerprint": "97b1c0d838ecec671baebca520d240660c001b3e385a672ff6a30fd1fec1bdbe",
+    "support_workload_sha256": "6596a876876d90ea2cf1f9196ce7c828ff039dc8fb4ac15478cee7488464250c",
+    "checkpoint": {
+      "sha256": "e2ae56a6a06e15c34444ec26df31ffa80b7631dcb64401b53c6486f09019f718",
+      "stage": "sft",
+      "pretrained": false,
+      "backend": "tiny"
+    },
+    "policies": [
+      {
+        "policy": "support_http_model",
+        "task_count": 12,
+        "success_rate": 0.0,
+        "mean_grader_score": 0.0,
+        "mean_controller_tokens": 4124.25,
+        "mean_downstream_tokens": 547.25,
+        "mean_total_tokens": 4671.5,
+        "mean_agent_calls": 7.416666666666667,
+        "mean_rounds": 3.75,
+        "mean_routing_calls": 3.8333333333333335,
+        "mean_wall_clock_seconds": 0.06552264574565925,
+        "mean_controller_seconds": 0.042834961835372574,
+        "mean_controller_overhead_fraction": 0.6523137427295919,
+        "mean_controller_token_fraction": 0.8870768131255314,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 36.833333333333336,
+        "mean_unique_communication_edges": 36.833333333333336,
+        "mean_communication_density": 0.45473251028806594,
+        "mean_communication_sparsity": 0.5452674897119341,
+        "mean_physical_controller_agent_messages": 14.833333333333334,
+        "mean_logical_inter_agent_edges": 22.0,
+        "mean_communication_message_bytes": 27396.166666666668,
+        "mean_communication_estimated_tokens": 1382.5833333333333,
+        "mean_activation_sparsity": 0.7604166666666666,
+        "p50_wall_clock_seconds": 0.06611316648195498,
+        "p95_wall_clock_seconds": 0.0754411978414282,
+        "p50_controller_seconds": 0.044925937021616846,
+        "p95_controller_seconds": 0.046515708696097134,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      },
+      {
+        "policy": "support_rule_based",
+        "task_count": 12,
+        "success_rate": 1.0,
+        "mean_grader_score": 1.0,
+        "mean_controller_tokens": 0.0,
+        "mean_downstream_tokens": 459.6666666666667,
+        "mean_total_tokens": 459.6666666666667,
+        "mean_agent_calls": 2.0,
+        "mean_rounds": 1.0,
+        "mean_routing_calls": 2.0,
+        "mean_wall_clock_seconds": 0.02207280558165318,
+        "mean_controller_seconds": 4.220458989342054e-05,
+        "mean_controller_overhead_fraction": 0.0019609652949790796,
+        "mean_controller_token_fraction": 0.0,
+        "mean_controller_cost_fraction": null,
+        "mean_controller_cost_usd": 0.0,
+        "mean_downstream_cost_usd": 0.0,
+        "mean_cost_usd": 0.0,
+        "mean_communication_edges": 5.0,
+        "mean_unique_communication_edges": 5.0,
+        "mean_communication_density": 0.06172839506172841,
+        "mean_communication_sparsity": 0.9382716049382718,
+        "mean_physical_controller_agent_messages": 4.0,
+        "mean_logical_inter_agent_edges": 1.0,
+        "mean_communication_message_bytes": 7272.75,
+        "mean_communication_estimated_tokens": 548.8333333333334,
+        "mean_activation_sparsity": 0.75,
+        "p50_wall_clock_seconds": 0.019965562998550013,
+        "p95_wall_clock_seconds": 0.031533620334812426,
+        "p50_controller_seconds": 3.945751814171672e-05,
+        "p95_controller_seconds": 5.48244424862787e-05,
+        "p50_cost_usd": 0.0,
+        "p95_cost_usd": 0.0
+      }
+    ],
+    "tickets": [
+      {
+        "ticket_id": "support-fixture-01",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.024615957983769476
+      },
+      {
+        "ticket_id": "support-fixture-02",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.020115291990805417
+      },
+      {
+        "ticket_id": "support-fixture-03",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.01983854203717783
+      },
+      {
+        "ticket_id": "support-fixture-04",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.03998854098608717
+      },
+      {
+        "ticket_id": "support-fixture-05",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.02003391698235646
+      },
+      {
+        "ticket_id": "support-fixture-06",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.019967083993833512
+      },
+      {
+        "ticket_id": "support-fixture-07",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.019964042003266513
+      },
+      {
+        "ticket_id": "support-fixture-08",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.020713458012323827
+      },
+      {
+        "ticket_id": "support-fixture-09",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.01993641600711271
+      },
+      {
+        "ticket_id": "support-fixture-10",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.019954915973357856
+      },
+      {
+        "ticket_id": "support-fixture-11",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.01990808401023969
+      },
+      {
+        "ticket_id": "support-fixture-12",
+        "policy": "support_rule_based",
+        "task_success": true,
+        "diagnostic_contract_passed": true,
+        "contract_checks": {
+          "valid_json": true,
+          "schema_valid": true,
+          "evidence_grounded": true,
+          "diagnosis_grounded": true,
+          "read_only_next_action": true,
+          "commands_not_executed": true,
+          "contract_valid": true
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 2,
+        "controller_tokens": 0,
+        "wall_seconds": 0.019837416999507695
+      },
+      {
+        "ticket_id": "support-fixture-01",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 4177,
+        "wall_seconds": 0.06598933303030208
+      },
+      {
+        "ticket_id": "support-fixture-02",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 4460,
+        "wall_seconds": 0.06641762499930337
+      },
+      {
+        "ticket_id": "support-fixture-03",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 1,
+        "controller_tokens": 1949,
+        "wall_seconds": 0.04128670901991427
+      },
+      {
+        "ticket_id": "support-fixture-04",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 5121,
+        "wall_seconds": 0.0687891659908928
+      },
+      {
+        "ticket_id": "support-fixture-05",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 4448,
+        "wall_seconds": 0.06624999997438863
+      },
+      {
+        "ticket_id": "support-fixture-06",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 4412,
+        "wall_seconds": 0.06581208296120167
+      },
+      {
+        "ticket_id": "support-fixture-07",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 4452,
+        "wall_seconds": 0.0673282920033671
+      },
+      {
+        "ticket_id": "support-fixture-08",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 3924,
+        "wall_seconds": 0.06376420799642801
+      },
+      {
+        "ticket_id": "support-fixture-09",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 3932,
+        "wall_seconds": 0.08357145899208263
+      },
+      {
+        "ticket_id": "support-fixture-10",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 3944,
+        "wall_seconds": 0.06599816598463804
+      },
+      {
+        "ticket_id": "support-fixture-11",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 3952,
+        "wall_seconds": 0.06483654101612046
+      },
+      {
+        "ticket_id": "support-fixture-12",
+        "policy": "support_http_model",
+        "task_success": false,
+        "diagnostic_contract_passed": false,
+        "contract_checks": {
+          "valid_json": false,
+          "schema_valid": false,
+          "evidence_grounded": false,
+          "diagnosis_grounded": false,
+          "read_only_next_action": false,
+          "commands_not_executed": false,
+          "contract_valid": false
+        },
+        "routing_http_failures": 0,
+        "agent_activations": 8,
+        "controller_tokens": 4720,
+        "wall_seconds": 0.06622816697927192
+      }
+    ],
+    "diagnostics": {
+      "support_http_model": {
+        "tasks": 12,
+        "successes": 0,
+        "contract_valid": 0,
+        "success_rate": 0.0,
+        "contract_valid_rate": 0.0,
+        "all_diagnostic_contracts_passed": false,
+        "mean_agent_activations": 7.416666666666667,
+        "controller_tokens": 49491,
+        "routing_http_failures": 0,
+        "p95_case_wall_seconds": 0.0754411978414282
+      },
+      "support_rule_based": {
+        "tasks": 12,
+        "successes": 12,
+        "contract_valid": 12,
+        "success_rate": 1.0,
+        "contract_valid_rate": 1.0,
+        "all_diagnostic_contracts_passed": true,
+        "mean_agent_activations": 2.0,
+        "controller_tokens": 0,
+        "routing_http_failures": 0,
+        "p95_case_wall_seconds": 0.031533620334812426
+      }
+    },
+    "acceptance": {
+      "checks": {
+        "ready": true,
+        "unauthorized_401": true,
+        "invalid_state_422": true,
+        "private_answer_field_422": true,
+        "zero_budget_guard": true,
+        "probes_dispatch_no_model_work": true,
+        "queue_drained": true,
+        "model_responses_identified": true,
+        "unique_model_request_ids": true,
+        "sparse_agent_cap": true,
+        "graceful_shutdown": true
+      },
+      "passed": true,
+      "http_statuses": {
+        "unauthorized": 401,
+        "invalid_state": 422,
+        "private_answer_field": 422,
+        "zero_budget": 200
+      },
+      "metrics_before": {
+        "conductor_ready": 1.0,
+        "conductor_pending": 0.0,
+        "conductor_queue_depth": 0.0,
+        "conductor_recent_latency_seconds_sum": 0.0,
+        "conductor_recent_latency_seconds_count": 0.0
+      },
+      "metrics_after": {
+        "conductor_ready": 1.0,
+        "conductor_pending": 0.0,
+        "conductor_queue_depth": 0.0,
+        "conductor_recent_latency_seconds_sum": 0.0,
+        "conductor_recent_latency_seconds_count": 0.0
+      },
+      "scope": "HTTP boundary probes only; no diagnostic correctness or trained-model overload claim.",
+      "final_metrics": {
+        "conductor_ready": 1.0,
+        "conductor_pending": 0.0,
+        "conductor_queue_depth": 0.0,
+        "conductor_accepted_total": 94.0,
+        "conductor_model_batches_total": 76.0,
+        "conductor_completed_total": 94.0,
+        "conductor_recent_latency_seconds_sum": 0.7793719599721953,
+        "conductor_recent_latency_seconds_count": 94.0
+      }
+    },
+    "load": [
+      {
+        "concurrency": 1,
+        "requests": 24,
+        "recorded_requests": 24,
+        "dispatched_requests": 24,
+        "successful_requests": 24,
+        "failures": 0,
+        "failure_rate": 0.0,
+        "wall_seconds": 0.22701524995500222,
+        "dispatch_requests_per_second": 105.71976994830592,
+        "requests_per_second": 105.71976994830592,
+        "completion_requests_per_second": 105.71976994830592,
+        "p50_latency_seconds": 0.0088382504764013,
+        "p95_latency_seconds": 0.00943729822174646,
+        "phase_deadline_reached": false,
+        "controller_tokens_known": 6856,
+        "scope": "Closed-loop controller HTTP load; client timing excludes waiting for a load-generator slot, includes transport/server queueing; no downstream work or GPU capacity conclusion."
+      },
+      {
+        "concurrency": 4,
+        "requests": 24,
+        "recorded_requests": 24,
+        "dispatched_requests": 24,
+        "successful_requests": 24,
+        "failures": 0,
+        "failure_rate": 0.0,
+        "wall_seconds": 0.058917999966070056,
+        "dispatch_requests_per_second": 407.34580287554263,
+        "requests_per_second": 407.34580287554263,
+        "completion_requests_per_second": 407.34580287554263,
+        "p50_latency_seconds": 0.008475625014398247,
+        "p95_latency_seconds": 0.011838087494834325,
+        "phase_deadline_reached": false,
+        "controller_tokens_known": 6856,
+        "scope": "Closed-loop controller HTTP load; client timing excludes waiting for a load-generator slot, includes transport/server queueing; no downstream work or GPU capacity conclusion."
+      }
+    ],
+    "illustrative_acceptance": {
+      "targets": {
+        "minimum_model_success_rate": 1.0,
+        "load_client_p95_seconds": 2.0,
+        "maximum_load_failure_rate": 0.0
+      },
+      "diagnostic_quality_passed": false,
+      "load_checks": [
+        {
+          "concurrency": 1,
+          "passed": true
+        },
+        {
+          "concurrency": 4,
+          "passed": true
+        }
+      ],
+      "all_load_checks_passed": true,
+      "recommendation": "shadow_candidate",
+      "scope": "Illustrative synthetic-demo targets; pass/fail is not an achieved customer SLA or release approval."
+    },
+    "scope": "Synthetic support fixtures, fixed agents, actual trained controller through localhost HTTP. This is a customer-demo/shadow evaluation, not a customer SLA, production deployment, cost saving, broad generalization, or NVIDIA capacity claim."
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "checks": {
+    "ready": true,
+    "unauthorized_401": true,
+    "invalid_state_422": true,
+    "private_answer_field_422": true,
+    "zero_budget_guard": true,
+    "probes_dispatch_no_model_work": true,
+    "queue_drained": true,
+    "model_responses_identified": true,
+    "unique_model_request_ids": true,
+    "sparse_agent_cap": true,
+    "graceful_shutdown": true
+  },
+  "passed": true,
+  "http_statuses": {
+    "unauthorized": 401,
+    "invalid_state": 422,
+    "private_answer_field": 422,
+    "zero_budget": 200
+  },
+  "metrics_before": {
+    "conductor_ready": 1.0,
+    "conductor_pending": 0.0,
+    "conductor_queue_depth": 0.0,
+    "conductor_recent_latency_seconds_sum": 0.0,
+    "conductor_recent_latency_seconds_count": 0.0
+  },
+  "metrics_after": {
+    "conductor_ready": 1.0,
+    "conductor_pending": 0.0,
+    "conductor_queue_depth": 0.0,
+    "conductor_recent_latency_seconds_sum": 0.0,
+    "conductor_recent_latency_seconds_count": 0.0
+  },
+  "scope": "HTTP boundary probes only; no diagnostic correctness or trained-model overload claim.",
+  "final_metrics": {
+    "conductor_ready": 1.0,
+    "conductor_pending": 0.0,
+    "conductor_queue_depth": 0.0,
+    "conductor_accepted_total": 72.0,
+    "conductor_model_batches_total": 54.0,
+    "conductor_completed_total": 72.0,
+    "conductor_recent_latency_seconds_sum": 48.5666082885582,
+    "conductor_recent_latency_seconds_count": 72.0
+  }
+}

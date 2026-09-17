@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import shutil
 from pathlib import Path
@@ -99,6 +100,10 @@ def render(output: Path, records: dict[str, dict[str, Any]]) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    repository = Path(__file__).resolve().parents[1]
+    def documentation(name: str) -> str:
+        return Path(os.path.relpath(repository / "docs" / name, output.resolve())).as_posix()
+
     lines = [
         "# Recorded support demonstration", "",
         "This CPU demonstration connects actual trained-controller HTTP decisions to fixed,",
@@ -160,6 +165,7 @@ def render(output: Path, records: dict[str, dict[str, Any]]) -> None:
         "overload recovery, kernel cancellation, external ingress, or all operational failures.", "",
         "## Latency figure", "",
         "![Measured client p50/p95 HTTP latency by concurrency](latency.png)", "",
+        "The panels use separate y-axis scales so the tiny controller's millisecond timings remain visible.",
         "The figure compares different checkpoints and repeated public states. It does",
         "not isolate a batching improvement: no matched individual-inference ablation",
         "is present in this demonstration. Use the separate research inference benchmark",
@@ -194,29 +200,33 @@ def render(output: Path, records: dict[str, dict[str, Any]]) -> None:
         "  --run granite=outputs/demos/support-granite \\",
         "  --output outputs/reports/support-demo",
         "```", "",
-        "See the [customer scenario](../../docs/customer_case_study.md),",
-        "[walkthrough](../../docs/demo_walkthrough.md), and",
-        "[operations guide](../../docs/support_operations.md) for the architecture and limits.", "",
+        f"See the [customer scenario]({documentation('customer_case_study.md')}),",
+        f"[walkthrough]({documentation('demo_walkthrough.md')}), and",
+        f"[operations guide]({documentation('support_operations.md')}) for the architecture and limits.", "",
     ])
     (output / "report.md").write_text("\n".join(lines))
 
-    figure, axis = plt.subplots(figsize=(8, 4.5))
-    labels, medians, tails = [], [], []
-    for label, record in records.items():
+    figure, axes = plt.subplots(1, len(records), figsize=(5 * len(records), 4.5), squeeze=False)
+    for axis, (label, record) in zip(axes.flat, records.items()):
+        labels, medians, tails = [], [], []
         for phase in record["metrics"]["load"]:
             if phase["p50_latency_seconds"] is None or phase["p95_latency_seconds"] is None:
                 continue
-            labels.append(f"{label}\nconcurrency {phase['concurrency']}")
+            labels.append(f"concurrency {phase['concurrency']}")
             medians.append(phase["p50_latency_seconds"] * 1000)
             tails.append(phase["p95_latency_seconds"] * 1000)
-    locations = list(range(len(labels)))
-    axis.bar([value - .18 for value in locations], medians, .36, label="client p50")
-    axis.bar([value + .18 for value in locations], tails, .36, label="client p95")
-    axis.set_xticks(locations, labels)
-    axis.set_ylabel("Local HTTP elapsed time (ms)")
-    axis.set_title("Trained-controller CPU service: short replay samples")
-    axis.legend()
-    axis.grid(axis="y", alpha=.2)
+        locations = list(range(len(labels)))
+        first = axis.bar([value - .18 for value in locations], medians, .36, label="client p50")
+        second = axis.bar([value + .18 for value in locations], tails, .36, label="client p95")
+        axis.bar_label(first, fmt="%.1f", padding=3)
+        axis.bar_label(second, fmt="%.1f", padding=3)
+        axis.set_ylim(0, max([1.0, *tails]) * 1.25)
+        axis.set_xticks(locations, labels)
+        axis.set_ylabel("Local HTTP elapsed time (ms)")
+        axis.set_title(f"{label}: trained CPU service")
+        axis.legend(loc="upper left")
+        axis.grid(axis="y", alpha=.2)
+    figure.suptitle("Short replay samples · separate y-axis scales")
     figure.tight_layout()
     figure.savefig(output / "latency.png", dpi=160)
     plt.close(figure)
@@ -259,7 +269,10 @@ def main() -> None:
     if len({record["metrics"]["support_workload_sha256"] for record in records.values()}) != 1:
         raise ValueError("All published runs must share the support workload and frozen specialists")
     args.output.mkdir(parents=True)
-    provenance: dict[str, Any] = {"scope": "CPU support fixtures and localhost HTTP, not NVIDIA validation", "runs": {}}
+    provenance: dict[str, Any] = {
+        "scope": "CPU support fixtures and localhost HTTP, not NVIDIA validation",
+        "renderer_sha256": sha256(Path(__file__)), "runs": {},
+    }
     for label, source in sources.items():
         destination = args.output / label
         destination.mkdir()
