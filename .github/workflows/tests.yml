@@ -12,3 +12,20 @@ jobs:
       - run: python -m pip install -e '.[dev,hf,serve,profiling]'
       - run: ruff check .
       - run: pytest -q
+      - name: Exercise the support workflow over localhost HTTP
+        run: CONDUCTOR_PYTHON=python bash scripts/run_support_demo.sh --output outputs/ci/support
+      - name: Preserve support acceptance measurements
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: support-acceptance
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            outputs/ci/support/run.json
+            outputs/ci/support/metrics.json
+            outputs/ci/support/service_acceptance.json
+            outputs/ci/support/shutdown.json
+            outputs/ci/support/tickets.csv
+            outputs/ci/support/load_requests.csv
+            outputs/ci/support/failure.json

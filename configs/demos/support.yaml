@@ -1,0 +1,24 @@
+seed: 42
+checkpoint: outputs/checkpoints/tiny-sft
+serving_config: configs/serving/support.yaml
+output: outputs/demos/support-tiny
+orchestration:
+  k: 2
+  max_rounds: 4
+  token_budget: 8192
+  agent_call_budget: 8
+  routing_interval: 1
+lifecycle:
+  startup_seconds: 120
+  shutdown_seconds: 15
+  request_timeout_seconds: 35
+load:
+  concurrency: [1, 4]
+  requests_per_level: 24
+  timeout_seconds: 35
+  max_phase_seconds: 180
+# Hypothetical acceptance targets for this synthetic demonstration, not an SLA.
+illustrative_targets:
+  minimum_model_success_rate: 1.0
+  load_client_p95_seconds: 2.0
+  maximum_load_failure_rate: 0.0

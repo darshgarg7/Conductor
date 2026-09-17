@@ -20,6 +20,8 @@ or inference savings. CUDA, NCCL, SLURM execution, and the NVIDIA container stil
 need validation on a GPU host.
 
 [Research report](results/granite-pilot/report.md) ·
+[Customer scenario](docs/customer_case_study.md) ·
+[Service demonstration](docs/demo_walkthrough.md) ·
 [Design decisions](docs/design_decisions.md) ·
 [Code review guide](docs/review_guide.md) ·
 [Cluster setup](docs/hpc.md)
@@ -143,6 +145,27 @@ pytest -q
 HF/PEFT versions are pinned to the tested API. Install a suitable PyTorch build
 for your target device; the local pilot uses CPU. Tests use small local model
 fixtures without downloading the pretrained pilot weights.
+
+### Walk through a customer workflow
+
+```bash
+bash scripts/run_support_demo.sh
+```
+
+The [GPU support triage scenario](docs/customer_case_study.md) connects the
+trained routing HTTP service to fixed, read-only support specialists. Synthetic
+tickets cover supported runbook symptoms and cases requiring more evidence.
+Selected specialists execute, then their outputs return to the controller for
+the next decision. No diagnostic command runs on the host.
+
+The demonstration compares a support rule policy with the model policy and
+records **diagnostic correctness separately from service acceptance**. It also
+replays HTTP requests at concurrency one and four, preserving raw timings,
+status codes, and configured latency-target outcomes. The default tiny path
+needs no pretrained-model download; an existing Granite checkpoint can be used
+instead. See the [walkthrough](docs/demo_walkthrough.md),
+[recorded results](results/support-demo/report.md), and
+[operations guide](docs/support_operations.md).
 
 ### Start with the tiny demo
 

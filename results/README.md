@@ -1,5 +1,11 @@
 # Recorded experiments
 
+The [support service demonstration](support-demo/report.md) compares rules with
+actual trained-controller HTTP routing on synthetic support tickets. It records
+diagnostic contract checks separately from HTTP acceptance and concurrent load.
+The fixed tickets/runbook are an integration fixture, not an independent customer
+quality benchmark. Raw JSON/JSONL/CSV and checksums accompany the report.
+
 The [Granite CPU pilot](granite-pilot/report.md) contains measured post-training,
 held-out routing and controller inference results. Start with the report;
 `phases/` holds raw metrics and configurations, `data/` holds sealed synthetic

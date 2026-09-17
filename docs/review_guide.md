@@ -30,6 +30,15 @@ request identity, overload/deadlines and durable counterfactual replay.
 CUDA tests are marked and skipped on hosts without a GPU; the validation script
 rejects those skips rather than counting them as NVIDIA evidence.
 
+For an architecture walkthrough, start with the
+[support reference scenario](customer_case_study.md) and
+[recorded service demonstration](../results/support-demo/report.md). The
+execution loop uses actual HTTP model decisions to invoke fixed support tools;
+the diagnostic and service gates remain separate. Inspect the raw trajectories
+and load samples before accepting a latency or quality claim. The
+[operations guide](support_operations.md) distinguishes automated checks from
+failure modes that still need target-host testing.
+
 The [design notes](design_decisions.md) explain tradeoffs and remaining limits.
 A next research run should use frozen LLM specialists, larger independent task
 corpora, multiple seeds and a real NVIDIA host. The repository includes the
