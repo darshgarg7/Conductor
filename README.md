@@ -9,6 +9,8 @@ to activate fewer agents while preserving task success. The coordinator receives
 a task and its execution state, predicts a constrained routing action, and
 repeats after the selected specialists return their outputs.
 
+Can a learned controller generalize to unseen coordination structures while matching dense execution quality with materially fewer specialist calls, and does MoE post-training outperform simpler routing models after including its own overhead?
+
 Only the coordinator is post-trained. Specialist parameters stay frozen, so the
 experiment measures the effect of changing the routing policy. The repository
 contains an offline trajectory pipeline, LoRA SFT and categorical DPO, held-out
