@@ -1,0 +1,34 @@
+{
+  "stage": "dpo",
+  "epochs": 1,
+  "completed": true,
+  "optimizer_windows": 68,
+  "skipped_amp_updates": 0,
+  "world_size": 1,
+  "gradient_accumulation_steps": 2,
+  "train_examples": 270,
+  "validation_examples": 90,
+  "source_examples": 360,
+  "excluded_actions_exceeding_k": 0,
+  "train_k": 2,
+  "initial_train": {
+    "loss": 0.6931471824645996,
+    "accuracy": 1.0
+  },
+  "final_train": {
+    "loss": 0.16925815498387373,
+    "accuracy": 1.0
+  },
+  "final_validation": {
+    "loss": 0.25073717885857655,
+    "accuracy": 0.9666666666666667
+  },
+  "trainable_parameters": 942565,
+  "total_controller_parameters": 1335567845,
+  "reference_checkpoint_sha256": "fe92e68c47dc9755f759ef13fa43310a00cb5153fb9e6c88dfa20aeb8005df5f",
+  "dataset_sha256": "121f84e3798e7141626adc553086e14cd72ac1bcde00c1772f62a3f4f38e3ca2",
+  "pretrained": true,
+  "checkpoint": "outputs/research/routing-repair/preference",
+  "resume_checkpoint": "outputs/research/routing-repair/preference/resume/step-00000068-epoch-0001",
+  "specialists_updated": false
+}

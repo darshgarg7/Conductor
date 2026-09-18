@@ -1,0 +1,42 @@
+{
+  "train_task_ids": [
+    "05a6e4259a92a3c1",
+    "1458b9e79a825a86",
+    "1e75fef0ed9d47ca",
+    "42b9a35b981daabc",
+    "6483a965fb3682cc",
+    "6a3561dac24bab13",
+    "6f31f34d61b52486",
+    "6fbef05a1927dfc5",
+    "70f537696a297c39",
+    "76800ccd9be30ce5",
+    "7c324eb0efa3bd87",
+    "7e511f838d6be850",
+    "81c40803c2a1bdb7",
+    "8a76a8ba3fdd62db",
+    "94b4ad9530a756d4",
+    "a1b22326377d7295",
+    "a6b4fdac92c8a7fc",
+    "ad569174c9a5355c",
+    "ae789239c822558a",
+    "b27b39c7d0c5ec1f",
+    "d47272acb7bc3a84",
+    "e9fa725f43e56444",
+    "ee455db77fdeb043",
+    "f11e55fa14bedef8",
+    "f3fc6595a5fe1734",
+    "f49e3471c88c4f4f",
+    "fee6bb4ff9e70fa2"
+  ],
+  "validation_task_ids": [
+    "12d01f5e844ca43c",
+    "69313443a20d09f1",
+    "82feaaa5bfdce739",
+    "8d9907105848ea6a",
+    "9a6185f0efa90a7b",
+    "a09e53bdaeaefe82",
+    "ad9985fb10d7c795",
+    "f2101884485cec27",
+    "fef32d988a68ec69"
+  ]
+}

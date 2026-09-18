@@ -1,0 +1,65 @@
+{
+  "configuration": {
+    "seed": 42,
+    "routing": {
+      "k": 2
+    },
+    "curation": {
+      "source": "data/generated/routing-repair/preferences.jsonl",
+      "output": "data/generated/routing-repair/curated",
+      "max_rejected_per_state": 2
+    }
+  },
+  "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": null,
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 0.10776979097863659,
+  "metrics": {
+    "method": "counterfactual_winner_v1",
+    "source_pairs": 1620,
+    "exact_states": 180,
+    "sft_examples": 180,
+    "preference_examples": 360,
+    "training_tasks": 36,
+    "states_with_conflicting_source_winners": 0,
+    "step_distribution": {
+      "1": 108,
+      "2": 36,
+      "0": 36
+    },
+    "target_distribution": {
+      "0": 127,
+      "4": 27,
+      "2": 14,
+      "8": 12
+    },
+    "selection_uses_heldout_labels": false,
+    "scope": "Best measured candidate with a fixed rule continuation; not a globally optimal multi-step policy.",
+    "source_sha256": "57a53ff51e6213494be41ef741a8d311ab5e500bec5b5be4e203ab3e22a821ed",
+    "sft_sha256": "61b60284aeb074b7e0e470fc233eeb06ece084ffcb4f44194512d5947059c284",
+    "preferences_sha256": "121f84e3798e7141626adc553086e14cd72ac1bcde00c1772f62a3f4f38e3ca2"
+  }
+}

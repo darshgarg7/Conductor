@@ -1,0 +1,2167 @@
+{
+  "sft_checkpoint_sha256": "fe92e68c47dc9755f759ef13fa43310a00cb5153fb9e6c88dfa20aeb8005df5f",
+  "records_sha256": "025b9ca564c37bf29aab59c5e5be79cb8bfd6f3e4c9370acc14f66e98a4a523a",
+  "k": 2,
+  "records": [
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "1883065218f1ab62980477dcb718ec5c3b77dc7fd23501ecda85194b1c4152d6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.41424560546875
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "1883065218f1ab62980477dcb718ec5c3b77dc7fd23501ecda85194b1c4152d6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.4270324707031
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "2868e1df9a9429affcdc17c28e527f8ab5e44fdd2c7956834330ec8d5ac59122",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.99072265625
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "2868e1df9a9429affcdc17c28e527f8ab5e44fdd2c7956834330ec8d5ac59122",
+      "chosen_logp": 0.0,
+      "rejected_logp": -65.2109375
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "6fc396da168fc1a87d8fa91738b26f0ddc83cd6a447bae5d25bf7f6cc218b098",
+      "chosen_logp": 0.0,
+      "rejected_logp": -61.413970947265625
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "6fc396da168fc1a87d8fa91738b26f0ddc83cd6a447bae5d25bf7f6cc218b098",
+      "chosen_logp": 0.0,
+      "rejected_logp": -248.98709106445312
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "74aa89aa0b7263fd9e9100470cedeabf18a831532aebf07dddf54575b7b790ba",
+      "chosen_logp": 0.0,
+      "rejected_logp": -245.27503967285156
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "74aa89aa0b7263fd9e9100470cedeabf18a831532aebf07dddf54575b7b790ba",
+      "chosen_logp": 0.0,
+      "rejected_logp": -55.84259033203125
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "94d4a269af6b6618886c0727a27aa98655e952dda086093e51a6822121084aa7",
+      "chosen_logp": 0.0,
+      "rejected_logp": -256.7772216796875
+    },
+    {
+      "task_id": "05a6e4259a92a3c1",
+      "state_sha256": "94d4a269af6b6618886c0727a27aa98655e952dda086093e51a6822121084aa7",
+      "chosen_logp": 0.0,
+      "rejected_logp": -84.36662292480469
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "0c7501faa0df7bd268d8ca0df900c22002ed1ec6806ec6a098836e8dcb8c44d0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.484375
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "0c7501faa0df7bd268d8ca0df900c22002ed1ec6806ec6a098836e8dcb8c44d0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -250.5890350341797
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "5e59ed60531f3bc35f0858d66ae2ae003e48e48a41aaa8c9edc9006a86ef5a48",
+      "chosen_logp": 0.0,
+      "rejected_logp": -249.5733184814453
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "5e59ed60531f3bc35f0858d66ae2ae003e48e48a41aaa8c9edc9006a86ef5a48",
+      "chosen_logp": 0.0,
+      "rejected_logp": -87.43389892578125
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "b65d51bc811d3703af6b412b7d0fc461ddef8e314b746c7b0e1a193d90cd6c4e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.11643981933594
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "b65d51bc811d3703af6b412b7d0fc461ddef8e314b746c7b0e1a193d90cd6c4e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -80.05213928222656
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "b7d8a0cfdfb468df40ce03bfccaa2985c01e2382afdec3eda80d7dfdf3348329",
+      "chosen_logp": 0.0,
+      "rejected_logp": -24.192916870117188
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "b7d8a0cfdfb468df40ce03bfccaa2985c01e2382afdec3eda80d7dfdf3348329",
+      "chosen_logp": 0.0,
+      "rejected_logp": -223.21975708007812
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "fae8834f72566d057cbe30a036a4997c85a567164d60fbb7463e6d5cfdbde0bb",
+      "chosen_logp": 0.0,
+      "rejected_logp": -63.02534484863281
+    },
+    {
+      "task_id": "12d01f5e844ca43c",
+      "state_sha256": "fae8834f72566d057cbe30a036a4997c85a567164d60fbb7463e6d5cfdbde0bb",
+      "chosen_logp": 0.0,
+      "rejected_logp": -249.41555786132812
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "23935bdbde51a5654ec5c612b809b81fd73a517d5b2e91a326359fa7745b31db",
+      "chosen_logp": 0.0,
+      "rejected_logp": -57.33636474609375
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "23935bdbde51a5654ec5c612b809b81fd73a517d5b2e91a326359fa7745b31db",
+      "chosen_logp": 0.0,
+      "rejected_logp": -254.45228576660156
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "3804c9587afeb039af421becbf95f243fa57dc8b5c248bebaca9d7703b8b1093",
+      "chosen_logp": 0.0,
+      "rejected_logp": -779.272705078125
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "3804c9587afeb039af421becbf95f243fa57dc8b5c248bebaca9d7703b8b1093",
+      "chosen_logp": 0.0,
+      "rejected_logp": -67.38421630859375
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "9d99005457c2d7a4f8c70378e632a43ed166aec4acc064ddfd077feeead02a74",
+      "chosen_logp": 0.0,
+      "rejected_logp": -241.07022094726562
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "9d99005457c2d7a4f8c70378e632a43ed166aec4acc064ddfd077feeead02a74",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.67691040039062
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "a3290e47ef827416500376ebf7ac30cbf2e8eeafafd44a41c607bf26bd23b842",
+      "chosen_logp": 0.0,
+      "rejected_logp": -57.28050231933594
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "a3290e47ef827416500376ebf7ac30cbf2e8eeafafd44a41c607bf26bd23b842",
+      "chosen_logp": 0.0,
+      "rejected_logp": -267.3717346191406
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "c0e91534f0ecb693dbb2241525cfd2cf6b34030ec6b357e7af835b72c0210222",
+      "chosen_logp": 0.0,
+      "rejected_logp": -74.98048400878906
+    },
+    {
+      "task_id": "1458b9e79a825a86",
+      "state_sha256": "c0e91534f0ecb693dbb2241525cfd2cf6b34030ec6b357e7af835b72c0210222",
+      "chosen_logp": 0.0,
+      "rejected_logp": -786.9803466796875
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "9011a69296b02346402e48ad895d78843c30f3a2de13555ece7a8799577fb39a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -249.6734619140625
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "9011a69296b02346402e48ad895d78843c30f3a2de13555ece7a8799577fb39a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -58.01219177246094
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "b5f8c08523793e6b52c212bafd9c1cfc7a1da07d2a64783c50c9a19cabebd32f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -228.06137084960938
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "b5f8c08523793e6b52c212bafd9c1cfc7a1da07d2a64783c50c9a19cabebd32f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -37.96809387207031
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "da1dfa8583f27b32fb76168d8fa4ff3c56a7904ff4f0abb26373f37cec1a4821",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.0958251953125
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "da1dfa8583f27b32fb76168d8fa4ff3c56a7904ff4f0abb26373f37cec1a4821",
+      "chosen_logp": 0.0,
+      "rejected_logp": -75.49557495117188
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "dc1fef1dcc60faa9519e810f51d00a728daca77c82ece56afec523b47467b4a0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -267.93585205078125
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "dc1fef1dcc60faa9519e810f51d00a728daca77c82ece56afec523b47467b4a0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -262.8178405761719
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "e7f3cbe80c26c956c2d3e4e6152d6788331b3f71bc7efba9c6a743ef4367942e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -97.6885986328125
+    },
+    {
+      "task_id": "1e75fef0ed9d47ca",
+      "state_sha256": "e7f3cbe80c26c956c2d3e4e6152d6788331b3f71bc7efba9c6a743ef4367942e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -274.5644836425781
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "0d380fa06bb970b7b00849b585d49d5c3de78053b08d7f39d19bd38c9e8acf43",
+      "chosen_logp": 0.0,
+      "rejected_logp": -263.85577392578125
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "0d380fa06bb970b7b00849b585d49d5c3de78053b08d7f39d19bd38c9e8acf43",
+      "chosen_logp": 0.0,
+      "rejected_logp": -270.9877014160156
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "64c469681078423d54f9adbfa5e11fa132a7e09b1fc674e53cf6e5b095577d34",
+      "chosen_logp": 0.0,
+      "rejected_logp": -57.58439636230469
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "64c469681078423d54f9adbfa5e11fa132a7e09b1fc674e53cf6e5b095577d34",
+      "chosen_logp": 0.0,
+      "rejected_logp": -788.5602416992188
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "87d115ad79f32288656990272be398baef2b0cf07749ce1081b11537ab044d80",
+      "chosen_logp": 0.0,
+      "rejected_logp": -281.6386413574219
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "87d115ad79f32288656990272be398baef2b0cf07749ce1081b11537ab044d80",
+      "chosen_logp": 0.0,
+      "rejected_logp": -109.05860900878906
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "91dff1b05c27bffa4911a389e67479fb3b32342b9fa3a819bac96fe66054dc53",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.8284606933594
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "91dff1b05c27bffa4911a389e67479fb3b32342b9fa3a819bac96fe66054dc53",
+      "chosen_logp": 0.0,
+      "rejected_logp": -73.24134826660156
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "c1bf486c423ac1e55c85df93c3c8f5e455fcb1d2acbd6edf6ffb19bea54cab42",
+      "chosen_logp": 0.0,
+      "rejected_logp": -44.124908447265625
+    },
+    {
+      "task_id": "42b9a35b981daabc",
+      "state_sha256": "c1bf486c423ac1e55c85df93c3c8f5e455fcb1d2acbd6edf6ffb19bea54cab42",
+      "chosen_logp": 0.0,
+      "rejected_logp": -261.3035888671875
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "182ec99442462d9d360316290c629185b49ed89d76db960aa899bd86f25e5eaf",
+      "chosen_logp": 0.0,
+      "rejected_logp": -61.70738220214844
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "182ec99442462d9d360316290c629185b49ed89d76db960aa899bd86f25e5eaf",
+      "chosen_logp": 0.0,
+      "rejected_logp": -256.7677001953125
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "3487587f860bc59702b3d2bbc65e20639586b95f2d91e0063817d447cfcc1c75",
+      "chosen_logp": 0.0,
+      "rejected_logp": -241.31781005859375
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "3487587f860bc59702b3d2bbc65e20639586b95f2d91e0063817d447cfcc1c75",
+      "chosen_logp": 0.0,
+      "rejected_logp": -64.93922424316406
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "8fa49c29d126fcc17185a64162eb29d576f432bad85634aaf3a9b30c7af7c9c0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -257.24420166015625
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "8fa49c29d126fcc17185a64162eb29d576f432bad85634aaf3a9b30c7af7c9c0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -84.72836303710938
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "dacd1d6bab6ccdfa282d04f10f378f8f1f7d183a2b85563560aa0d09cfdc3b1d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.8258056640625
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "dacd1d6bab6ccdfa282d04f10f378f8f1f7d183a2b85563560aa0d09cfdc3b1d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.819091796875
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "f6a3fdf9142f28170ed8ecbc2e8bffab3cf1941d322b3373be71ff8c1f15337e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -32.92041015625
+    },
+    {
+      "task_id": "6483a965fb3682cc",
+      "state_sha256": "f6a3fdf9142f28170ed8ecbc2e8bffab3cf1941d322b3373be71ff8c1f15337e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -239.0758514404297
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "0cf25897851a8d10240b90865eb0a637699318f7a50a909b588700b46c05c388",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.2559509277344
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "0cf25897851a8d10240b90865eb0a637699318f7a50a909b588700b46c05c388",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.41082763671875
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "4ae53a0ec99f89f663a448ad8eac6aee9aa44d6a1657712056c13494bbab0544",
+      "chosen_logp": 0.0,
+      "rejected_logp": -246.2643585205078
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "4ae53a0ec99f89f663a448ad8eac6aee9aa44d6a1657712056c13494bbab0544",
+      "chosen_logp": 0.0,
+      "rejected_logp": -79.45036315917969
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "8a58395f0d2090dabb9975df92f2cd145a1d4645b78774f94ade86cdcf6e23b3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -230.0740509033203
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "8a58395f0d2090dabb9975df92f2cd145a1d4645b78774f94ade86cdcf6e23b3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -25.279296875
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "ba9e2e9f5ba013f77295563e16c61865e26ec071c73cc2f07911f76fcf07c398",
+      "chosen_logp": 0.0,
+      "rejected_logp": -230.47998046875
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "ba9e2e9f5ba013f77295563e16c61865e26ec071c73cc2f07911f76fcf07c398",
+      "chosen_logp": 0.0,
+      "rejected_logp": -236.49664306640625
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "c538d1802a592ae0c87e765de379c0730ea985c1f88cea918b26b72d21d9be0c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -65.24957275390625
+    },
+    {
+      "task_id": "69313443a20d09f1",
+      "state_sha256": "c538d1802a592ae0c87e765de379c0730ea985c1f88cea918b26b72d21d9be0c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.81326293945312
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "06278eaff79e29dd191c200b79f89dc2009d49e8d4576de54dced497a7fa67ac",
+      "chosen_logp": 0.0,
+      "rejected_logp": -35.64955139160156
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "06278eaff79e29dd191c200b79f89dc2009d49e8d4576de54dced497a7fa67ac",
+      "chosen_logp": 0.0,
+      "rejected_logp": -101.71131896972656
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "26a02101b3548f10d21bcc08b207bd30fe1829daa0845f6046460be194358c68",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.23829650878906
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "26a02101b3548f10d21bcc08b207bd30fe1829daa0845f6046460be194358c68",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.78521728515625
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "72121eee32bc4bd6b1fe4a38fb8373dde53990f29d55715b670872a1a47ca991",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.3382873535156
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "72121eee32bc4bd6b1fe4a38fb8373dde53990f29d55715b670872a1a47ca991",
+      "chosen_logp": 0.0,
+      "rejected_logp": -75.73745727539062
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "787a82584f07d9f62e25b56a738aadc71caa7dc201421d689be3422deb5b896c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -96.70516967773438
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "787a82584f07d9f62e25b56a738aadc71caa7dc201421d689be3422deb5b896c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -267.417236328125
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "8eb40bc744d37322d0c068bf859bfc87492a6e125b7907d2ebac83aa81f942e3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -97.40560913085938
+    },
+    {
+      "task_id": "6a3561dac24bab13",
+      "state_sha256": "8eb40bc744d37322d0c068bf859bfc87492a6e125b7907d2ebac83aa81f942e3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -280.4371337890625
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "416b751dbcb94d269980f63d5a617547da210cbe8df94f877d792d47b451245f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -274.8857727050781
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "416b751dbcb94d269980f63d5a617547da210cbe8df94f877d792d47b451245f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -268.12127685546875
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "6b01fe9d383f7544f9efa224051eb7719fc28142d2a0a821746b9b3e41298712",
+      "chosen_logp": 0.0,
+      "rejected_logp": -248.17042541503906
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "6b01fe9d383f7544f9efa224051eb7719fc28142d2a0a821746b9b3e41298712",
+      "chosen_logp": 0.0,
+      "rejected_logp": -46.957763671875
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "82127f1f04191dad495beef87a8aaa4e39f92c523251384ac6f19136befbf554",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.57167053222656
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "82127f1f04191dad495beef87a8aaa4e39f92c523251384ac6f19136befbf554",
+      "chosen_logp": 0.0,
+      "rejected_logp": -262.5077209472656
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "c4599fbaec5efceeff5fb05219892d5830cf01fd2a24c8ec8f002ed2def269d8",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.85858154296875
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "c4599fbaec5efceeff5fb05219892d5830cf01fd2a24c8ec8f002ed2def269d8",
+      "chosen_logp": 0.0,
+      "rejected_logp": -75.68905639648438
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "f56c2f5a04f8181d034704ab64ca9b55cdd3555500a5ea0e10bb5df9a453d52f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -79.2503662109375
+    },
+    {
+      "task_id": "6f31f34d61b52486",
+      "state_sha256": "f56c2f5a04f8181d034704ab64ca9b55cdd3555500a5ea0e10bb5df9a453d52f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -268.510009765625
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "070f6395063be6647f061d0a0708b840a5eec279ee95962672c91aa7af6b55b1",
+      "chosen_logp": 0.0,
+      "rejected_logp": -39.772552490234375
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "070f6395063be6647f061d0a0708b840a5eec279ee95962672c91aa7af6b55b1",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.47900390625
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "8b26836f6dcb2068f54b04c34e801f8f545dd49d2f8866f00a810ba0357c89ab",
+      "chosen_logp": 0.0,
+      "rejected_logp": -58.87934875488281
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "8b26836f6dcb2068f54b04c34e801f8f545dd49d2f8866f00a810ba0357c89ab",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.18699645996094
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "a7298763222791c14e1d8576f7e4606f489008ffe0cafbda80df63d0070e21f3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -780.3709106445312
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "a7298763222791c14e1d8576f7e4606f489008ffe0cafbda80df63d0070e21f3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -65.38323974609375
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "ae9ee7cfc8ed62438269a60d8521f480373c112e851fd552d14c0e4520787591",
+      "chosen_logp": 0.0,
+      "rejected_logp": -48.13993835449219
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "ae9ee7cfc8ed62438269a60d8521f480373c112e851fd552d14c0e4520787591",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.03091430664062
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "fac9d866b3ca22256700a79f9c11a3c42e8798d93298ad77c2d10ab0964f3df9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -240.2901153564453
+    },
+    {
+      "task_id": "6fbef05a1927dfc5",
+      "state_sha256": "fac9d866b3ca22256700a79f9c11a3c42e8798d93298ad77c2d10ab0964f3df9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.1190948486328
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "09ea6dafc7863d81ca234c3aa27e605b1d4e79b4667b5af03e40fb2881451f78",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.0147399902344
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "09ea6dafc7863d81ca234c3aa27e605b1d4e79b4667b5af03e40fb2881451f78",
+      "chosen_logp": 0.0,
+      "rejected_logp": -71.65774536132812
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "20f63987b7b12c02215ce7d4d61d562f2a433af2099dcf25ee29bbcc197585a4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -112.77349853515625
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "20f63987b7b12c02215ce7d4d61d562f2a433af2099dcf25ee29bbcc197585a4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -274.84246826171875
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "804327de36db17cc767035c3f8a75f10779d9f2ab1dd40bc702dc26a880b801d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -269.63006591796875
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "804327de36db17cc767035c3f8a75f10779d9f2ab1dd40bc702dc26a880b801d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -96.22879028320312
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "d379cc5f77d8597a7e9d3388c1a311efd4d80daeb80a46a13e1eb9790f373983",
+      "chosen_logp": 0.0,
+      "rejected_logp": -89.1463623046875
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "d379cc5f77d8597a7e9d3388c1a311efd4d80daeb80a46a13e1eb9790f373983",
+      "chosen_logp": 0.0,
+      "rejected_logp": -270.6168212890625
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "ecef2e8bd1db3dafea3b1d12194c2dba45208d5abb97dd398b1b205b50bf466b",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.9107666015625
+    },
+    {
+      "task_id": "70f537696a297c39",
+      "state_sha256": "ecef2e8bd1db3dafea3b1d12194c2dba45208d5abb97dd398b1b205b50bf466b",
+      "chosen_logp": 0.0,
+      "rejected_logp": -268.24945068359375
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "030c8f1ca524cad3960b70864398ebcf8b39538dce37ded2c4157da623d10629",
+      "chosen_logp": 0.0,
+      "rejected_logp": -64.17845153808594
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "030c8f1ca524cad3960b70864398ebcf8b39538dce37ded2c4157da623d10629",
+      "chosen_logp": 0.0,
+      "rejected_logp": -257.5830078125
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "81480be8dbe7ad75d7460a00472dde38cdd1a15bbe8f275982b35d817d310a51",
+      "chosen_logp": 0.0,
+      "rejected_logp": -228.4009552001953
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "81480be8dbe7ad75d7460a00472dde38cdd1a15bbe8f275982b35d817d310a51",
+      "chosen_logp": 0.0,
+      "rejected_logp": -24.280319213867188
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "b7724c0e6d06125fc7b7fbe8a991e515762a4b4b4a529b09db9cc99ccffa9c88",
+      "chosen_logp": 0.0,
+      "rejected_logp": -65.95285034179688
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "b7724c0e6d06125fc7b7fbe8a991e515762a4b4b4a529b09db9cc99ccffa9c88",
+      "chosen_logp": 0.0,
+      "rejected_logp": -77.84059143066406
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "dd8186892bc97ca5284be1edd60343cb6ffc05e92b5396e4d61ca28a07153c8a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.03318786621094
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "dd8186892bc97ca5284be1edd60343cb6ffc05e92b5396e4d61ca28a07153c8a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.9223937988281
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "e460bf04e2a6634020e7361dab3fe118ccd1b8f33933f55f74598473c107a583",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.8012390136719
+    },
+    {
+      "task_id": "76800ccd9be30ce5",
+      "state_sha256": "e460bf04e2a6634020e7361dab3fe118ccd1b8f33933f55f74598473c107a583",
+      "chosen_logp": 0.0,
+      "rejected_logp": -263.635009765625
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "0d8411cdbf98d82c0b17c02ae505760c538d490926737e26fca0e163c3197d20",
+      "chosen_logp": 0.0,
+      "rejected_logp": -41.72344970703125
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "0d8411cdbf98d82c0b17c02ae505760c538d490926737e26fca0e163c3197d20",
+      "chosen_logp": 0.0,
+      "rejected_logp": -253.508544921875
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "84e8d9ac6299350d19d0c5e3a1c731d1dda485e547c7c2523e5cd2169f5a5f0a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.62515258789062
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "84e8d9ac6299350d19d0c5e3a1c731d1dda485e547c7c2523e5cd2169f5a5f0a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -48.357177734375
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "b878610a65fc0cda662bdf4f4e1b6c3dbab0ef3a2769d446ed2d24e0878c009b",
+      "chosen_logp": 0.0,
+      "rejected_logp": -262.50531005859375
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "b878610a65fc0cda662bdf4f4e1b6c3dbab0ef3a2769d446ed2d24e0878c009b",
+      "chosen_logp": 0.0,
+      "rejected_logp": -269.4105529785156
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "c23f87d5fabbe10b4f1f121eae055bbdc585cb057d9f154ee94e2e41669a4fff",
+      "chosen_logp": 0.0,
+      "rejected_logp": -257.09326171875
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "c23f87d5fabbe10b4f1f121eae055bbdc585cb057d9f154ee94e2e41669a4fff",
+      "chosen_logp": 0.0,
+      "rejected_logp": -76.42544555664062
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "ca92edde20cbd4beb439194e7639a487c0758232e65577803540aa4cf460d517",
+      "chosen_logp": 0.0,
+      "rejected_logp": -242.111572265625
+    },
+    {
+      "task_id": "7c324eb0efa3bd87",
+      "state_sha256": "ca92edde20cbd4beb439194e7639a487c0758232e65577803540aa4cf460d517",
+      "chosen_logp": 0.0,
+      "rejected_logp": -26.81671142578125
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "12a7916cd630ef1d90f606ec290b411556881414968e30956cb896dbf842b942",
+      "chosen_logp": 0.0,
+      "rejected_logp": -62.03143310546875
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "12a7916cd630ef1d90f606ec290b411556881414968e30956cb896dbf842b942",
+      "chosen_logp": 0.0,
+      "rejected_logp": -79.84686279296875
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "1baaad3a253343442c10206f47539eb3fa86c1a23cad50ed20735d3ff137b8e9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -55.12712097167969
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "1baaad3a253343442c10206f47539eb3fa86c1a23cad50ed20735d3ff137b8e9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -107.02474975585938
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "6b11c382b6666c04d7499e7cf41ef57d0b35ecfd315db6aab8440af47bb242f0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.6365051269531
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "6b11c382b6666c04d7499e7cf41ef57d0b35ecfd315db6aab8440af47bb242f0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -122.41865539550781
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "af56895033a01d3855ce42d1448fb46fd3273c881567c6ceb742a3be530aa8e9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -78.26020812988281
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "af56895033a01d3855ce42d1448fb46fd3273c881567c6ceb742a3be530aa8e9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -256.43438720703125
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "bab05defc117546b40c44fdc2ae4c0213663bed1f1790f3066b0444dba8aaf5a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -60.19189453125
+    },
+    {
+      "task_id": "7e511f838d6be850",
+      "state_sha256": "bab05defc117546b40c44fdc2ae4c0213663bed1f1790f3066b0444dba8aaf5a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -755.0275268554688
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "75d50cc9a71c2d65b1e6d739936722feff08d319de7450e550563f42639b5a2c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -61.57795715332031
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "75d50cc9a71c2d65b1e6d739936722feff08d319de7450e550563f42639b5a2c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -82.17240905761719
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "78fefc88a5b385fcdc084fdeaaf30666362bdc2b516676a6dbb1ec84c153e6b7",
+      "chosen_logp": 0.0,
+      "rejected_logp": -254.97613525390625
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "78fefc88a5b385fcdc084fdeaaf30666362bdc2b516676a6dbb1ec84c153e6b7",
+      "chosen_logp": 0.0,
+      "rejected_logp": -262.4755554199219
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "b0c3aa58f8f917dfb3b11aed02398b12853053fd8827c20addd303448da6b6f0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -253.31497192382812
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "b0c3aa58f8f917dfb3b11aed02398b12853053fd8827c20addd303448da6b6f0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -81.24192810058594
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "cf51dcc397194bc3c779eb73b0fbfc001034c087407298b28e94736140bddc81",
+      "chosen_logp": 0.0,
+      "rejected_logp": -65.90296936035156
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "cf51dcc397194bc3c779eb73b0fbfc001034c087407298b28e94736140bddc81",
+      "chosen_logp": 0.0,
+      "rejected_logp": -768.930908203125
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "e6f8062a0a851bf3ec165601b1b0d865ccad61431da0d7214ca439eaaf15433a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -78.92570495605469
+    },
+    {
+      "task_id": "81c40803c2a1bdb7",
+      "state_sha256": "e6f8062a0a851bf3ec165601b1b0d865ccad61431da0d7214ca439eaaf15433a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -265.5861511230469
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "1bc0e97c39f407eb5a9207385070924b7e125fa88f81a1c3751952f399309812",
+      "chosen_logp": 0.0,
+      "rejected_logp": -67.02088928222656
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "1bc0e97c39f407eb5a9207385070924b7e125fa88f81a1c3751952f399309812",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.95733642578125
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "1e9a0a2a05cf544e65344571ba6238a04de2d0e40d40733c2e356c3d81a65264",
+      "chosen_logp": 0.0,
+      "rejected_logp": -66.05599975585938
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "1e9a0a2a05cf544e65344571ba6238a04de2d0e40d40733c2e356c3d81a65264",
+      "chosen_logp": 0.0,
+      "rejected_logp": -78.32626342773438
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "6077d8ce318aeb39011031dd9a93be77b6cd7754d2ed06a9af01688c961ff7b4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -102.55772399902344
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "6077d8ce318aeb39011031dd9a93be77b6cd7754d2ed06a9af01688c961ff7b4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -268.1429138183594
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "bc31b89549acc33650c46a0952954c2155926c007d013653918a786771e56532",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.95684814453125
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "bc31b89549acc33650c46a0952954c2155926c007d013653918a786771e56532",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.01087951660156
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "dc17ae12a90db8c7a8f9c9adb8e98c4fbad0933d5680eff43cc8eca8c9167603",
+      "chosen_logp": 0.0,
+      "rejected_logp": -51.889251708984375
+    },
+    {
+      "task_id": "82feaaa5bfdce739",
+      "state_sha256": "dc17ae12a90db8c7a8f9c9adb8e98c4fbad0933d5680eff43cc8eca8c9167603",
+      "chosen_logp": 0.0,
+      "rejected_logp": -770.5440063476562
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "5284c1f167ce9b86703d7e10effa938fb4c9bf0f5c63d75e8e40b2569b3c093d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.051513671875
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "5284c1f167ce9b86703d7e10effa938fb4c9bf0f5c63d75e8e40b2569b3c093d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -74.98637390136719
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "7229141712668681f619c964f05872d19e601aa35db11676f055201618298526",
+      "chosen_logp": 0.0,
+      "rejected_logp": -39.23426818847656
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "7229141712668681f619c964f05872d19e601aa35db11676f055201618298526",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.1208190917969
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "74c17094adab19f8e09a2c381d1060462d97ad9f647044143cd4bfcb4f296380",
+      "chosen_logp": 0.0,
+      "rejected_logp": -93.01112365722656
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "74c17094adab19f8e09a2c381d1060462d97ad9f647044143cd4bfcb4f296380",
+      "chosen_logp": 0.0,
+      "rejected_logp": -263.447265625
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "822023a38fe12e25e947947cbae8d7af53da95346e1b96723c44c464a3a96c33",
+      "chosen_logp": 0.0,
+      "rejected_logp": -36.14488220214844
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "822023a38fe12e25e947947cbae8d7af53da95346e1b96723c44c464a3a96c33",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.41961669921875
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "cab48d3945f8c959a6ffb9323a36ec1c30396858415c50490d5e204ef423b645",
+      "chosen_logp": 0.0,
+      "rejected_logp": -46.297760009765625
+    },
+    {
+      "task_id": "8a76a8ba3fdd62db",
+      "state_sha256": "cab48d3945f8c959a6ffb9323a36ec1c30396858415c50490d5e204ef423b645",
+      "chosen_logp": 0.0,
+      "rejected_logp": -246.45143127441406
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "1deed7f4b87a774db26dddc5d40e04e50ed0ccbe4657e07bff65f5557f5c9d43",
+      "chosen_logp": 0.0,
+      "rejected_logp": -780.8057861328125
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "1deed7f4b87a774db26dddc5d40e04e50ed0ccbe4657e07bff65f5557f5c9d43",
+      "chosen_logp": 0.0,
+      "rejected_logp": -69.04110717773438
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "208bfffffed8c20ca5edbe7f3925cff016af8e99ff9420c99925b1e7e4c69dca",
+      "chosen_logp": 0.0,
+      "rejected_logp": -44.94032287597656
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "208bfffffed8c20ca5edbe7f3925cff016af8e99ff9420c99925b1e7e4c69dca",
+      "chosen_logp": 0.0,
+      "rejected_logp": -262.8963317871094
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "35086db3e86b8471c76886800263ad5186a541393b4fa3bee8384e82e404364c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -54.564239501953125
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "35086db3e86b8471c76886800263ad5186a541393b4fa3bee8384e82e404364c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.3954772949219
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "41d1c44ebf819c0f5a616d0d57eaca3811ef32053ea7517f5b50baeedba6e001",
+      "chosen_logp": 0.0,
+      "rejected_logp": -42.77455139160156
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "41d1c44ebf819c0f5a616d0d57eaca3811ef32053ea7517f5b50baeedba6e001",
+      "chosen_logp": 0.0,
+      "rejected_logp": -776.248046875
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "f33c07dddd860cdd09151ceb4fe97ec78055aae9c623a8fcec8f50374b78017d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.48861694335938
+    },
+    {
+      "task_id": "8d9907105848ea6a",
+      "state_sha256": "f33c07dddd860cdd09151ceb4fe97ec78055aae9c623a8fcec8f50374b78017d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -240.88613891601562
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "0cf3e8ffec1e43790591411d285006f0cd93007ac87b2a11091e2659e1cac7b2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -55.59587097167969
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "0cf3e8ffec1e43790591411d285006f0cd93007ac87b2a11091e2659e1cac7b2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -264.1029052734375
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "308aefec3a212129ac35ca1acf4f136a288465106ea966f3a52cdc0a31fa94f9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -45.437835693359375
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "308aefec3a212129ac35ca1acf4f136a288465106ea966f3a52cdc0a31fa94f9",
+      "chosen_logp": 0.0,
+      "rejected_logp": -237.97906494140625
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "7f7c0d4b4c9830cbd5f8d6a4f1b432c107a8a866d6174810802f6b60a429dc67",
+      "chosen_logp": 0.0,
+      "rejected_logp": -271.8033142089844
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "7f7c0d4b4c9830cbd5f8d6a4f1b432c107a8a866d6174810802f6b60a429dc67",
+      "chosen_logp": 0.0,
+      "rejected_logp": -104.14906311035156
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "a3448b3cbe33c62fba1b150cd5a15011019e8b1a8f00b12d245f8fdaad749a15",
+      "chosen_logp": 0.0,
+      "rejected_logp": -268.7281494140625
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "a3448b3cbe33c62fba1b150cd5a15011019e8b1a8f00b12d245f8fdaad749a15",
+      "chosen_logp": 0.0,
+      "rejected_logp": -98.11689758300781
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "d8229aaff74900d522627386fa4aebef1e22e89cd8ed2fd4c0dde278a885c297",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.6767578125
+    },
+    {
+      "task_id": "94b4ad9530a756d4",
+      "state_sha256": "d8229aaff74900d522627386fa4aebef1e22e89cd8ed2fd4c0dde278a885c297",
+      "chosen_logp": 0.0,
+      "rejected_logp": -75.46380615234375
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "17f24c7f7c3f83e8c6fc9125d66839d9cbd996c11ae8c5fe868b8bce1cd5140e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -76.14682006835938
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "17f24c7f7c3f83e8c6fc9125d66839d9cbd996c11ae8c5fe868b8bce1cd5140e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.8618927001953
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "2d0d503d9474b682b7a98dd004053e97b944ec3e1fa5bf5afc56a81a243604f0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -268.8927307128906
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "2d0d503d9474b682b7a98dd004053e97b944ec3e1fa5bf5afc56a81a243604f0",
+      "chosen_logp": 0.0,
+      "rejected_logp": -261.6855163574219
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "4667143f19723a5c9cabdae9a940477a5693f5a381721e9a08dcf9b1292b6d1e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -770.0250854492188
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "4667143f19723a5c9cabdae9a940477a5693f5a381721e9a08dcf9b1292b6d1e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -53.11163330078125
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "ee83bf43903646e24e88dd2554dc3aab1ef094187ab944d88a0a65e5172db383",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.79676818847656
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "ee83bf43903646e24e88dd2554dc3aab1ef094187ab944d88a0a65e5172db383",
+      "chosen_logp": 0.0,
+      "rejected_logp": -80.63841247558594
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "f8e1f572601d029546ded933c6341ddd9b891b2da35bf2027099c6830dbd1f93",
+      "chosen_logp": 0.0,
+      "rejected_logp": -147.47906494140625
+    },
+    {
+      "task_id": "9a6185f0efa90a7b",
+      "state_sha256": "f8e1f572601d029546ded933c6341ddd9b891b2da35bf2027099c6830dbd1f93",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.89471435546875
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "31bfe5dcdcf68dc1b2756f56cf89845698abd748a638602aca8ba5f0351dd53b",
+      "chosen_logp": 0.0,
+      "rejected_logp": -145.3204345703125
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "31bfe5dcdcf68dc1b2756f56cf89845698abd748a638602aca8ba5f0351dd53b",
+      "chosen_logp": 0.0,
+      "rejected_logp": -49.39659118652344
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "437dfeadf893b804767d75ce7abc09538d50fc7d5b4954e35b05d8e5fb369b2a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.0279541015625
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "437dfeadf893b804767d75ce7abc09538d50fc7d5b4954e35b05d8e5fb369b2a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -78.129150390625
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "4b6b82cfbddc6ed74ad7a021cf25c3ff76e2cab0b8c54af08c726117a5374139",
+      "chosen_logp": 0.0,
+      "rejected_logp": -270.6845703125
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "4b6b82cfbddc6ed74ad7a021cf25c3ff76e2cab0b8c54af08c726117a5374139",
+      "chosen_logp": 0.0,
+      "rejected_logp": -775.99658203125
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "91cef821e70a82cd926e50b7cde7002182cac90acdaf23990093fc186afeb2ab",
+      "chosen_logp": 0.0,
+      "rejected_logp": -131.8921356201172
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "91cef821e70a82cd926e50b7cde7002182cac90acdaf23990093fc186afeb2ab",
+      "chosen_logp": 0.0,
+      "rejected_logp": -265.49078369140625
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "9c6a7c8d18cca7b60e12bdc9684a93479aa56939c173f68ee07539d16aeaebf2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -77.13143920898438
+    },
+    {
+      "task_id": "a09e53bdaeaefe82",
+      "state_sha256": "9c6a7c8d18cca7b60e12bdc9684a93479aa56939c173f68ee07539d16aeaebf2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -143.8291473388672
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "243c7823ba301517e1e29c9ec6fa4f7f739eee8f1a5793edd8f191fa0f240344",
+      "chosen_logp": 0.0,
+      "rejected_logp": -75.55056762695312
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "243c7823ba301517e1e29c9ec6fa4f7f739eee8f1a5793edd8f191fa0f240344",
+      "chosen_logp": 0.0,
+      "rejected_logp": -254.4796142578125
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "428572fae7f27e8cfe7d49f3544745a323c5207740cd3355636869b48f26da0a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -243.71578979492188
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "428572fae7f27e8cfe7d49f3544745a323c5207740cd3355636869b48f26da0a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -79.91566467285156
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "48cf6ca9afedcf50945834083ad68818de5a19f3dbcb82a4f78d7df7069568e5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.4636688232422
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "48cf6ca9afedcf50945834083ad68818de5a19f3dbcb82a4f78d7df7069568e5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -753.1800537109375
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "4a0fe1619f33363dec56764f097473e4a2907f68d117a93ad48577d2eb7a739a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -760.1705932617188
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "4a0fe1619f33363dec56764f097473e4a2907f68d117a93ad48577d2eb7a739a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -60.59312438964844
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "bb9bf1e56f16eb712bd2dd5d87bc717429bef1a00b739b6362327418d7ec84e8",
+      "chosen_logp": 0.0,
+      "rejected_logp": -267.2648010253906
+    },
+    {
+      "task_id": "a1b22326377d7295",
+      "state_sha256": "bb9bf1e56f16eb712bd2dd5d87bc717429bef1a00b739b6362327418d7ec84e8",
+      "chosen_logp": 0.0,
+      "rejected_logp": -124.50546264648438
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "51e669d70473f7f9eddbcb79f567ff5422ccaf4d12c3d5ef9643fd18ef00b3fb",
+      "chosen_logp": 0.0,
+      "rejected_logp": -757.9755249023438
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "51e669d70473f7f9eddbcb79f567ff5422ccaf4d12c3d5ef9643fd18ef00b3fb",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.3807830810547
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "a8d6d2e9472bb72e6c7c946f8e4c6a9e8a655a7b8958f73b953a24b873e7f523",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.98936462402344
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "a8d6d2e9472bb72e6c7c946f8e4c6a9e8a655a7b8958f73b953a24b873e7f523",
+      "chosen_logp": 0.0,
+      "rejected_logp": -80.37782287597656
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "cde883666ca59a3377e5510c819723f9217a42ce0227f40a8bf3beffa5cdec65",
+      "chosen_logp": 0.0,
+      "rejected_logp": -243.22842407226562
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "cde883666ca59a3377e5510c819723f9217a42ce0227f40a8bf3beffa5cdec65",
+      "chosen_logp": 0.0,
+      "rejected_logp": -54.09205627441406
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "dbd1ae5dfec10b86bb51f326866d3b0ca91025840153163c7eb01a30dcaf91cf",
+      "chosen_logp": 0.0,
+      "rejected_logp": -77.64860534667969
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "dbd1ae5dfec10b86bb51f326866d3b0ca91025840153163c7eb01a30dcaf91cf",
+      "chosen_logp": 0.0,
+      "rejected_logp": -135.87118530273438
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "e4328727d7f1e3e18dc56360610b4d3526030b562adc9b8779902aec12bdd242",
+      "chosen_logp": 0.0,
+      "rejected_logp": -263.900634765625
+    },
+    {
+      "task_id": "a6b4fdac92c8a7fc",
+      "state_sha256": "e4328727d7f1e3e18dc56360610b4d3526030b562adc9b8779902aec12bdd242",
+      "chosen_logp": 0.0,
+      "rejected_logp": -271.3571472167969
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "02b7c69c942532f7fa6922e3ea1382848c9b688944f5a8c7b47a26c1eaa3bd84",
+      "chosen_logp": 0.0,
+      "rejected_logp": -53.549530029296875
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "02b7c69c942532f7fa6922e3ea1382848c9b688944f5a8c7b47a26c1eaa3bd84",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.14132690429688
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "37da118c41d401dcafa244aca2f15118baa9be7c761130a7603c1a3676be95e1",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.70196533203125
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "37da118c41d401dcafa244aca2f15118baa9be7c761130a7603c1a3676be95e1",
+      "chosen_logp": 0.0,
+      "rejected_logp": -56.29731750488281
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "53c2377fa7b25f8d1f768149d53e202317b5b3c149379f87fec7f9a3517b3313",
+      "chosen_logp": 0.0,
+      "rejected_logp": -239.49058532714844
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "53c2377fa7b25f8d1f768149d53e202317b5b3c149379f87fec7f9a3517b3313",
+      "chosen_logp": 0.0,
+      "rejected_logp": -246.22702026367188
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "872ed159458207ff0583ac7fb5575961468484be2170d58fd7e56fe1f69f9c17",
+      "chosen_logp": 0.0,
+      "rejected_logp": -781.89306640625
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "872ed159458207ff0583ac7fb5575961468484be2170d58fd7e56fe1f69f9c17",
+      "chosen_logp": 0.0,
+      "rejected_logp": -68.15892028808594
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "9325af5148a62742451af25d15f41c6d5b3c9d0f3714ad439ab44c9f278816d6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.87744140625
+    },
+    {
+      "task_id": "ad569174c9a5355c",
+      "state_sha256": "9325af5148a62742451af25d15f41c6d5b3c9d0f3714ad439ab44c9f278816d6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.446044921875
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "437c4e4359a44ac2026271614a4869dfa397a278dcc3a7107bf2737f25936594",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.96238708496094
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "437c4e4359a44ac2026271614a4869dfa397a278dcc3a7107bf2737f25936594",
+      "chosen_logp": 0.0,
+      "rejected_logp": -40.487274169921875
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "56430f729236d2ffcb1212fbf33f31a80d82cd895c74251b5ad7c6ca439f8d0d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -240.8571014404297
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "56430f729236d2ffcb1212fbf33f31a80d82cd895c74251b5ad7c6ca439f8d0d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -247.45877075195312
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "8bca1038b2750c43377b190af80cf661ce548a970233ffdd482ebf8a7da26f4f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -53.68891906738281
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "8bca1038b2750c43377b190af80cf661ce548a970233ffdd482ebf8a7da26f4f",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.7120666503906
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "b03373b064c9410a36d560b5bf0663a2db14d2aa21837ec5816ca5ccf62123b3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -237.23031616210938
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "b03373b064c9410a36d560b5bf0663a2db14d2aa21837ec5816ca5ccf62123b3",
+      "chosen_logp": 0.0,
+      "rejected_logp": -30.9412841796875
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "c56cb9467276dfdaf054d0e63421864b3249c42a03481d80ad84545ddabdf300",
+      "chosen_logp": 0.0,
+      "rejected_logp": -782.6256103515625
+    },
+    {
+      "task_id": "ad9985fb10d7c795",
+      "state_sha256": "c56cb9467276dfdaf054d0e63421864b3249c42a03481d80ad84545ddabdf300",
+      "chosen_logp": 0.0,
+      "rejected_logp": -69.17079162597656
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "0e6ff7c4f150d390e78b9cdc3fc4522a1da7f5dba0bbf3323584b32e6324e220",
+      "chosen_logp": 0.0,
+      "rejected_logp": -57.80931091308594
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "0e6ff7c4f150d390e78b9cdc3fc4522a1da7f5dba0bbf3323584b32e6324e220",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.24822998046875
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "3bb4cd42cb7c9d6618355d348dac644d48e4c0c2de9bea366dc49ceacfd5cf71",
+      "chosen_logp": 0.0,
+      "rejected_logp": -244.84426879882812
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "3bb4cd42cb7c9d6618355d348dac644d48e4c0c2de9bea366dc49ceacfd5cf71",
+      "chosen_logp": 0.0,
+      "rejected_logp": -42.391448974609375
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "4b42afb231d59123ee47d66457e4cfa5d6819e1843685db57931e05ea89b6773",
+      "chosen_logp": 0.0,
+      "rejected_logp": -781.95654296875
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "4b42afb231d59123ee47d66457e4cfa5d6819e1843685db57931e05ea89b6773",
+      "chosen_logp": 0.0,
+      "rejected_logp": -66.66499328613281
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "e1ad736ca8e2e3f64e5ae399577642cc2f24e601ef91e8863097814ed71f5ae6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -241.0566864013672
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "e1ad736ca8e2e3f64e5ae399577642cc2f24e601ef91e8863097814ed71f5ae6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -26.175918579101562
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "f46f1dee0408dd9cefdc3ff95e98a6c84ae841d8b72d86e84f33693defe4aa7c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -240.08847045898438
+    },
+    {
+      "task_id": "ae789239c822558a",
+      "state_sha256": "f46f1dee0408dd9cefdc3ff95e98a6c84ae841d8b72d86e84f33693defe4aa7c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -246.86495971679688
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "0dc5b482a23d9561752d24499a1ef004994d3f3f156358c3e32e7c0c2c764a89",
+      "chosen_logp": 0.0,
+      "rejected_logp": -782.0390625
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "0dc5b482a23d9561752d24499a1ef004994d3f3f156358c3e32e7c0c2c764a89",
+      "chosen_logp": 0.0,
+      "rejected_logp": -67.48809814453125
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "76a75e318412ff5e2fa0ee5a9f4bfa91c8c99c1a8e49fc431a5d2f39929ac750",
+      "chosen_logp": 0.0,
+      "rejected_logp": -49.37467956542969
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "76a75e318412ff5e2fa0ee5a9f4bfa91c8c99c1a8e49fc431a5d2f39929ac750",
+      "chosen_logp": 0.0,
+      "rejected_logp": -781.2937622070312
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "a2cd3746c8b408d1cf3f9a81a301c577cdbfc4550e47bdb01fbee98e7c7eb87a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -59.13160705566406
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "a2cd3746c8b408d1cf3f9a81a301c577cdbfc4550e47bdb01fbee98e7c7eb87a",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.75299072265625
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "cd2cb7099b6eeee3985e967a838d63d1c641e5a4117deee3cb36ee96eb1f7938",
+      "chosen_logp": 0.0,
+      "rejected_logp": -246.7212677001953
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "cd2cb7099b6eeee3985e967a838d63d1c641e5a4117deee3cb36ee96eb1f7938",
+      "chosen_logp": 0.0,
+      "rejected_logp": -239.8924102783203
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "d2e40031b67700ca37d9275fb99aba56440b96d693803ef9337f55ff22697b64",
+      "chosen_logp": 0.0,
+      "rejected_logp": -41.3714599609375
+    },
+    {
+      "task_id": "b27b39c7d0c5ec1f",
+      "state_sha256": "d2e40031b67700ca37d9275fb99aba56440b96d693803ef9337f55ff22697b64",
+      "chosen_logp": 0.0,
+      "rejected_logp": -785.0181884765625
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "4b7ff74264b43fb5dade3e1f75fcd8eaed7f210257c52933849f5f5ac72ba75d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.3000183105469
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "4b7ff74264b43fb5dade3e1f75fcd8eaed7f210257c52933849f5f5ac72ba75d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.42929077148438
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "7ab301a89a8ec36fb812a1a0519c24e09da9c02c927dcb1210431993af90f826",
+      "chosen_logp": 0.0,
+      "rejected_logp": -31.059799194335938
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "7ab301a89a8ec36fb812a1a0519c24e09da9c02c927dcb1210431993af90f826",
+      "chosen_logp": 0.0,
+      "rejected_logp": -229.68540954589844
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "95960bec07ff401016ed2a98457f74e4bd677737cb63f7ac6c439fb6ffd458a5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -63.072845458984375
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "95960bec07ff401016ed2a98457f74e4bd677737cb63f7ac6c439fb6ffd458a5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -77.696044921875
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "d82989ef4b6605a98f3306cfd4e5c417b62c37797ce283994e303beb0ca2976d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -68.04124450683594
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "d82989ef4b6605a98f3306cfd4e5c417b62c37797ce283994e303beb0ca2976d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.3585205078125
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "f388ddf7879de12df6f96b1eb0d89b4374ef92094dbd1a20d0373522e3970bbd",
+      "chosen_logp": 0.0,
+      "rejected_logp": -245.09043884277344
+    },
+    {
+      "task_id": "d47272acb7bc3a84",
+      "state_sha256": "f388ddf7879de12df6f96b1eb0d89b4374ef92094dbd1a20d0373522e3970bbd",
+      "chosen_logp": 0.0,
+      "rejected_logp": -57.96574401855469
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "1bd257f895c0756ed26cd3bdfebc7638eb3ecd7efb4e8b444468ea612dd8f469",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.91877746582031
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "1bd257f895c0756ed26cd3bdfebc7638eb3ecd7efb4e8b444468ea612dd8f469",
+      "chosen_logp": 0.0,
+      "rejected_logp": -249.4530029296875
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "889cb0a944c7d2eee98c41a2b33dab8555919282cf6bf3b5d70dfa615d23f00c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -246.00436401367188
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "889cb0a944c7d2eee98c41a2b33dab8555919282cf6bf3b5d70dfa615d23f00c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -41.736907958984375
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "cd84a50618b5d464936afe01522ce5f536dd3be2ed1b25713295cff9494fa738",
+      "chosen_logp": 0.0,
+      "rejected_logp": -781.4973754882812
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "cd84a50618b5d464936afe01522ce5f536dd3be2ed1b25713295cff9494fa738",
+      "chosen_logp": 0.0,
+      "rejected_logp": -68.2127685546875
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "d8b94d62ebfe82127c546e690b49f5144de86ea0437ff8a60417f1c6db26e8e6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -34.90165710449219
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "d8b94d62ebfe82127c546e690b49f5144de86ea0437ff8a60417f1c6db26e8e6",
+      "chosen_logp": 0.0,
+      "rejected_logp": -781.0350341796875
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "fb92cda7ecb09eda72f504bd50d0b9be2591328333e0a50e0e319be90882f111",
+      "chosen_logp": 0.0,
+      "rejected_logp": -59.37458801269531
+    },
+    {
+      "task_id": "e9fa725f43e56444",
+      "state_sha256": "fb92cda7ecb09eda72f504bd50d0b9be2591328333e0a50e0e319be90882f111",
+      "chosen_logp": 0.0,
+      "rejected_logp": -265.9169006347656
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "45fcb71fea54c936e860f1fc57e3416c41ce779355ef15c75945d0e260dc47ae",
+      "chosen_logp": 0.0,
+      "rejected_logp": -775.1942138671875
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "45fcb71fea54c936e860f1fc57e3416c41ce779355ef15c75945d0e260dc47ae",
+      "chosen_logp": 0.0,
+      "rejected_logp": -60.5433349609375
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "4be7df7603cf8bedf7622609d1d1187d5179dad4af22fb352ec3a7e82389c403",
+      "chosen_logp": 0.0,
+      "rejected_logp": -254.46575927734375
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "4be7df7603cf8bedf7622609d1d1187d5179dad4af22fb352ec3a7e82389c403",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.10099792480469
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "70f36fc3eb9f89387006dc4abd25ff64d315d6b5901fd604fd9d9eed0630b666",
+      "chosen_logp": 0.0,
+      "rejected_logp": -62.19676208496094
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "70f36fc3eb9f89387006dc4abd25ff64d315d6b5901fd604fd9d9eed0630b666",
+      "chosen_logp": 0.0,
+      "rejected_logp": -256.9082336425781
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "a1a7cb971ca9af202838bcf0082c5ec2ffbdfaaf266ef7c7574b6847bafac6f4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.256103515625
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "a1a7cb971ca9af202838bcf0082c5ec2ffbdfaaf266ef7c7574b6847bafac6f4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -85.04977416992188
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "e9feaaebdbf9e3d885c90307934c260fc4a3ed9d90572cb00680d68d94eed735",
+      "chosen_logp": 0.0,
+      "rejected_logp": -257.01165771484375
+    },
+    {
+      "task_id": "ee455db77fdeb043",
+      "state_sha256": "e9feaaebdbf9e3d885c90307934c260fc4a3ed9d90572cb00680d68d94eed735",
+      "chosen_logp": 0.0,
+      "rejected_logp": -248.97024536132812
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "222639a9bbbf8f5cc193fbc2a33a8e8c89d185597df1208a4623a5f70a973fef",
+      "chosen_logp": 0.0,
+      "rejected_logp": -251.55812072753906
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "222639a9bbbf8f5cc193fbc2a33a8e8c89d185597df1208a4623a5f70a973fef",
+      "chosen_logp": 0.0,
+      "rejected_logp": -78.49327087402344
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "c158b97dfe84bfd3154f1d807e8bff74401e23546f1c82b52fd82cbefd81b599",
+      "chosen_logp": 0.0,
+      "rejected_logp": -256.6493835449219
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "c158b97dfe84bfd3154f1d807e8bff74401e23546f1c82b52fd82cbefd81b599",
+      "chosen_logp": 0.0,
+      "rejected_logp": -264.0051574707031
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "d426e7440e732f5cec37684e3526e3169d6fcaede6a408ef05a65f283c2a8954",
+      "chosen_logp": 0.0,
+      "rejected_logp": -87.54054260253906
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "d426e7440e732f5cec37684e3526e3169d6fcaede6a408ef05a65f283c2a8954",
+      "chosen_logp": 0.0,
+      "rejected_logp": -261.3206481933594
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "f7c529b5cbdaaad63d59781b46234275346038d90fe1355d03be41c50c0ab4ef",
+      "chosen_logp": 0.0,
+      "rejected_logp": -257.5907287597656
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "f7c529b5cbdaaad63d59781b46234275346038d90fe1355d03be41c50c0ab4ef",
+      "chosen_logp": 0.0,
+      "rejected_logp": -61.15278625488281
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "fa27462cdef0043c053a33e685ea208b46118faf1063e9cd69deac0cb53b5388",
+      "chosen_logp": 0.0,
+      "rejected_logp": -242.81094360351562
+    },
+    {
+      "task_id": "f11e55fa14bedef8",
+      "state_sha256": "fa27462cdef0043c053a33e685ea208b46118faf1063e9cd69deac0cb53b5388",
+      "chosen_logp": 0.0,
+      "rejected_logp": -238.3612823486328
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "4228b3f150b308578708cc142db8eb40478edc79d0f3de73f1ef417c6f427e29",
+      "chosen_logp": 0.0,
+      "rejected_logp": -245.9791717529297
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "4228b3f150b308578708cc142db8eb40478edc79d0f3de73f1ef417c6f427e29",
+      "chosen_logp": 0.0,
+      "rejected_logp": -239.1881866455078
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "a104b06142ad1364e0353e6b9e811c4afaa4a74a885dab5b06894ca35b8b62c2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -778.7469482421875
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "a104b06142ad1364e0353e6b9e811c4afaa4a74a885dab5b06894ca35b8b62c2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -66.60908508300781
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "b2c493c33f7b355f0e0cd11c899d0fc2be2a9f125932ae642bf27a2a15bf1502",
+      "chosen_logp": 0.0,
+      "rejected_logp": -60.250030517578125
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "b2c493c33f7b355f0e0cd11c899d0fc2be2a9f125932ae642bf27a2a15bf1502",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.10272216796875
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "c83dc43cee9cf0be40e51086269754d961c158009ca4bd08cf03e820ba02f50f",
+      "chosen_logp": -1.728519782773219e-05,
+      "rejected_logp": -237.7798309326172
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "c83dc43cee9cf0be40e51086269754d961c158009ca4bd08cf03e820ba02f50f",
+      "chosen_logp": -1.728519782773219e-05,
+      "rejected_logp": -10.963930130004883
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "f9df3733e60ef53ce6219572c38cf0c028c56e03540fd5f497d2f9e058710440",
+      "chosen_logp": 0.0,
+      "rejected_logp": -235.0203399658203
+    },
+    {
+      "task_id": "f2101884485cec27",
+      "state_sha256": "f9df3733e60ef53ce6219572c38cf0c028c56e03540fd5f497d2f9e058710440",
+      "chosen_logp": 0.0,
+      "rejected_logp": -28.177154541015625
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "13d75470a9201e0b33b86028b8e37f6e0bc2249794fcf982c8d8b67f49c15cd4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -260.2230529785156
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "13d75470a9201e0b33b86028b8e37f6e0bc2249794fcf982c8d8b67f49c15cd4",
+      "chosen_logp": 0.0,
+      "rejected_logp": -252.152587890625
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "1dca96b696d3fe776578a85f22ce30eab70b6ff8deae8d6b70160ba7c0f4a342",
+      "chosen_logp": 0.0,
+      "rejected_logp": -61.87968444824219
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "1dca96b696d3fe776578a85f22ce30eab70b6ff8deae8d6b70160ba7c0f4a342",
+      "chosen_logp": 0.0,
+      "rejected_logp": -249.10177612304688
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "83f9dca10e4e1f3639135a764751f9e1e4a7f81413b6b9938b63dc38f31ddd5d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.1285705566406
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "83f9dca10e4e1f3639135a764751f9e1e4a7f81413b6b9938b63dc38f31ddd5d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -85.03909301757812
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "caa4130b9f2cf20be96683ddf7d08afb6b9f3d61f17fd3f2120d9ac9241eae32",
+      "chosen_logp": 0.0,
+      "rejected_logp": -50.811309814453125
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "caa4130b9f2cf20be96683ddf7d08afb6b9f3d61f17fd3f2120d9ac9241eae32",
+      "chosen_logp": 0.0,
+      "rejected_logp": -764.951904296875
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "e61358d0a9564fbc364da3b95cd0dc03c01d0f7aced749184ef0ccd47a76c5b8",
+      "chosen_logp": 0.0,
+      "rejected_logp": -241.1816864013672
+    },
+    {
+      "task_id": "f3fc6595a5fe1734",
+      "state_sha256": "e61358d0a9564fbc364da3b95cd0dc03c01d0f7aced749184ef0ccd47a76c5b8",
+      "chosen_logp": 0.0,
+      "rejected_logp": -32.407257080078125
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "18b208a7e57be595c495a604c04483ed2a0efd8be8d4d6a88c52b19a16e137c5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -273.9513854980469
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "18b208a7e57be595c495a604c04483ed2a0efd8be8d4d6a88c52b19a16e137c5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -267.5498352050781
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "3f12dfef1c8b31aed412dba66984191e2298a433a485160f31e5536761cee231",
+      "chosen_logp": 0.0,
+      "rejected_logp": -258.49261474609375
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "3f12dfef1c8b31aed412dba66984191e2298a433a485160f31e5536761cee231",
+      "chosen_logp": 0.0,
+      "rejected_logp": -75.39755249023438
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "40a1038804506f633af2caf3181ed0594f3bb6192909c6bee7a9a163cab05538",
+      "chosen_logp": 0.0,
+      "rejected_logp": -113.26719665527344
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "40a1038804506f633af2caf3181ed0594f3bb6192909c6bee7a9a163cab05538",
+      "chosen_logp": 0.0,
+      "rejected_logp": -287.4764404296875
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "8a02e809dd687bfbf0171afa4625793332ee0714e25a8d4554f885767ef6b3a2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -66.130859375
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "8a02e809dd687bfbf0171afa4625793332ee0714e25a8d4554f885767ef6b3a2",
+      "chosen_logp": 0.0,
+      "rejected_logp": -269.29827880859375
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "e73e9c3686fb6add51ce8339004a2ebee5f4e16d396eadea797c4553a3b4b11c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -52.34197998046875
+    },
+    {
+      "task_id": "f49e3471c88c4f4f",
+      "state_sha256": "e73e9c3686fb6add51ce8339004a2ebee5f4e16d396eadea797c4553a3b4b11c",
+      "chosen_logp": 0.0,
+      "rejected_logp": -261.5007629394531
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "1fbe514aabc22b49467d118349ead0259d5f239d50831bcb7c90d8a947cba0cf",
+      "chosen_logp": 0.0,
+      "rejected_logp": -63.919647216796875
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "1fbe514aabc22b49467d118349ead0259d5f239d50831bcb7c90d8a947cba0cf",
+      "chosen_logp": 0.0,
+      "rejected_logp": -82.92196655273438
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "428d261422954c473044905f593df0d701bbb458b16213367de0dc9e7cc32471",
+      "chosen_logp": 0.0,
+      "rejected_logp": -101.98187255859375
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "428d261422954c473044905f593df0d701bbb458b16213367de0dc9e7cc32471",
+      "chosen_logp": 0.0,
+      "rejected_logp": -57.93768310546875
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "7eb74c844b6131ca109f5a77174e20fee4545ffb9a0e2d037dc34fb08f5e3580",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.5953369140625
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "7eb74c844b6131ca109f5a77174e20fee4545ffb9a0e2d037dc34fb08f5e3580",
+      "chosen_logp": 0.0,
+      "rejected_logp": -267.2716979980469
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "930d8e0255e78195ba610f1df5996cf25b8ba9bf452f2355d9d17fd81229d10e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -42.37107849121094
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "930d8e0255e78195ba610f1df5996cf25b8ba9bf452f2355d9d17fd81229d10e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -96.0699462890625
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "eb833e44d9d6c3776ea9f9890ee0ec8f81593909557082ed90d3d6432eefefdd",
+      "chosen_logp": 0.0,
+      "rejected_logp": -70.97653198242188
+    },
+    {
+      "task_id": "fee6bb4ff9e70fa2",
+      "state_sha256": "eb833e44d9d6c3776ea9f9890ee0ec8f81593909557082ed90d3d6432eefefdd",
+      "chosen_logp": 0.0,
+      "rejected_logp": -261.498779296875
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "33dad5f8f0726f412fed2763488da72423617d02b648c882513f44485f6b001e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -110.32429504394531
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "33dad5f8f0726f412fed2763488da72423617d02b648c882513f44485f6b001e",
+      "chosen_logp": 0.0,
+      "rejected_logp": -50.281768798828125
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "45c0c0d3076a1487c039897d374c46b27d5880afeed3cc3713f7ee0bc66962d1",
+      "chosen_logp": 0.0,
+      "rejected_logp": -253.32958984375
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "45c0c0d3076a1487c039897d374c46b27d5880afeed3cc3713f7ee0bc66962d1",
+      "chosen_logp": 0.0,
+      "rejected_logp": -80.84561157226562
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "87a5d70e13cd8864eebd06db141ebdfde5bd3f18f7d0d1e2b9f6104c721b614d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -34.25433349609375
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "87a5d70e13cd8864eebd06db141ebdfde5bd3f18f7d0d1e2b9f6104c721b614d",
+      "chosen_logp": 0.0,
+      "rejected_logp": -69.56585693359375
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "a7704d836bd4fd1b6ce7d604bfb0268af1ea3228287a683d85e3bc05fe7f4dc5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -76.66233825683594
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "a7704d836bd4fd1b6ce7d604bfb0268af1ea3228287a683d85e3bc05fe7f4dc5",
+      "chosen_logp": 0.0,
+      "rejected_logp": -255.80589294433594
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "d5118f7a08c1071744a299a186adab597169057ea22635102600c6129020b475",
+      "chosen_logp": 0.0,
+      "rejected_logp": -120.28656005859375
+    },
+    {
+      "task_id": "fef32d988a68ec69",
+      "state_sha256": "d5118f7a08c1071744a299a186adab597169057ea22635102600c6129020b475",
+      "chosen_logp": 0.0,
+      "rejected_logp": -259.5823974609375
+    }
+  ]
+}

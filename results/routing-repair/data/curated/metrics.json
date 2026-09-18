@@ -1,0 +1,25 @@
+{
+  "method": "counterfactual_winner_v1",
+  "source_pairs": 1620,
+  "exact_states": 180,
+  "sft_examples": 180,
+  "preference_examples": 360,
+  "training_tasks": 36,
+  "states_with_conflicting_source_winners": 0,
+  "step_distribution": {
+    "1": 108,
+    "2": 36,
+    "0": 36
+  },
+  "target_distribution": {
+    "0": 127,
+    "4": 27,
+    "2": 14,
+    "8": 12
+  },
+  "selection_uses_heldout_labels": false,
+  "scope": "Best measured candidate with a fixed rule continuation; not a globally optimal multi-step policy.",
+  "source_sha256": "57a53ff51e6213494be41ef741a8d311ab5e500bec5b5be4e203ab3e22a821ed",
+  "sft_sha256": "61b60284aeb074b7e0e470fc233eeb06ece084ffcb4f44194512d5947059c284",
+  "preferences_sha256": "121f84e3798e7141626adc553086e14cd72ac1bcde00c1772f62a3f4f38e3ca2"
+}

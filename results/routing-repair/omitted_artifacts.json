@@ -1,0 +1,56 @@
+[
+  {
+    "phase": "probe",
+    "path": "representations.pt",
+    "sha256": "ecc83ad3ab8f39b1d0e76fc5547ecefb19e389310dfd8825b70a1a7562a7d434",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "sft",
+    "path": "checkpoint_pointer.json",
+    "sha256": "66430d22a69f82969cc0997ec2611e7803b0430b60562288afa03c9966ca8e39",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "sft",
+    "path": "head.pt",
+    "sha256": "3cce5df32c77ffd890ada4ecd3c4a1953551583c9122b240a1d0dd7a06486c23",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "sft",
+    "path": "latest_resume.json",
+    "sha256": "66430d22a69f82969cc0997ec2611e7803b0430b60562288afa03c9966ca8e39",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "sft",
+    "path": "optimizer.pt",
+    "sha256": "594aa53a17890e1473841c69178942d9a47ad3fffcf9fc4adb248acd74df55bc",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "preference",
+    "path": "checkpoint_pointer.json",
+    "sha256": "79a27013ff25ad1f7cab84f9018a07cbb15c47409fb8c10832d050aced592e20",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "preference",
+    "path": "head.pt",
+    "sha256": "c96263cace83c680f7ee4489d8a6584adf54f025a4fa8346155868dabcd21637",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "preference",
+    "path": "latest_resume.json",
+    "sha256": "79a27013ff25ad1f7cab84f9018a07cbb15c47409fb8c10832d050aced592e20",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  },
+  {
+    "phase": "preference",
+    "path": "optimizer.pt",
+    "sha256": "8543a5e3d64aee239605e3de320d28f41eb3d25e8a959cab76eaaeb3fcafae6a",
+    "reason": "Weights, features, optimizer state, local pointers and logs remain local."
+  }
+]

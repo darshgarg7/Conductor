@@ -1,0 +1,324 @@
+[
+  {
+    "baseline": "conductor_sft",
+    "candidate": "conductor_preference",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -0.9104218437641975
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -0.2061887345116702
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -0.017716468872094993
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -0.47939042212237837
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.9482011928630527
+      }
+    },
+    "mean_delta_task_success": 0.0,
+    "success_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "success_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_grader_score": 0.0,
+    "mean_delta_total_tokens": 0.0,
+    "token_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "token_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_agent_calls": 0.0,
+    "agent_calls_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "agent_calls_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -0.7453900843162652,
+    "latency_delta_ci95": [
+      -1.853546418089779,
+      0.3287342724435496
+    ],
+    "latency_ratio_ci95": [
+      0.5743358353651002,
+      1.1124371044818213
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+        ],
+        "candidate": [
+          "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ],
+        "candidate": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "conductor_preference",
+    "candidate": "conductor_sft",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.9104218437641975
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.2061887345116702
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.017716468872094993
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.47939042212237837
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.9482011928630527
+      }
+    },
+    "mean_delta_task_success": 0.0,
+    "success_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "success_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_grader_score": 0.0,
+    "mean_delta_total_tokens": 0.0,
+    "token_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "token_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_agent_calls": 0.0,
+    "agent_calls_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "agent_calls_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": 0.7453900843162652,
+    "latency_delta_ci95": [
+      -0.32873427244354986,
+      1.853546418089779
+    ],
+    "latency_ratio_ci95": [
+      0.8989272337921194,
+      1.741141600672234
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+        ],
+        "candidate": [
+          "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ],
+        "candidate": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  }
+]

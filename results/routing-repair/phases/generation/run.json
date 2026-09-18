@@ -1,0 +1,95 @@
+{
+  "configuration": {
+    "agents": {
+      "backend": "deterministic",
+      "token_price_per_million": 0.0,
+      "names": [
+        "planner",
+        "retriever",
+        "researcher",
+        "coder",
+        "tool_executor",
+        "critic",
+        "verifier",
+        "math"
+      ]
+    },
+    "seed": 314159,
+    "output": "outputs/research/routing-repair/generation",
+    "dataset_output": "data/generated/routing-repair",
+    "train_count": 36,
+    "eval_count": 48,
+    "policies": [
+      "all_agent",
+      "rule_based",
+      "random_top_k"
+    ],
+    "k": 2,
+    "max_rounds": 3,
+    "token_budget": 8192,
+    "agent_call_budget": 12,
+    "preference": {
+      "enabled": true,
+      "max_candidates": 10,
+      "max_states_per_task": 100,
+      "minimum_margin": 1e-06
+    },
+    "reward": {
+      "tokens": 0.05,
+      "token_normalizer": 1000,
+      "latency": 0.0,
+      "agent_calls": 0.04,
+      "communication": 0.01,
+      "communication_normalizer": 20
+    }
+  },
+  "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+  "git_dirty": false,
+  "seed": 314159,
+  "checkpoint": null,
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "runtime_seconds": 22.305907667032443,
+  "metrics": {
+    "tasks": 84,
+    "source_tasks": 84,
+    "train_tasks": 36,
+    "eval_tasks": 48,
+    "trajectories": 252,
+    "successes": 227,
+    "failures": 25,
+    "sft_records": 213,
+    "preference_records": 1620,
+    "sft_excluded_non_sparse": 36,
+    "unavailable_policies": [],
+    "resumed_trajectories": 0,
+    "dataset_directory": "data/generated/routing-repair",
+    "source_sha256": "287b5b6b8c90a4f54702634ae11ccff492c08bcb8bc50850c9bdba53056b3414",
+    "source_kind": "synthetic_development_templates",
+    "durable_preference_trials": 1800,
+    "recovery_scope": "completed trajectories and counterfactual trials replay without execution; interrupted uncommitted invocations may repeat",
+    "scope": "Actual executions; synthetic development fixtures do not establish real language-task quality.",
+    "preference_protocol": "exact-state counterfactual action at configurable initial/late states, fixed continuation",
+    "training_split": "train only; source task IDs/public texts validated disjoint"
+  }
+}

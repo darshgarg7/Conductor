@@ -1,0 +1,1616 @@
+[
+  {
+    "baseline": "Original SFT",
+    "candidate": "Repaired LoRA SFT",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -0.8125,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.016840976626554
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 5.375,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.7501015831294353
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 41.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.9748304687309428
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": -6.75,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.2566286824803683
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": 32.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.5829665207347716
+      }
+    },
+    "mean_delta_task_success": 0.3333333333333333,
+    "success_delta_ci95": [
+      0.20833333333333331,
+      0.47916666666666663
+    ],
+    "success_ratio_ci95": [
+      1.4782608695652175,
+      3.1
+    ],
+    "mean_delta_grader_score": 0.3333333333333333,
+    "mean_delta_total_tokens": 11.666666666666666,
+    "token_delta_ci95": [
+      6.561458333333335,
+      16.979687500000015
+    ],
+    "token_ratio_ci95": [
+      1.0262404705976498,
+      1.0662604065152728
+    ],
+    "mean_delta_agent_calls": 0.0,
+    "agent_calls_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "agent_calls_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -2.599701534721438,
+    "latency_delta_ci95": [
+      -3.69544239404513,
+      -1.5838821711312758
+    ],
+    "latency_ratio_ci95": [
+      0.2018745890988776,
+      0.4355763671142123
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+        ],
+        "candidate": [
+          "e194343f7c75c5c4fbaef6e369189e32a0d338a8d0b22ea57f3993f426db2b19"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Original SFT",
+    "candidate": "Repaired DPO",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -0.8125,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.363534593820077
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 5.375,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.8943849322386086
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 41.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.758651969001221
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": -6.75,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.946295828114671
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": 32.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.7741188073778176
+      }
+    },
+    "mean_delta_task_success": 0.3333333333333333,
+    "success_delta_ci95": [
+      0.20833333333333331,
+      0.47916666666666663
+    ],
+    "success_ratio_ci95": [
+      1.4782608695652175,
+      3.1
+    ],
+    "mean_delta_grader_score": 0.3333333333333333,
+    "mean_delta_total_tokens": 11.666666666666666,
+    "token_delta_ci95": [
+      6.561458333333335,
+      16.979687500000015
+    ],
+    "token_ratio_ci95": [
+      1.0262404705976498,
+      1.0662604065152728
+    ],
+    "mean_delta_agent_calls": 0.0,
+    "agent_calls_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "agent_calls_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -2.5167534540620786,
+    "latency_delta_ci95": [
+      -3.69372293132404,
+      -1.478665344410062
+    ],
+    "latency_ratio_ci95": [
+      0.2003958093584222,
+      0.48633862875236705
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+        ],
+        "candidate": [
+          "344091586109562df2b87280ca6b0903e8e90776cc3f72b859dbfae621de3207"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Original DPO",
+    "candidate": "Repaired LoRA SFT",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -0.8125,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.1064191328623565
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 5.375,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.5439128486177651
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 41.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.9571139998588478
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": -6.75,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.77723826035799
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": 32.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.634765327871719
+      }
+    },
+    "mean_delta_task_success": 0.3333333333333333,
+    "success_delta_ci95": [
+      0.20833333333333331,
+      0.47916666666666663
+    ],
+    "success_ratio_ci95": [
+      1.4782608695652175,
+      3.1
+    ],
+    "mean_delta_grader_score": 0.3333333333333333,
+    "mean_delta_total_tokens": 11.666666666666666,
+    "token_delta_ci95": [
+      6.561458333333335,
+      16.979687500000015
+    ],
+    "token_ratio_ci95": [
+      1.0262404705976498,
+      1.0662604065152728
+    ],
+    "mean_delta_agent_calls": 0.0,
+    "agent_calls_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "agent_calls_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -1.8543114504051725,
+    "latency_delta_ci95": [
+      -2.712524890566995,
+      -1.078001476767047
+    ],
+    "latency_ratio_ci95": [
+      0.2597084732682025,
+      0.5312257213868612
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+        ],
+        "candidate": [
+          "e194343f7c75c5c4fbaef6e369189e32a0d338a8d0b22ea57f3993f426db2b19"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Original DPO",
+    "candidate": "Repaired DPO",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -0.8125,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.4531127500558796
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 5.375,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.6881961977269384
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 41.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.740935500129126
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": -6.75,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.466905405992293
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": 32.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.8259176145147649
+      }
+    },
+    "mean_delta_task_success": 0.3333333333333333,
+    "success_delta_ci95": [
+      0.20833333333333331,
+      0.47916666666666663
+    ],
+    "success_ratio_ci95": [
+      1.4782608695652175,
+      3.1
+    ],
+    "mean_delta_grader_score": 0.3333333333333333,
+    "mean_delta_total_tokens": 11.666666666666666,
+    "token_delta_ci95": [
+      6.561458333333335,
+      16.979687500000015
+    ],
+    "token_ratio_ci95": [
+      1.0262404705976498,
+      1.0662604065152728
+    ],
+    "mean_delta_agent_calls": 0.0,
+    "agent_calls_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "agent_calls_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -1.7713633697458135,
+    "latency_delta_ci95": [
+      -2.6645447629736436,
+      -1.0070935791236784
+    ],
+    "latency_ratio_ci95": [
+      0.25832803451243075,
+      0.580245886163094
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+        ],
+        "candidate": [
+          "344091586109562df2b87280ca6b0903e8e90776cc3f72b859dbfae621de3207"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Frozen-backbone head",
+    "candidate": "Repaired LoRA SFT",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.60098983336502
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -190.625,
+        "mean_delta_agent_calls": -0.75,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.470698572877154
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.7681632914755028
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": -176.25,
+        "mean_delta_agent_calls": -0.75,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.7239962604871835
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.7120274427579716
+      }
+    },
+    "mean_delta_task_success": 0.16666666666666666,
+    "success_delta_ci95": [
+      0.0625,
+      0.27083333333333337
+    ],
+    "success_ratio_ci95": [
+      1.1212121212121213,
+      1.7144841269841258
+    ],
+    "mean_delta_grader_score": 0.16666666666666666,
+    "mean_delta_total_tokens": -61.145833333333336,
+    "token_delta_ci95": [
+      -91.97968749999997,
+      -30.644791666666656
+    ],
+    "token_ratio_ci95": [
+      0.7403631086167123,
+      0.8982501185809719
+    ],
+    "mean_delta_agent_calls": -0.25,
+    "agent_calls_delta_ci95": [
+      -0.375,
+      -0.125
+    ],
+    "agent_calls_ratio_ci95": [
+      0.7272727272727273,
+      0.8888888888888888
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -2.6461442057213085,
+    "latency_delta_ci95": [
+      -3.5187652350457332,
+      -1.8111870242706272
+    ],
+    "latency_ratio_ci95": [
+      0.20231538571129104,
+      0.4106729506301651
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "7ec75b92fd92efbe333176848f639e2c8af6cdc87d8f5bf8c7c4b1ca80b1de75"
+        ],
+        "candidate": [
+          "e194343f7c75c5c4fbaef6e369189e32a0d338a8d0b22ea57f3993f426db2b19"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "b1a85014c293dec5e1d670aeb2f13fa9c33d6225595c73a0f056d25af4877f9b"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Frozen-backbone head",
+    "candidate": "Repaired DPO",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.947683450558543
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -190.625,
+        "mean_delta_agent_calls": -0.75,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.6149819219863275
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -1.551984791745781
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 1.0,
+        "mean_delta_grader_score": 1.0,
+        "mean_delta_total_tokens": -176.25,
+        "mean_delta_agent_calls": -0.75,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -2.4136634061214863
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 0.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": -3.9031797294010175
+      }
+    },
+    "mean_delta_task_success": 0.16666666666666666,
+    "success_delta_ci95": [
+      0.0625,
+      0.27083333333333337
+    ],
+    "success_ratio_ci95": [
+      1.1212121212121213,
+      1.7144841269841258
+    ],
+    "mean_delta_grader_score": 0.16666666666666666,
+    "mean_delta_total_tokens": -61.145833333333336,
+    "token_delta_ci95": [
+      -91.97968749999997,
+      -30.644791666666656
+    ],
+    "token_ratio_ci95": [
+      0.7403631086167123,
+      0.8982501185809719
+    ],
+    "mean_delta_agent_calls": -0.25,
+    "agent_calls_delta_ci95": [
+      -0.375,
+      -0.125
+    ],
+    "agent_calls_ratio_ci95": [
+      0.7272727272727273,
+      0.8888888888888888
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": -2.5631961250619497,
+    "latency_delta_ci95": [
+      -3.4331779768064425,
+      -1.759525486592672
+    ],
+    "latency_ratio_ci95": [
+      0.2105445060292113,
+      0.4412935745107463
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "7ec75b92fd92efbe333176848f639e2c8af6cdc87d8f5bf8c7c4b1ca80b1de75"
+        ],
+        "candidate": [
+          "344091586109562df2b87280ca6b0903e8e90776cc3f72b859dbfae621de3207"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "b1a85014c293dec5e1d670aeb2f13fa9c33d6225595c73a0f056d25af4877f9b"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Rules",
+    "candidate": "Repaired LoRA SFT",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 208.25,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.8487740363816556
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": -1.0,
+        "mean_delta_grader_score": -1.0,
+        "mean_delta_total_tokens": 172.75,
+        "mean_delta_agent_calls": -1.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.8115259011392482
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": -1.0,
+        "mean_delta_grader_score": -1.0,
+        "mean_delta_total_tokens": 208.0,
+        "mean_delta_agent_calls": -1.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.1412419947737362
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 206.5,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.4002710936474614
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 263.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.3512879167537903
+      }
+    },
+    "mean_delta_task_success": -0.3333333333333333,
+    "success_delta_ci95": [
+      -0.45833333333333337,
+      -0.20781250000000287
+    ],
+    "success_ratio_ci95": [
+      0.5416666666666666,
+      0.7921874999999972
+    ],
+    "mean_delta_grader_score": -0.3333333333333333,
+    "mean_delta_total_tokens": 211.125,
+    "token_delta_ci95": [
+      203.77083333333337,
+      219.23072916666666
+    ],
+    "token_ratio_ci95": [
+      4.306104642120245,
+      5.844018160435516
+    ],
+    "mean_delta_agent_calls": -0.3333333333333333,
+    "agent_calls_delta_ci95": [
+      -0.45833333333333326,
+      -0.20781250000000276
+    ],
+    "agent_calls_ratio_ci95": [
+      0.6857142857142857,
+      0.8279491833030834
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": 1.0669791631795913,
+    "latency_delta_ci95": [
+      0.830596567984109,
+      1.364099871694695
+    ],
+    "latency_ratio_ci95": [
+      89.09850701415269,
+      152.64837337848806
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "None"
+        ],
+        "candidate": [
+          "e194343f7c75c5c4fbaef6e369189e32a0d338a8d0b22ea57f3993f426db2b19"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Quality noninferiority is not established by the lower confidence bound",
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "Rules",
+    "candidate": "Repaired DPO",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 208.25,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.5020804191881325
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": -1.0,
+        "mean_delta_grader_score": -1.0,
+        "mean_delta_total_tokens": 172.75,
+        "mean_delta_agent_calls": -1.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.6672425520300749
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": -1.0,
+        "mean_delta_grader_score": -1.0,
+        "mean_delta_total_tokens": 208.0,
+        "mean_delta_agent_calls": -1.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.357420494503458
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 206.5,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.7106039480131585
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": 263.0,
+        "mean_delta_agent_calls": 0.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.1601356301107444
+      }
+    },
+    "mean_delta_task_success": -0.3333333333333333,
+    "success_delta_ci95": [
+      -0.45833333333333337,
+      -0.20781250000000287
+    ],
+    "success_ratio_ci95": [
+      0.5416666666666666,
+      0.7921874999999972
+    ],
+    "mean_delta_grader_score": -0.3333333333333333,
+    "mean_delta_total_tokens": 211.125,
+    "token_delta_ci95": [
+      203.77083333333337,
+      219.23072916666666
+    ],
+    "token_ratio_ci95": [
+      4.306104642120245,
+      5.844018160435516
+    ],
+    "mean_delta_agent_calls": -0.3333333333333333,
+    "agent_calls_delta_ci95": [
+      -0.45833333333333326,
+      -0.20781250000000276
+    ],
+    "agent_calls_ratio_ci95": [
+      0.6857142857142857,
+      0.8279491833030834
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": 1.14992724383895,
+    "latency_delta_ci95": [
+      0.8338830963964028,
+      1.5298915442032617
+    ],
+    "latency_ratio_ci95": [
+      90.08822003352691,
+      170.941458425272
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "None"
+        ],
+        "candidate": [
+          "344091586109562df2b87280ca6b0903e8e90776cc3f72b859dbfae621de3207"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Quality noninferiority is not established by the lower confidence bound",
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "All-Agent sequential",
+    "candidate": "Repaired LoRA SFT",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1051.75,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.8460721822557389
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1091.25,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.8076530262624146
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": -1.0,
+        "mean_delta_grader_score": -1.0,
+        "mean_delta_total_tokens": -1020.0,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.1420871095106122
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1026.5,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.3989172865040018
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1008.0,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.3499899375165114
+      }
+    },
+    "mean_delta_task_success": -0.16666666666666666,
+    "success_delta_ci95": [
+      -0.27083333333333337,
+      -0.0625
+    ],
+    "success_ratio_ci95": [
+      0.6749999999999999,
+      0.9230769230769231
+    ],
+    "mean_delta_grader_score": -0.16666666666666666,
+    "mean_delta_total_tokens": -1041.5416666666667,
+    "token_delta_ci95": [
+      -1050.6703125,
+      -1032.8322916666666
+    ],
+    "token_ratio_ci95": [
+      0.19689408791313265,
+      0.2090025609489251
+    ],
+    "mean_delta_agent_calls": -7.0,
+    "agent_calls_delta_ci95": [
+      -7.0,
+      -7.0
+    ],
+    "agent_calls_ratio_ci95": [
+      0.125,
+      0.125
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": 1.0651319540508364,
+    "latency_delta_ci95": [
+      0.8283754405099293,
+      1.3628978901955935
+    ],
+    "latency_ratio_ci95": [
+      73.97757041328519,
+      128.3047686468356
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "None"
+        ],
+        "candidate": [
+          "e194343f7c75c5c4fbaef6e369189e32a0d338a8d0b22ea57f3993f426db2b19"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "03cae4d95f35801a06afa2ee9951dc408676d782b561b5d044fad8780acb151b"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Quality noninferiority is not established by the lower confidence bound",
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  },
+  {
+    "baseline": "All-Agent sequential",
+    "candidate": "Repaired DPO",
+    "paired_tasks": 48,
+    "baseline_only_tasks": 0,
+    "candidate_only_tasks": 0,
+    "status": "measured",
+    "categories": {
+      "code": {
+        "paired_tasks": 16,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1051.75,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.4993785650622158
+      },
+      "composed_math_string": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1091.25,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.6633696771532414
+      },
+      "composed_retrieval_math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": -1.0,
+        "mean_delta_grader_score": -1.0,
+        "mean_delta_total_tokens": -1020.0,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.358265609240334
+      },
+      "math": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1026.5,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 0.709250140869699
+      },
+      "retrieval": {
+        "paired_tasks": 8,
+        "mean_delta_task_success": 0.0,
+        "mean_delta_grader_score": 0.0,
+        "mean_delta_total_tokens": -1008.0,
+        "mean_delta_agent_calls": -7.0,
+        "mean_delta_cost_usd": 0.0,
+        "mean_delta_wall_clock_seconds": 1.1588376508734655
+      }
+    },
+    "mean_delta_task_success": -0.16666666666666666,
+    "success_delta_ci95": [
+      -0.27083333333333337,
+      -0.0625
+    ],
+    "success_ratio_ci95": [
+      0.6749999999999999,
+      0.9230769230769231
+    ],
+    "mean_delta_grader_score": -0.16666666666666666,
+    "mean_delta_total_tokens": -1041.5416666666667,
+    "token_delta_ci95": [
+      -1050.6703125,
+      -1032.8322916666666
+    ],
+    "token_ratio_ci95": [
+      0.19689408791313265,
+      0.2090025609489251
+    ],
+    "mean_delta_agent_calls": -7.0,
+    "agent_calls_delta_ci95": [
+      -7.0,
+      -7.0
+    ],
+    "agent_calls_ratio_ci95": [
+      0.125,
+      0.125
+    ],
+    "mean_delta_cost_usd": 0.0,
+    "cost_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "cost_ratio_ci95": [
+      1.0,
+      1.0
+    ],
+    "mean_delta_wall_clock_seconds": 1.1480800347101952,
+    "latency_delta_ci95": [
+      0.8322447710331592,
+      1.52816844987686
+    ],
+    "latency_ratio_ci95": [
+      73.86143364947279,
+      145.58394741840007
+    ],
+    "fingerprints": {
+      "data_sha256": {
+        "baseline": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ],
+        "candidate": [
+          "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17"
+        ]
+      },
+      "specialist_sha256": {
+        "baseline": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ],
+        "candidate": [
+          "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18"
+        ]
+      },
+      "experiment_sha256": {
+        "baseline": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ],
+        "candidate": [
+          "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085"
+        ]
+      },
+      "checkpoint_sha256": {
+        "baseline": [
+          "None"
+        ],
+        "candidate": [
+          "344091586109562df2b87280ca6b0903e8e90776cc3f72b859dbfae621de3207"
+        ]
+      },
+      "config_sha256": {
+        "baseline": [
+          "03cae4d95f35801a06afa2ee9951dc408676d782b561b5d044fad8780acb151b"
+        ],
+        "candidate": [
+          "2842d4bdc650f26b02b18f8ca71a792af11b572815549c3b90e92105e5e41177"
+        ]
+      }
+    },
+    "comparable_fingerprints": true,
+    "unknown_cost_exclusions": 48,
+    "bootstrap": {
+      "unit": "unique_task_id",
+      "samples": 2000,
+      "seed": 42
+    },
+    "claim_gate": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Quality noninferiority is not established by the lower confidence bound",
+        "Cost reduction is not established by the upper confidence bound",
+        "Unknown/proxy/heterogeneous token billing invalidates this cost comparison"
+      ],
+      "cost_metric": "cost_usd",
+      "minimum_paired_tasks": 30,
+      "quality_noninferiority_margin": 0.0,
+      "interpretation": "Eligibility supports only this predefined measured comparison, not a broader improvement claim."
+    }
+  }
+]

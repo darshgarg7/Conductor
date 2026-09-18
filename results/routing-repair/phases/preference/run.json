@@ -1,0 +1,194 @@
+{
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 256,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": true,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      },
+      "state_serialization": "priority_v1"
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": true,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "training": {
+      "stage": "dpo",
+      "data": "data/generated/routing-repair/curated/preferences.jsonl",
+      "checkpoint": "outputs/research/routing-repair/sft",
+      "output": "outputs/research/routing-repair/preference",
+      "epochs": 1,
+      "batch_size": 2,
+      "gradient_accumulation_steps": 2,
+      "learning_rate": 3e-05,
+      "weight_decay": 0.01,
+      "validation_fraction": 0.25,
+      "beta": 0.1,
+      "max_grad_norm": 1.0,
+      "gradient_checkpointing": false,
+      "scheduler": "constant",
+      "save_every_epochs": 1
+    }
+  },
+  "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+  "git_dirty": false,
+  "seed": 42,
+  "checkpoint": "outputs/research/routing-repair/sft",
+  "hardware": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "cudnn_version": null,
+    "visible_nvidia_devices": [],
+    "mps_available": true,
+    "cpu_count": 11
+  },
+  "library_versions": {
+    "torch": "2.14.0",
+    "transformers": "4.57.6",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "numpy": "2.5.3",
+    "PyYAML": "6.0.3",
+    "fastapi": "0.141.1",
+    "uvicorn": "0.53.0"
+  },
+  "slurm_job_id": null,
+  "resolved_model": {
+    "backend": "hf",
+    "name": "ibm-granite/granite-3.1-1b-a400m-base",
+    "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+    "pretrained": true,
+    "max_agents": 3,
+    "max_length": 256,
+    "device": "cpu",
+    "dtype": "float32",
+    "attention_implementation": "sdpa",
+    "local_files_only": true,
+    "trust_remote_code": false,
+    "input_cost_per_million_tokens": 0.0,
+    "lora": {
+      "enabled": true,
+      "r": 4,
+      "alpha": 8,
+      "dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "v_proj",
+        "router.layer"
+      ]
+    },
+    "state_serialization": "priority_v1",
+    "resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+    "pooling": "mean",
+    "head_input_normalization": "none"
+  },
+  "distributed": {
+    "rank": 0,
+    "world_size": 1
+  },
+  "resumed_from": null,
+  "data_identity": {
+    "stage": "dpo",
+    "seed": 42,
+    "world_size": 1,
+    "dataset_sha256": "121f84e3798e7141626adc553086e14cd72ac1bcde00c1772f62a3f4f38e3ca2",
+    "filtered_records_sha256": "025b9ca564c37bf29aab59c5e5be79cb8bfd6f3e4c9370acc14f66e98a4a523a",
+    "partition_sha256": "b4c30a8df10e4bac6434110020dd6840ea1b32783dd4992f450fee7635ef5369",
+    "reference_checkpoint_sha256": "fe92e68c47dc9755f759ef13fa43310a00cb5153fb9e6c88dfa20aeb8005df5f",
+    "k": 2,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 2,
+    "beta": 0.1,
+    "learning_rate": 3e-05,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "scheduler": "constant",
+    "warmup_steps": 0,
+    "dtype": "torch.float32",
+    "gradient_checkpointing": false,
+    "router_auxiliary_weight": 0.0,
+    "device_type": "cpu",
+    "execution_device_type": "cpu",
+    "per_rank_execution_hardware": [
+      {
+        "device_type": "cpu",
+        "processor": "arm",
+        "machine": "arm64",
+        "cpu_kernel_capability": "DEFAULT",
+        "torch_threads": 1,
+        "torch_interop_threads": 11,
+        "float32_matmul_precision": "highest",
+        "deterministic_algorithms": false,
+        "cublas_workspace_config": null,
+        "cuda_runtime": null
+      }
+    ],
+    "model_sha256": "4cc58d103c70f60051448c5c2bde3d4354ce0da6db09bfb45397f4131268729a",
+    "hf_versions": {
+      "transformers": "4.57.6",
+      "peft": "0.21.0",
+      "tokenizers": "0.22.2"
+    }
+  },
+  "runtime_seconds": 1458.9194753749762,
+  "metrics": {
+    "stage": "dpo",
+    "epochs": 1,
+    "completed": true,
+    "optimizer_windows": 68,
+    "skipped_amp_updates": 0,
+    "world_size": 1,
+    "gradient_accumulation_steps": 2,
+    "train_examples": 270,
+    "validation_examples": 90,
+    "source_examples": 360,
+    "excluded_actions_exceeding_k": 0,
+    "train_k": 2,
+    "initial_train": {
+      "loss": 0.6931471824645996,
+      "accuracy": 1.0
+    },
+    "final_train": {
+      "loss": 0.16925815498387373,
+      "accuracy": 1.0
+    },
+    "final_validation": {
+      "loss": 0.25073717885857655,
+      "accuracy": 0.9666666666666667
+    },
+    "trainable_parameters": 942565,
+    "total_controller_parameters": 1335567845,
+    "reference_checkpoint_sha256": "fe92e68c47dc9755f759ef13fa43310a00cb5153fb9e6c88dfa20aeb8005df5f",
+    "dataset_sha256": "121f84e3798e7141626adc553086e14cd72ac1bcde00c1772f62a3f4f38e3ca2",
+    "pretrained": true,
+    "checkpoint": "outputs/research/routing-repair/preference",
+    "resume_checkpoint": "outputs/research/routing-repair/preference/resume/step-00000068-epoch-0001",
+    "specialists_updated": false
+  }
+}

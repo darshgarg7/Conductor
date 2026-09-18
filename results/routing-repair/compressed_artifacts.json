@@ -1,0 +1,8 @@
+[
+  {
+    "archive": "data/preference_trials.jsonl.gz",
+    "uncompressed_sha256": "4e8ec77d147b90b88e97656c0f18125a84b11cc9b075b126da8ce15173f54805",
+    "uncompressed_bytes": 20744195,
+    "round_trip_verified": true
+  }
+]

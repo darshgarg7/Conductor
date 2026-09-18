@@ -1,0 +1,733 @@
+{
+  "train_count": 36,
+  "heldout_count": 48,
+  "splits": [
+    "eval"
+  ],
+  "train_overlap_ids": 0,
+  "train_overlap_texts": 0,
+  "heldout_task_ids": [
+    "37ce5b6576095221",
+    "0c4f9eb7ed60e8af",
+    "77b09eea34894878",
+    "6e43fa0f45b32f4f",
+    "070da2d16e345766",
+    "771b540f029a0ca6",
+    "8310ff64f17026f0",
+    "a617a03df5679ba3",
+    "02618fd1d5e90773",
+    "dd45c8dc774c31c9",
+    "58b8db390e337cbf",
+    "92d6a056aeb8061a",
+    "32109318cbf223dc",
+    "74252ac48d455991",
+    "063a83db2f61d661",
+    "13963443dc508dd3",
+    "0045f7ba188712f1",
+    "69d4246418da8601",
+    "a8525cf6f3718c2f",
+    "e00bc4cdd9592534",
+    "4e5c24077ab12113",
+    "34a27aa482707ab3",
+    "04b017e43b44fab2",
+    "fb7d2bdaf99f3cd1",
+    "2055ab45f043d261",
+    "48ea7fa6cd06dac0",
+    "72b0475deab9ee01",
+    "40ed52c3de05a3d7",
+    "d7eea40bbd0143a3",
+    "7a1499c22bbc12ec",
+    "9625758aa5348567",
+    "9c3146084cce7ef4",
+    "7a12e4f3c9762239",
+    "7883c04c65825ffd",
+    "a4b9a77198a652ad",
+    "35541b37f4bcc8cf",
+    "d713141593f321b9",
+    "0af35fc55420e563",
+    "878cb746cc6a9d6e",
+    "05fc01256bee2fa9",
+    "808a39ce147335cf",
+    "2611ca96495b0129",
+    "8313266602378b1f",
+    "e32f529c213a1787",
+    "dc8fac7381039b16",
+    "64b3be0778c6e980",
+    "e317bae3c7655fe4",
+    "df94c49a2a5669c4"
+  ],
+  "tasks": [
+    {
+      "id": "37ce5b6576095221",
+      "user_task": "Compute 3748 + 11.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "3759",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "0c4f9eb7ed60e8af",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 6, \"Orion\": 3864, \"Vega\": 3870}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "3864",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "77b09eea34894878",
+      "user_task": "Reverse the text \"cobalt orbit am\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "ma tibro tlaboc",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "6e43fa0f45b32f4f",
+      "user_task": "Count vowels in the text \"river amber an\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "5",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "070da2d16e345766",
+      "user_task": "Find Orion's value in reference, then multiply that value by 5. Reference: {\"Lyra\": 5, \"Orion\": 4233}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "21165",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "771b540f029a0ca6",
+      "user_task": "Compute 4292 + 17. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "9034",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "8310ff64f17026f0",
+      "user_task": "Compute 4370 + 7.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "4377",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "a617a03df5679ba3",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 17, \"Orion\": 4457, \"Vega\": 4474}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "4457",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "02618fd1d5e90773",
+      "user_task": "Reverse the text \"orbit signal as\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "sa langis tibro",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "dd45c8dc774c31c9",
+      "user_task": "Count vowels in the text \"signal silver at\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "5",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "58b8db390e337cbf",
+      "user_task": "Find Orion's value in reference, then multiply that value by 16. Reference: {\"Lyra\": 16, \"Orion\": 4797}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "76752",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "92d6a056aeb8061a",
+      "user_task": "Compute 4888 + 7. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "5984",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "32109318cbf223dc",
+      "user_task": "Compute 4991 + 6.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "4997",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "74252ac48d455991",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 7, \"Orion\": 5116, \"Vega\": 5123}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "5116",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "063a83db2f61d661",
+      "user_task": "Reverse the text \"violet silver ay\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "ya revlis teloiv",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "13963443dc508dd3",
+      "user_task": "Count vowels in the text \"amber cobalt az\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "5",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "0045f7ba188712f1",
+      "user_task": "Find Orion's value in reference, then multiply that value by 16. Reference: {\"Lyra\": 16, \"Orion\": 5363}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "85808",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "69d4246418da8601",
+      "user_task": "Compute 5503 + 9. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "2155",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "a8525cf6f3718c2f",
+      "user_task": "Compute 5602 + 17.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "5619",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "e00bc4cdd9592534",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 17, \"Orion\": 5675, \"Vega\": 5692}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "5675",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "4e5c24077ab12113",
+      "user_task": "Reverse the text \"meadow orbit be\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "eb tibro wodaem",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "34a27aa482707ab3",
+      "user_task": "Count vowels in the text \"silver signal bf\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "4",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "04b017e43b44fab2",
+      "user_task": "Find Orion's value in reference, then multiply that value by 9. Reference: {\"Lyra\": 9, \"Orion\": 5990}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "53910",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "fb7d2bdaf99f3cd1",
+      "user_task": "Compute 6121 + 14. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "5316",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "2055ab45f043d261",
+      "user_task": "Compute 6216 + 5.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "6221",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "48ea7fa6cd06dac0",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 6, \"Orion\": 6359, \"Vega\": 6365}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "6359",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "72b0475deab9ee01",
+      "user_task": "Reverse the text \"cobalt violet bk\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "kb teloiv tlaboc",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "40ed52c3de05a3d7",
+      "user_task": "Count vowels in the text \"river signal bl\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "4",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "d7eea40bbd0143a3",
+      "user_task": "Find Orion's value in reference, then multiply that value by 4. Reference: {\"Lyra\": 4, \"Orion\": 6612}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "26448",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "7a1499c22bbc12ec",
+      "user_task": "Compute 6755 + 3. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "8576",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "9625758aa5348567",
+      "user_task": "Compute 6811 + 7.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "6818",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "9c3146084cce7ef4",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 13, \"Orion\": 6965, \"Vega\": 6978}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "6965",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "7a12e4f3c9762239",
+      "user_task": "Reverse the text \"orbit violet bq\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "qb teloiv tibro",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "7883c04c65825ffd",
+      "user_task": "Count vowels in the text \"signal river br\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "4",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "a4b9a77198a652ad",
+      "user_task": "Find Orion's value in reference, then multiply that value by 12. Reference: {\"Lyra\": 12, \"Orion\": 7175}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "86100",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "35541b37f4bcc8cf",
+      "user_task": "Compute 7327 + 2. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "9237",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "d713141593f321b9",
+      "user_task": "Compute 7411 + 8.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "7419",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "0af35fc55420e563",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 3, \"Orion\": 7545, \"Vega\": 7548}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "7545",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "878cb746cc6a9d6e",
+      "user_task": "Reverse the text \"violet signal bw\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "wb langis teloiv",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "05fc01256bee2fa9",
+      "user_task": "Count vowels in the text \"amber cobalt bx\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "4",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "808a39ce147335cf",
+      "user_task": "Find Orion's value in reference, then multiply that value by 14. Reference: {\"Lyra\": 14, \"Orion\": 7794}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "109116",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "2611ca96495b0129",
+      "user_task": "Compute 7931 + 10. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "1497",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    },
+    {
+      "id": "8313266602378b1f",
+      "user_task": "Compute 8035 + 3.",
+      "task_type": "math",
+      "split": "eval",
+      "expected_answer": "8038",
+      "metadata": {
+        "family": "math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "arithmetic_addition"
+      }
+    },
+    {
+      "id": "e32f529c213a1787",
+      "user_task": "What is Orion's value? Reference: {\"Lyra\": 16, \"Orion\": 8092, \"Vega\": 8108}",
+      "task_type": "retrieval",
+      "split": "eval",
+      "expected_answer": "8092",
+      "metadata": {
+        "family": "retrieval",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "inline_lookup"
+      }
+    },
+    {
+      "id": "dc8fac7381039b16",
+      "user_task": "Reverse the text \"meadow meadow cc\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "cc wodaem wodaem",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "reverse_string"
+      }
+    },
+    {
+      "id": "64b3be0778c6e980",
+      "user_task": "Count vowels in the text \"silver silver cd\".",
+      "task_type": "code",
+      "split": "eval",
+      "expected_answer": "4",
+      "metadata": {
+        "family": "code",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": false,
+        "template_family": "count_vowels"
+      }
+    },
+    {
+      "id": "e317bae3c7655fe4",
+      "user_task": "Find Orion's value in reference, then multiply that value by 2. Reference: {\"Lyra\": 2, \"Orion\": 8461}",
+      "task_type": "composed_retrieval_math",
+      "split": "eval",
+      "expected_answer": "16922",
+      "metadata": {
+        "family": "composed_retrieval_math",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "lookup_multiply"
+      }
+    },
+    {
+      "id": "df94c49a2a5669c4",
+      "user_task": "Compute 8543 + 9. then reverse the digits of the result.",
+      "task_type": "composed_math_string",
+      "split": "eval",
+      "expected_answer": "2558",
+      "metadata": {
+        "family": "composed_math_string",
+        "generation_seed": 314159,
+        "grader": "exact",
+        "ood": true,
+        "template_family": "addition_reverse_digits"
+      }
+    }
+  ]
+}

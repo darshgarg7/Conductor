@@ -1,0 +1,19 @@
+[
+  {
+    "policy": "conductor_sft",
+    "label": "conductor_sft",
+    "status": "measured",
+    "task_count": 48,
+    "checkpoint": "outputs/research/routing-repair/probe/selected",
+    "controller_backend": "hf",
+    "controller_pretrained": true,
+    "specialist_backend": "deterministic",
+    "checkpoint_sha256": "7ec75b92fd92efbe333176848f639e2c8af6cdc87d8f5bf8c7c4b1ca80b1de75",
+    "controller_token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+    "data_sha256": "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17",
+    "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+    "config_sha256": "b1a85014c293dec5e1d670aeb2f13fa9c33d6225595c73a0f056d25af4877f9b",
+    "experiment_sha256": "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085",
+    "strict_mode": true
+  }
+]

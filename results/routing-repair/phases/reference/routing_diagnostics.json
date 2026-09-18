@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "policies": {
+    "conductor_preference": {
+      "independent_task_count": 48,
+      "task_ids": [
+        "0045f7ba188712f1",
+        "02618fd1d5e90773",
+        "04b017e43b44fab2",
+        "05fc01256bee2fa9",
+        "063a83db2f61d661",
+        "070da2d16e345766",
+        "0af35fc55420e563",
+        "0c4f9eb7ed60e8af",
+        "13963443dc508dd3",
+        "2055ab45f043d261",
+        "2611ca96495b0129",
+        "32109318cbf223dc",
+        "34a27aa482707ab3",
+        "35541b37f4bcc8cf",
+        "37ce5b6576095221",
+        "40ed52c3de05a3d7",
+        "48ea7fa6cd06dac0",
+        "4e5c24077ab12113",
+        "58b8db390e337cbf",
+        "64b3be0778c6e980",
+        "69d4246418da8601",
+        "6e43fa0f45b32f4f",
+        "72b0475deab9ee01",
+        "74252ac48d455991",
+        "771b540f029a0ca6",
+        "77b09eea34894878",
+        "7883c04c65825ffd",
+        "7a12e4f3c9762239",
+        "7a1499c22bbc12ec",
+        "808a39ce147335cf",
+        "8310ff64f17026f0",
+        "8313266602378b1f",
+        "878cb746cc6a9d6e",
+        "92d6a056aeb8061a",
+        "9625758aa5348567",
+        "9c3146084cce7ef4",
+        "a4b9a77198a652ad",
+        "a617a03df5679ba3",
+        "a8525cf6f3718c2f",
+        "d713141593f321b9",
+        "d7eea40bbd0143a3",
+        "dc8fac7381039b16",
+        "dd45c8dc774c31c9",
+        "df94c49a2a5669c4",
+        "e00bc4cdd9592534",
+        "e317bae3c7655fe4",
+        "e32f529c213a1787",
+        "fb7d2bdaf99f3cd1"
+      ],
+      "trajectory_count": 48,
+      "runs_per_task": {
+        "0045f7ba188712f1": 1,
+        "02618fd1d5e90773": 1,
+        "04b017e43b44fab2": 1,
+        "05fc01256bee2fa9": 1,
+        "063a83db2f61d661": 1,
+        "070da2d16e345766": 1,
+        "0af35fc55420e563": 1,
+        "0c4f9eb7ed60e8af": 1,
+        "13963443dc508dd3": 1,
+        "2055ab45f043d261": 1,
+        "2611ca96495b0129": 1,
+        "32109318cbf223dc": 1,
+        "34a27aa482707ab3": 1,
+        "35541b37f4bcc8cf": 1,
+        "37ce5b6576095221": 1,
+        "40ed52c3de05a3d7": 1,
+        "48ea7fa6cd06dac0": 1,
+        "4e5c24077ab12113": 1,
+        "58b8db390e337cbf": 1,
+        "64b3be0778c6e980": 1,
+        "69d4246418da8601": 1,
+        "6e43fa0f45b32f4f": 1,
+        "72b0475deab9ee01": 1,
+        "74252ac48d455991": 1,
+        "771b540f029a0ca6": 1,
+        "77b09eea34894878": 1,
+        "7883c04c65825ffd": 1,
+        "7a12e4f3c9762239": 1,
+        "7a1499c22bbc12ec": 1,
+        "808a39ce147335cf": 1,
+        "8310ff64f17026f0": 1,
+        "8313266602378b1f": 1,
+        "878cb746cc6a9d6e": 1,
+        "92d6a056aeb8061a": 1,
+        "9625758aa5348567": 1,
+        "9c3146084cce7ef4": 1,
+        "a4b9a77198a652ad": 1,
+        "a617a03df5679ba3": 1,
+        "a8525cf6f3718c2f": 1,
+        "d713141593f321b9": 1,
+        "d7eea40bbd0143a3": 1,
+        "dc8fac7381039b16": 1,
+        "dd45c8dc774c31c9": 1,
+        "df94c49a2a5669c4": 1,
+        "e00bc4cdd9592534": 1,
+        "e317bae3c7655fe4": 1,
+        "e32f529c213a1787": 1,
+        "fb7d2bdaf99f3cd1": 1
+      },
+      "splits": [
+        "eval"
+      ],
+      "recorded_success_rate": 0.3333333333333333,
+      "exact_grading_coverage": 1.0,
+      "exact_success_rate": 0.3333333333333333,
+      "reported_success_disagreements": 0,
+      "raw_fresh_routing_decisions": 96,
+      "raw_reused_decisions": 0,
+      "unique_routing_actions": 2,
+      "unique_first_actions": 1,
+      "constant_first_action": true,
+      "first_action_distribution": [
+        {
+          "action": {
+            "selected_agents": [
+              "coder"
+            ],
+            "execution_mode": "parallel",
+            "terminate": false
+          },
+          "missing_routing_decision": false,
+          "task_weighted_mass": 48.0,
+          "probability": 1.0
+        }
+      ],
+      "action_distribution": [
+        {
+          "action": {
+            "selected_agents": [
+              "coder"
+            ],
+            "execution_mode": "parallel",
+            "terminate": false
+          },
+          "missing_routing_decision": false,
+          "task_weighted_mass": 24.0,
+          "probability": 0.5
+        },
+        {
+          "action": {
+            "selected_agents": [],
+            "execution_mode": "parallel",
+            "terminate": true
+          },
+          "missing_routing_decision": false,
+          "task_weighted_mass": 24.0,
+          "probability": 0.5
+        }
+      ],
+      "first_action_entropy_bits": -0.0,
+      "action_entropy_bits": 1.0,
+      "task_type_entropy_bits": 2.2516291673878226,
+      "task_type_first_action_mutual_information_bits": 0.0,
+      "normalized_task_type_first_action_mutual_information": null,
+      "first_action_association_permutation_null": {
+        "status": "measured",
+        "independent_task_count": 48,
+        "permutation_samples": 199,
+        "seed": 42,
+        "observed_mutual_information_bits": 0.0,
+        "mean_permuted_mutual_information_bits": 0.0,
+        "excess_over_permuted_mean_bits": 0.0,
+        "p_value_ge_observed": 1.0,
+        "scope": "Shuffles task-type labels across unique task IDs, keeping each task's repeated-run action distribution together. Exchangeability is an assumption; shared-template task dependence is not corrected. P-values are unadjusted for multiple policy/metric comparisons. Association does not establish learning, specialization or causation."
+      },
+      "missing_first_action_task_fraction": 0.0,
+      "first_route_step_distribution": [
+        {
+          "step": 0,
+          "task_weighted_mass": 48.0
+        }
+      ],
+      "agent_selection_distribution": {
+        "planner": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "retriever": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "researcher": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "coder": {
+          "selection_share": 1.0,
+          "task_normalized_route_selection_probability": 0.5,
+          "mean_actual_activations_per_task": 1.0,
+          "task_called_probability": 1.0
+        },
+        "tool_executor": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "critic": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "verifier": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "math": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        }
+      },
+      "agent_selection_entropy_bits": -0.0,
+      "mean_actual_agent_activations": 1.0,
+      "termination_by_step": [
+        {
+          "step": 0,
+          "visiting_task_mass": 48.0,
+          "visitation_rate": 1.0,
+          "fresh_routing_task_mass": 48.0,
+          "requested_termination_frequency_given_fresh_route": 0.0,
+          "execution_termination_frequency_given_visit": 0.0,
+          "requested_termination_task_probability": 0.0
+        },
+        {
+          "step": 1,
+          "visiting_task_mass": 48.0,
+          "visitation_rate": 1.0,
+          "fresh_routing_task_mass": 48.0,
+          "requested_termination_frequency_given_fresh_route": 1.0,
+          "execution_termination_frequency_given_visit": 1.0,
+          "requested_termination_task_probability": 1.0
+        }
+      ],
+      "categories": {
+        "code": {
+          "independent_task_count": 16,
+          "trajectory_count": 16,
+          "recorded_success_mass": 16.0,
+          "exact_success_mass": 16.0,
+          "exact_grading_mass": 16.0,
+          "actual_activation_mass": 16.0,
+          "recorded_success_rate": 1.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 1.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "composed_math_string": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "composed_retrieval_math": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "math": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "retrieval": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        }
+      },
+      "condition_inventory": {
+        "checkpoint_sha256": [
+          "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1"
+        ],
+        "evaluation_budgets": [
+          {
+            "agent_call_budget": 12,
+            "k": 2,
+            "max_rounds": 3,
+            "routing_interval": 1,
+            "token_budget": 8192
+          }
+        ],
+        "specialist_fingerprint": [
+          "3568efdd4abbce53c0838cb80d34ffc4024b5b52eb0a0a149c2fc8a95ad7e171"
+        ]
+      },
+      "mixed_conditions": false,
+      "requested_action_run_coverage": 1.0,
+      "warnings": [
+        {
+          "code": "constant_first_action",
+          "severity": "descriptive",
+          "message": "Every observed first action is identical. This can be a justified shared route; inspect task success and required capabilities before calling it harmful collapse."
+        }
+      ]
+    },
+    "conductor_sft": {
+      "independent_task_count": 48,
+      "task_ids": [
+        "0045f7ba188712f1",
+        "02618fd1d5e90773",
+        "04b017e43b44fab2",
+        "05fc01256bee2fa9",
+        "063a83db2f61d661",
+        "070da2d16e345766",
+        "0af35fc55420e563",
+        "0c4f9eb7ed60e8af",
+        "13963443dc508dd3",
+        "2055ab45f043d261",
+        "2611ca96495b0129",
+        "32109318cbf223dc",
+        "34a27aa482707ab3",
+        "35541b37f4bcc8cf",
+        "37ce5b6576095221",
+        "40ed52c3de05a3d7",
+        "48ea7fa6cd06dac0",
+        "4e5c24077ab12113",
+        "58b8db390e337cbf",
+        "64b3be0778c6e980",
+        "69d4246418da8601",
+        "6e43fa0f45b32f4f",
+        "72b0475deab9ee01",
+        "74252ac48d455991",
+        "771b540f029a0ca6",
+        "77b09eea34894878",
+        "7883c04c65825ffd",
+        "7a12e4f3c9762239",
+        "7a1499c22bbc12ec",
+        "808a39ce147335cf",
+        "8310ff64f17026f0",
+        "8313266602378b1f",
+        "878cb746cc6a9d6e",
+        "92d6a056aeb8061a",
+        "9625758aa5348567",
+        "9c3146084cce7ef4",
+        "a4b9a77198a652ad",
+        "a617a03df5679ba3",
+        "a8525cf6f3718c2f",
+        "d713141593f321b9",
+        "d7eea40bbd0143a3",
+        "dc8fac7381039b16",
+        "dd45c8dc774c31c9",
+        "df94c49a2a5669c4",
+        "e00bc4cdd9592534",
+        "e317bae3c7655fe4",
+        "e32f529c213a1787",
+        "fb7d2bdaf99f3cd1"
+      ],
+      "trajectory_count": 48,
+      "runs_per_task": {
+        "0045f7ba188712f1": 1,
+        "02618fd1d5e90773": 1,
+        "04b017e43b44fab2": 1,
+        "05fc01256bee2fa9": 1,
+        "063a83db2f61d661": 1,
+        "070da2d16e345766": 1,
+        "0af35fc55420e563": 1,
+        "0c4f9eb7ed60e8af": 1,
+        "13963443dc508dd3": 1,
+        "2055ab45f043d261": 1,
+        "2611ca96495b0129": 1,
+        "32109318cbf223dc": 1,
+        "34a27aa482707ab3": 1,
+        "35541b37f4bcc8cf": 1,
+        "37ce5b6576095221": 1,
+        "40ed52c3de05a3d7": 1,
+        "48ea7fa6cd06dac0": 1,
+        "4e5c24077ab12113": 1,
+        "58b8db390e337cbf": 1,
+        "64b3be0778c6e980": 1,
+        "69d4246418da8601": 1,
+        "6e43fa0f45b32f4f": 1,
+        "72b0475deab9ee01": 1,
+        "74252ac48d455991": 1,
+        "771b540f029a0ca6": 1,
+        "77b09eea34894878": 1,
+        "7883c04c65825ffd": 1,
+        "7a12e4f3c9762239": 1,
+        "7a1499c22bbc12ec": 1,
+        "808a39ce147335cf": 1,
+        "8310ff64f17026f0": 1,
+        "8313266602378b1f": 1,
+        "878cb746cc6a9d6e": 1,
+        "92d6a056aeb8061a": 1,
+        "9625758aa5348567": 1,
+        "9c3146084cce7ef4": 1,
+        "a4b9a77198a652ad": 1,
+        "a617a03df5679ba3": 1,
+        "a8525cf6f3718c2f": 1,
+        "d713141593f321b9": 1,
+        "d7eea40bbd0143a3": 1,
+        "dc8fac7381039b16": 1,
+        "dd45c8dc774c31c9": 1,
+        "df94c49a2a5669c4": 1,
+        "e00bc4cdd9592534": 1,
+        "e317bae3c7655fe4": 1,
+        "e32f529c213a1787": 1,
+        "fb7d2bdaf99f3cd1": 1
+      },
+      "splits": [
+        "eval"
+      ],
+      "recorded_success_rate": 0.3333333333333333,
+      "exact_grading_coverage": 1.0,
+      "exact_success_rate": 0.3333333333333333,
+      "reported_success_disagreements": 0,
+      "raw_fresh_routing_decisions": 96,
+      "raw_reused_decisions": 0,
+      "unique_routing_actions": 2,
+      "unique_first_actions": 1,
+      "constant_first_action": true,
+      "first_action_distribution": [
+        {
+          "action": {
+            "selected_agents": [
+              "coder"
+            ],
+            "execution_mode": "parallel",
+            "terminate": false
+          },
+          "missing_routing_decision": false,
+          "task_weighted_mass": 48.0,
+          "probability": 1.0
+        }
+      ],
+      "action_distribution": [
+        {
+          "action": {
+            "selected_agents": [
+              "coder"
+            ],
+            "execution_mode": "parallel",
+            "terminate": false
+          },
+          "missing_routing_decision": false,
+          "task_weighted_mass": 24.0,
+          "probability": 0.5
+        },
+        {
+          "action": {
+            "selected_agents": [],
+            "execution_mode": "parallel",
+            "terminate": true
+          },
+          "missing_routing_decision": false,
+          "task_weighted_mass": 24.0,
+          "probability": 0.5
+        }
+      ],
+      "first_action_entropy_bits": -0.0,
+      "action_entropy_bits": 1.0,
+      "task_type_entropy_bits": 2.2516291673878226,
+      "task_type_first_action_mutual_information_bits": 0.0,
+      "normalized_task_type_first_action_mutual_information": null,
+      "first_action_association_permutation_null": {
+        "status": "measured",
+        "independent_task_count": 48,
+        "permutation_samples": 199,
+        "seed": 42,
+        "observed_mutual_information_bits": 0.0,
+        "mean_permuted_mutual_information_bits": 0.0,
+        "excess_over_permuted_mean_bits": 0.0,
+        "p_value_ge_observed": 1.0,
+        "scope": "Shuffles task-type labels across unique task IDs, keeping each task's repeated-run action distribution together. Exchangeability is an assumption; shared-template task dependence is not corrected. P-values are unadjusted for multiple policy/metric comparisons. Association does not establish learning, specialization or causation."
+      },
+      "missing_first_action_task_fraction": 0.0,
+      "first_route_step_distribution": [
+        {
+          "step": 0,
+          "task_weighted_mass": 48.0
+        }
+      ],
+      "agent_selection_distribution": {
+        "planner": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "retriever": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "researcher": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "coder": {
+          "selection_share": 1.0,
+          "task_normalized_route_selection_probability": 0.5,
+          "mean_actual_activations_per_task": 1.0,
+          "task_called_probability": 1.0
+        },
+        "tool_executor": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "critic": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "verifier": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        },
+        "math": {
+          "selection_share": 0.0,
+          "task_normalized_route_selection_probability": 0.0,
+          "mean_actual_activations_per_task": 0.0,
+          "task_called_probability": 0.0
+        }
+      },
+      "agent_selection_entropy_bits": -0.0,
+      "mean_actual_agent_activations": 1.0,
+      "termination_by_step": [
+        {
+          "step": 0,
+          "visiting_task_mass": 48.0,
+          "visitation_rate": 1.0,
+          "fresh_routing_task_mass": 48.0,
+          "requested_termination_frequency_given_fresh_route": 0.0,
+          "execution_termination_frequency_given_visit": 0.0,
+          "requested_termination_task_probability": 0.0
+        },
+        {
+          "step": 1,
+          "visiting_task_mass": 48.0,
+          "visitation_rate": 1.0,
+          "fresh_routing_task_mass": 48.0,
+          "requested_termination_frequency_given_fresh_route": 1.0,
+          "execution_termination_frequency_given_visit": 1.0,
+          "requested_termination_task_probability": 1.0
+        }
+      ],
+      "categories": {
+        "code": {
+          "independent_task_count": 16,
+          "trajectory_count": 16,
+          "recorded_success_mass": 16.0,
+          "exact_success_mass": 16.0,
+          "exact_grading_mass": 16.0,
+          "actual_activation_mass": 16.0,
+          "recorded_success_rate": 1.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 1.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "composed_math_string": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "composed_retrieval_math": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "math": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        },
+        "retrieval": {
+          "independent_task_count": 8,
+          "trajectory_count": 8,
+          "recorded_success_mass": 0.0,
+          "exact_success_mass": 0.0,
+          "exact_grading_mass": 8.0,
+          "actual_activation_mass": 8.0,
+          "recorded_success_rate": 0.0,
+          "exact_grading_coverage": 1.0,
+          "exact_success_rate": 0.0,
+          "mean_actual_agent_activations": 1.0
+        }
+      },
+      "condition_inventory": {
+        "checkpoint_sha256": [
+          "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9"
+        ],
+        "evaluation_budgets": [
+          {
+            "agent_call_budget": 12,
+            "k": 2,
+            "max_rounds": 3,
+            "routing_interval": 1,
+            "token_budget": 8192
+          }
+        ],
+        "specialist_fingerprint": [
+          "3568efdd4abbce53c0838cb80d34ffc4024b5b52eb0a0a149c2fc8a95ad7e171"
+        ]
+      },
+      "mixed_conditions": false,
+      "requested_action_run_coverage": 1.0,
+      "warnings": [
+        {
+          "code": "constant_first_action",
+          "severity": "descriptive",
+          "message": "Every observed first action is identical. This can be a justified shared route; inspect task success and required capabilities before calling it harmful collapse."
+        }
+      ]
+    }
+  },
+  "analysis_unit": "One equally weighted unique task ID per policy; executions averaged within task. Unique IDs do not establish sampling independence between shared-template tasks.",
+  "action_frequency_unit": "Each task splits its unit across runs, then across fresh routing events; long trajectories do not gain extra statistical weight. Raw counts are descriptive.",
+  "action_source": "Aligned requested decisions when available; otherwise recorded execution decisions. Reused decisions excluded from fresh routing distributions; actual outputs determine activations.",
+  "association_unit": "Task-type versus first observed fresh external action, using equal task weights. Unavailable for incomplete routing coverage; bits are descriptive plug-in estimates, with a task-unit-preserving permutation null to expose high-cardinality/small-corpus bias.",
+  "interpretation": "Routing concentration is descriptive, not an automatic model failure or causal specialization claim. These are external specialist actions, not internal MoE expert activations. Exact grading reads private labels only in offline analysis; no held-out filtering is performed here."
+}

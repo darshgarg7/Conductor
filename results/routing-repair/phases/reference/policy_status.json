@@ -1,0 +1,36 @@
+[
+  {
+    "policy": "conductor_sft",
+    "label": "conductor_sft",
+    "status": "measured",
+    "task_count": 48,
+    "checkpoint": "outputs/research/granite-pilot/sft",
+    "controller_backend": "hf",
+    "controller_pretrained": true,
+    "specialist_backend": "deterministic",
+    "checkpoint_sha256": "ca070cfb08d0a003ff92a31002ca68424b5304f45561cbe6321639c837400cf9",
+    "controller_token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+    "data_sha256": "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17",
+    "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+    "config_sha256": "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c",
+    "experiment_sha256": "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085",
+    "strict_mode": true
+  },
+  {
+    "policy": "conductor_preference",
+    "label": "conductor_preference",
+    "status": "measured",
+    "task_count": 48,
+    "checkpoint": "outputs/research/granite-pilot/preference",
+    "controller_backend": "hf",
+    "controller_pretrained": true,
+    "specialist_backend": "deterministic",
+    "checkpoint_sha256": "e9e5633e12de5a50f1198ada36323ee4630dae8f067e2e03f707822473e5acd1",
+    "controller_token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+    "data_sha256": "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17",
+    "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+    "config_sha256": "fe98bcd0d6fa68201875d781f093f7d369e6feff17d2ffaf9c8c7ee73c66b73c",
+    "experiment_sha256": "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085",
+    "strict_mode": true
+  }
+]

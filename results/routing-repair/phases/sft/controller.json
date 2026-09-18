@@ -1,0 +1,81 @@
+{
+  "backend": "hf",
+  "configuration": {
+    "seed": 42,
+    "model": {
+      "backend": "hf",
+      "name": "ibm-granite/granite-3.1-1b-a400m-base",
+      "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pretrained": true,
+      "max_agents": 3,
+      "max_length": 256,
+      "device": "cpu",
+      "dtype": "float32",
+      "attention_implementation": "sdpa",
+      "local_files_only": true,
+      "trust_remote_code": false,
+      "input_cost_per_million_tokens": 0.0,
+      "lora": {
+        "enabled": true,
+        "r": 4,
+        "alpha": 8,
+        "dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "v_proj",
+          "router.layer"
+        ]
+      },
+      "state_serialization": "priority_v1",
+      "resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+      "pooling": "mean",
+      "head_input_normalization": "none"
+    },
+    "routing": {
+      "k": 2
+    },
+    "inference": {
+      "instrument_experts": true,
+      "sample": false,
+      "token_cache_size": 128
+    },
+    "probe": {
+      "data": "data/generated/routing-repair/curated/sft.jsonl",
+      "output": "outputs/research/routing-repair/probe",
+      "batch_size": 2,
+      "epochs": 200,
+      "learning_rate": 0.01,
+      "validation_fraction": 0.25
+    },
+    "training": {
+      "stage": "sft",
+      "data": "data/generated/routing-repair/curated/sft.jsonl",
+      "checkpoint": "outputs/research/routing-repair/probe/selected",
+      "output": "outputs/research/routing-repair/sft",
+      "epochs": 2,
+      "batch_size": 2,
+      "gradient_accumulation_steps": 2,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "validation_fraction": 0.25,
+      "max_grad_norm": 1.0,
+      "gradient_checkpointing": false,
+      "scheduler": "constant",
+      "save_every_epochs": 1
+    }
+  },
+  "stage": "sft",
+  "pretrained": true,
+  "base_model": "ibm-granite/granite-3.1-1b-a400m-base",
+  "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+  "resolved_revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29",
+  "local_checkpoint_sha256": null,
+  "action_catalog_size": 485,
+  "token_accounting": "HF tokenizer input tokens; classifier emits no language tokens",
+  "context_strategy": "priority_v1: complete compact progress/type; full task when it fits, otherwise task prefix; newest sanitized evidence tail",
+  "max_length": 256,
+  "state_serialization": "priority_v1",
+  "pooling": "mean",
+  "head_input_normalization": "none",
+  "method": "constrained categorical routing head with optional coordinator-backbone LoRA"
+}

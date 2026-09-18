@@ -1,0 +1,22 @@
+{
+  "tasks": 84,
+  "source_tasks": 84,
+  "train_tasks": 36,
+  "eval_tasks": 48,
+  "trajectories": 252,
+  "successes": 227,
+  "failures": 25,
+  "sft_records": 213,
+  "preference_records": 1620,
+  "sft_excluded_non_sparse": 36,
+  "unavailable_policies": [],
+  "resumed_trajectories": 0,
+  "dataset_directory": "data/generated/routing-repair",
+  "source_sha256": "287b5b6b8c90a4f54702634ae11ccff492c08bcb8bc50850c9bdba53056b3414",
+  "source_kind": "synthetic_development_templates",
+  "durable_preference_trials": 1800,
+  "recovery_scope": "completed trajectories and counterfactual trials replay without execution; interrupted uncommitted invocations may repeat",
+  "scope": "Actual executions; synthetic development fixtures do not establish real language-task quality.",
+  "preference_protocol": "exact-state counterfactual action at configurable initial/late states, fixed continuation",
+  "training_split": "train only; source task IDs/public texts validated disjoint"
+}

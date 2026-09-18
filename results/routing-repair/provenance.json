@@ -1,0 +1,73 @@
+{
+  "generation": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 314159,
+    "runtime_seconds": 22.305907667032443
+  },
+  "probe": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 78.97140070801834
+  },
+  "sft": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 675.9815279159811
+  },
+  "preference": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 1458.9194753749762
+  },
+  "reference": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 401.064424125012
+  },
+  "frozen": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 223.05242158303736
+  },
+  "evaluation": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 390.553885500005
+  },
+  "dense-sequential": {
+    "git_commit": "ffa1dd97d2a9dcc6215e0478354bc08a48dba07f",
+    "git_dirty": false,
+    "seed": 42,
+    "runtime_seconds": 0.6486529170069844
+  },
+  "archive": {
+    "script_sha256": "13cb1b0a79111208f4f425a531cc2093706c20bf55c3c8db72a004081e6bbf17",
+    "archive_source_commit": "9ebdb536d5983ac16ce8c3f3cb0e9cc096589c94",
+    "archive_source_dirty": false,
+    "task_inventory_sha256": "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17",
+    "adapter_proof_sha256": "08a3674b7d37f47cb2576f42e93dea610efc0a2c0f2b7977edc8f936c728e4fb",
+    "context_audit_sha256": "ad7a2bbcc3a1cae59da24604003c7d58a72efe9d4d49f273cd4a6680ec9edee1",
+    "comparison_conditions": {
+      "budgets": {
+        "k": 2,
+        "max_rounds": 3,
+        "token_budget": 8192,
+        "agent_call_budget": 12,
+        "routing_interval": 1
+      },
+      "data_sha256": "5042bca3db940943303868bd20b0d8e596367c5a31940eae65f6f5744ec1ff17",
+      "specialist_sha256": "dd18ae8d19f96a7804df35c4965c99bbf3ce758ddc835c8c55dcc8bfdb642c18",
+      "specialist_audit_fingerprint": "3568efdd4abbce53c0838cb80d34ffc4024b5b52eb0a0a149c2fc8a95ad7e171",
+      "experiment_sha256": "0442a88d8cd57d60f8706858b12e50398d2914e57c06ef9ee4b2317ffffd1085",
+      "seed": 42
+    },
+    "scope": "Renderer provenance is separate from unchanged experiment phase commits. CUDA and full frozen-base tensor verification are not claimed."
+  }
+}
