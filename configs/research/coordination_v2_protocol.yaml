@@ -1,0 +1,231 @@
+# DECLARATIVE RESEARCH PLAN. Do not pass this file to conductor.train/evaluate.
+# Values are proposed, frozen acceptance thresholds; none are measured results.
+kind: research_protocol
+protocol_version: coordination_v2
+executable: false
+status: proposed_not_run
+threshold_status: frozen_design_requires_new_committed_revision_before_training_changes
+claim_scope: fixed_synthetic_workflow_inventory_cpu
+
+reproducibility:
+  training_seeds: [42, 137, 2027]
+  inventory_seed: 314159
+  evaluation_seed: 271828
+  artifact_release_seed: 42
+  select_best_seed: false
+  report_failed_and_blocked_seeds: true
+  final_suite_lock_requires_protocol_commit: true
+  final_suite_lock_precedes_candidate_dependent_inspection: true
+  final_results_never_select_models_prompts_or_baselines: true
+
+workload:
+  public_task_type: coordination_workflow
+  expose_task_family_structure_or_required_agents: false
+  private_grader_labels_in_controller_or_specialist_inputs: false
+  old_routing_repair_48_tasks_role: development_regression_only
+  training_tasks: 72
+  development_tasks: 36
+  final_tasks: 120
+  workflow_families:
+    - retrieve_then_calculate
+    - retrieve_code_then_verify
+    - research_then_verify
+    - parallel_evidence_then_combine
+    - distractor_evidence_then_verify
+    - tool_failure_then_recover
+  tasks_per_training_family: 12
+  tasks_per_development_family: 6
+  tasks_per_final_family: 20
+  development_dependency_stages: [2, 3]
+  split_unit: underlying_problem_and_source_document_group
+  train_dev_stratification: workflow_family_and_dependency_stages
+  final_structure_ood: dependency_graph_and_failure_pattern_absent_from_train_dev
+  final_ood_tasks_per_family: 10
+  freeze_suite_inputs_private_graders_and_strata_before_final: true
+  final_failure_requires_new_protocol_revision_and_new_unopened_test_suite: true
+
+execution_contract:
+  specialist_parameters_frozen: true
+  specialist_capabilities_distinct_and_contract_tested: true
+  routing_k: 3
+  routing_k_applies_to: sparse_routed_policies
+  all_agent_per_step_k_exception: eight_specialists_allowed_under_same_total_call_budget
+  max_coordination_rounds: 6
+  agent_call_budget: 12
+  token_budget: 16384
+  same_public_information_budgets_and_agents_across_policies: true
+  execution_state_progress_and_relevant_evidence_audited: true
+  quality_requires_correct_answer_and_workflow_contract: true
+  quality_requires_required_public_verification_evidence: true
+  grade_route_names_or_mandatory_agent_call_counts: false
+  permit_any_valid_alternative_workflow: true
+  capability_isolation_scope: controlled_synthetic_contract_not_broad_multiagent_necessity
+  prerequisite_ablation_checks:
+    - omitted_prerequisite
+    - reversed_execution_order
+    - wrong_consumer_artifact
+    - cheap_shortcut_or_unsupported_final_text
+  count_failed_attempts_retries_fallbacks_and_abstentions: true
+  independent_quality_grader_cannot_execute_as_a_specialist: true
+
+compute_plan:
+  execution_device: cpu
+  download_new_backbones_for_initial_probe: false
+  missing_cached_pretrained_weights: fail_closed_no_random_substitution
+  cached_pretrained_backbone: ibm-granite/granite-3.1-1b-a400m-base
+  cached_pretrained_revision: 408b6e90baab8cf24f4aa9f8e19703ffa0a53b29
+  initial_training_scope: cached_frozen_features_and_small_heads
+  representation_variants_maximum: 4
+  head_epoch_cap: 200
+  lora_enabled_only_after_development_gate: true
+  lora_rank: 4
+  sft_epoch_cap: 2
+  dpo_epoch_cap: 1
+  hyperparameter_search_after_final_lock: false
+  model_and_context_choices_frozen_on_development: true
+  no_gpu_or_cluster_execution_planned_in_initial_phase: true
+
+
+supervision:
+  state_coverage: [initial, intermediate, handoff, failure, stopping]
+  collect_current_sft_rollouts_on: [train, development]
+  fit_dpo_from_train_task_rollouts_only: true
+  development_rollout_preferences_role: validation_and_diagnostics_only
+  final_rollouts_never_generate_preferences: true
+  include_actual_controller_mistakes_and_measured_successful_rescues: true
+  pairs_require_identical_public_state_and_shared_identified_continuation: true
+  actor_state_coverage_refresh_before_dpo: true
+  chosen_rejected_actions_require_distinct_canonical_complete_actions: true
+  answer_present_alone_is_not_stop_supervision: true
+  label_coverage_breakdowns:
+    - workflow_family_and_dependency_structure
+    - initial_intermediate_handoff_failure_stopping_state
+    - chosen_stop_one_two_three_agent_counts
+    - chosen_parallel_and_sequential_multiagent_modes
+    - successful_and_broken_handoffs
+    - actual_wrong_partial_unsupported_answers_and_tool_failures
+    - blocked_handoffs_and_failure_prefixes_without_private_route_ids
+    - appropriate_stop_premature_stop_and_unnecessary_continuation
+  group_stratification: underlying_task_source_group_family_and_dependency_stages
+  empty_or_rare_cells_block_unsupported_behavior_claims: true
+
+factorized_policy_proposal:
+  implementation_status: design_only_not_implemented
+  compatibility_control: normalized_complete_categorical_action_catalog
+  complete_joint_semantics: stop_then_count_then_conditional_mode_then_agents_without_replacement
+  all_conditionals_normalized_on_valid_support: true
+  stop_count_support_respects_remaining_call_token_and_top_k_budgets: true
+  single_agent_mode: canonical_parallel_probability_one
+  stopped_action: no_agents_no_count_canonical_irrelevant_mode
+  parallel_actions: increasing_versioned_agent_order_with_remaining_feasibility_mask
+  sequential_actions: ordered_without_replacement_within_decision
+  cross_round_agent_recalls_allowed: true
+  sft_objective: negative_complete_joint_log_probability
+  dpo_objective: complete_joint_actor_reference_chosen_rejected_log_probability_ratio
+  actor_reference_support_and_masks_identical: true
+  independent_agent_sigmoid_scores_are_not_joint_likelihood: true
+  confidence_semantics: documented_complete_decision_probability
+  metadata_and_cache_identity:
+    - factorization_and_mask_version
+    - agent_order_and_hash
+    - public_state_and_complete_canonical_actions
+    - top_k_and_budget_support
+    - model_checkpoint_and_exact_sft_reference_digest
+    - state_representation_and_source_partition_hashes
+  old_catalog_weights_not_silently_reinterpreted: true
+
+baselines:
+  cheap_primary_candidates: [public_state_rules, sparse_linear_router, small_mlp_router]
+  mandatory_controls:
+    - public_state_rules
+    - sparse_linear_router
+    - small_mlp_router
+    - iterative_all_agent_sequential
+    - all_agent_parallel
+    - random_top_k
+    - functioning_frozen_prompted_supervisor
+    - pretrained_moe_random_action_head
+    - frozen_backbone_trained_head
+    - conductor_sft
+    - conductor_preference
+  primary_selection_dataset: development_only
+  primary_baseline_known_workflow_development_floor: 0.95
+  primary_selection_rule:
+    - highest_mean_family_balanced_workflow_success_across_predeclared_seeds
+    - lowest_mean_whole_inventory_agent_calls
+    - lowest_mean_total_cpu_latency_including_controller
+    - lexicographic_baseline_identifier
+  primary_baseline_lock_precedes_final_suite_lock: true
+  prompted_schema_validity_floor_on_development: 0.99
+  prompted_controller_has_no_undisclosed_fallback: true
+  unavailable_control_reported_as_incomplete_comparison: true
+
+acceptance:
+  thresholds_are_proposed_not_achieved: true
+  development:
+    workflow_correctness_floor_per_seed_and_dependency_stage: 0.95
+    apply_before_lora: true
+    apply_after_sft_before_dpo: true
+    each_group_minimum_tasks: 12
+    all_training_families_present: true
+    report_family_and_stop_action_breakdowns: true
+  final_fixed_inventory:
+    require_completed_sft_and_dpo_seeds: [42, 137, 2027]
+    each_seed_candidate_minus_primary_success_floor: -0.05
+    each_seed_candidate_family_success_floor: 0.90
+    each_seed_dpo_minus_matched_sft_success_floor: -0.05
+    each_seed_dpo_family_success_floor: 0.90
+    each_seed_dpo_actual_call_reduction_vs_sft_floor: 0.10
+    each_seed_dpo_failure_charged_call_reduction_vs_sft_floor: 0.10
+    failure_charged_calls: full_agent_call_budget_on_failed_or_abstained_task
+    reductions_use_whole_inventory: true
+    jointly_correct_cohort_reported_separately: true
+    jointly_correct_cohort_is_conditional_not_causal: true
+    controller_feature_extraction_serialization_retries_and_fallback_overhead_included: true
+    token_and_latency_directions_reported_even_when_unfavorable: true
+    completed_study_can_fail_candidate_acceptance: true
+    benchmark_acceptance_is_not_statistical_noninferiority_certification: true
+
+analysis:
+  quality_unit: task_paired_correct_answer_and_workflow_contract
+  family_aggregation: equally_weighted_family_means
+  report_task_proportions_and_exact_paired_discordance_counts: true
+  report_structure_ood_separately: true
+  report_every_seed_mean_range_and_standard_deviation: true
+  few_workflow_families_limit_population_inference: true
+  exploratory_family_cluster_bootstrap_samples: 1999
+  repeated_timings_do_not_inflate_independent_task_count: true
+  population_noninferiority_or_superiority_claims_authorized: false
+  multiple_comparisons_are_exploratory_and_unadjusted: true
+  dollar_savings_claims_authorized: false
+  nvidia_gpu_performance_claims_authorized: false
+  production_readiness_claims_authorized: false
+  cpu_latency_repeats: 3
+  cpu_latency_includes_controller_and_agents: true
+  estimated_tool_tokens_separated_from_model_tokenizer_counts: true
+
+ordered_steps:
+  - order: 1
+    name: publish_both_prior_analyses_and_record_exposure
+    evidence: protocol_commit_original_and_repair_results_source_hashes_and_exposure_ledger
+  - order: 2
+    name: define_genuine_workflows_and_distinct_frozen_specialists
+    evidence: capability_isolation_grading_privacy_and_dependency_contract_checks
+  - order: 3
+    name: collect_initial_intermediate_handoff_failure_and_stopping_supervision
+    evidence: group_disjoint_balanced_data_and_measured_counterfactual_label_coverage
+  - order: 4
+    name: design_normalized_factorization_and_audit_semantic_label_coverage
+    evidence: complete_joint_mask_canonicalization_cache_and_catalog_control_design
+  - order: 5
+    name: establish_strong_cheap_controllers_and_gated_cached_head_lora_training
+    evidence: functioning_controls_locked_primary_and_two_three_stage_development_gates
+  - order: 6
+    name: train_preference_candidates_from_on_policy_mistakes_and_measured_rescues
+    evidence: train_only_state_matched_preferences_and_exact_per_seed_sft_references
+  - order: 7
+    name: run_three_predeclared_seeds_under_already_committed_frozen_acceptance_rules
+    evidence: all_seed_outcomes_failures_quality_calls_overhead_and_release_seed_rule
+  - order: 8
+    name: seal_fresh_unseen_structure_final_suite_then_open_once_and_publish
+    evidence: locked_final_hashes_paired_family_results_acceptance_and_cpu_tradeoffs

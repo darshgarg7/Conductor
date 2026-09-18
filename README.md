@@ -14,12 +14,16 @@ experiment measures the effect of changing the routing policy. The repository
 contains an offline trajectory pipeline, LoRA SFT and categorical DPO, held-out
 baseline evaluation, controller inference benchmarks, and a bounded HTTP service.
 
-**Current evidence:** a completed pretrained Granite CPU pilot with deterministic
-specialists. Training works, but the pilot does not establish better task success
-or inference savings. CUDA, NCCL, SLURM execution, and the NVIDIA container still
-need validation on a GPU host.
+**Current evidence:** pretrained Granite CPU post-training with deterministic
+specialists. A completed routing repair improves success over the original
+checkpoints on the same 48 tasks, but fails every unseen composition and trails
+rules and random routing. Neither study establishes inference savings or a need
+for MoE. CUDA, NCCL, SLURM execution, and the NVIDIA container still need GPU-host
+validation.
 
-[Research report](results/granite-pilot/report.md) ·
+[Routing repair](results/routing-repair/report.md) ·
+[Original pilot](results/granite-pilot/report.md) ·
+[Failure analysis](docs/routing_failure_analysis.md) ·
 [Customer scenario](docs/customer_case_study.md) ·
 [Service demonstration](docs/demo_walkthrough.md) ·
 [Design decisions](docs/design_decisions.md) ·
@@ -67,8 +71,10 @@ does not reduce that internal expert count.
    measured usage. Counterfactual replay compares candidate actions from the
    same public state under a fixed continuation.
 2. **Supervised fine-tuning.** Train the coordination head and attention/router
-   LoRA adapters on successful sparse routing labels. Task IDs split fitting
-   data from internal validation; held-out evaluation tasks remain separate.
+   LoRA adapters on sparse routing labels. The repair curates measured
+   counterfactual winners instead of labeling every successful path useful.
+   Task IDs split fitting data from internal validation; held-out evaluation
+   tasks remain separate.
 3. **Preference optimization.** Categorical DPO compares chosen/rejected action
    log probabilities against the exact frozen SFT checkpoint. Cached reference
    probabilities avoid keeping a second pretrained backbone resident.
@@ -79,55 +85,66 @@ uses zero latency weight to avoid learning from noisy fixture timings.
 See the [experimental protocol](docs/research_protocol.md) for evaluation and
 claim requirements.
 
-## Measured CPU pilot
+## Measured CPU studies
 
-The recorded run uses `ibm-granite/granite-3.1-1b-a400m-base` at a pinned revision,
-CPU float32 with SDPA, and a 128-token input cap. All comparisons use the same
-six held-out synthetic tasks, eight fixed specialists, and common total budgets.
+Both studies use pinned `ibm-granite/granite-3.1-1b-a400m-base`, CPU float32 with
+SDPA, eight fixed specialists, and common total budgets within each comparison.
+The 1,335,567,845-parameter coordinator updates 942,565 parameters (0.07%): its
+action head and rank-four attention/router LoRA adapters.
 
-| Scope | Recorded measurement |
+The **original pilot** solves 2/6 held-out tasks with SFT and 2/6 with DPO. Both
+choose coder and then stop on every task. DPO improves offline preference ranking
+without improving task success. Its prompted supervisor fails closed on invalid
+decisions; that baseline does not establish superiority over a functioning
+supervisor. The original measurements and subsequent dense sensitivity controls
+remain in the [sealed pilot report](results/granite-pilot/report.md).
+
+The **routing repair** compares original and repaired checkpoints on the same
+new, locked 48-task inventory:
+
+| Routing policy | Exact success on the same 48 tasks |
 | --- | --- |
-| Coordinator | 1,335,567,845 parameters including the action head |
-| Trainable parameters | 942,565 (0.07%): rank-4 attention/router LoRA and the head |
-| Reference data | 54 trajectories: 36 on training tasks, 18 on held-out tasks |
-| Optimizer fitting | 54 SFT examples and 162 DPO pairs over nine task IDs |
-| Internal validation | 18 SFT examples and 54 DPO pairs over three task IDs |
-| Inference benchmark | 30 CPU configurations, 720 timed requests, eight replayed states |
+| Original SFT and DPO | 16/48 each |
+| Frozen backbone with a fitted action head | 24/48 |
+| Repaired LoRA SFT and DPO | 32/48 each |
+| Rule-Based Router | 48/48 |
+| Random Top-K | 39/48 |
+| All-Agent: one sequential round | 40/48 |
 
-| Primary routing policy | Held-out success |
-| --- | --- |
-| All-Agent: one parallel round | 4/6 |
-| Static Supervisor: prompted Qwen | 0/6* |
-| Rule-Based Router | 6/6 |
-| Random Top-K | 4/6 |
-| Base MoE with an untrained action head | 3/6 |
-| Conductor-SFT | 2/6 |
-| Conductor-Preference | 2/6 |
+Both repaired controllers solve **32/32 seen-template tasks and 0/16 unseen
+compositions**. The repair combines preserved progress fields, a 256-token cap,
+reward-curated supervision, more training data, and a validation-selected
+masked-mean fitted head before LoRA. Original checkpoints retain their 128-token
+inputs; this comparison does not isolate one causal change. DPO adds no task
+success over repaired SFT, and the simpler controls remain stronger.
 
-\* The prompted supervisor returned invalid structured decisions on all six tasks
-and failed closed. Its result does not establish superiority over a reliable
-prompted supervisor.
+The 36 training tasks produce 108 reference trajectories. Curation yields 180
+state labels and 360 preference pairs: SFT fits 135 states and reserves 45;
+DPO fits 270 pairs and reserves 90, across the same 27/9 task partition. These
+are distinct units, not independent sample counts to add together. Every chosen
+label is stop or a single-agent call, and internal validation contains no math
+task. The [repair report](results/routing-repair/report.md) preserves these gaps,
+raw traces, comparisons, and failures; the
+[repair protocol](docs/routing_repair_protocol.md) records its scope.
 
-**The main finding is routing collapse.** SFT lowers training loss, but both
-post-trained controllers choose coder and then stop on every held-out task.
-DPO improves offline preference ranking without improving task success. Two
-additional sequential dense controls solve 6/6 and 5/6; they were added after
-inspecting the pilot and are reported as sensitivity analyses.
+![CPU routing repair: success and agent calls](results/routing-repair/repair.png)
 
-![Measured held-out task success, token units, and agent activations](results/granite-pilot/plots/quality_cost.png)
-
-The inference study also finds no reliable CPU batching/cache gain. At batch
-limit four, concurrency four, and k=2, dynamic batching records **0.843× throughput**
+The original inference study measures 30 CPU configurations and 720 timed
+requests over eight replayed states. It finds no reliable CPU batching/cache
+gain. At batch limit four, concurrency four, and k=2, dynamic batching records
+**0.843× throughput**
 and **1.133× p95 latency** relative to queued individual inference. Grouped repeats
 and host variation limit interpretation. Raw timings and matched comparisons are
 in the [report](results/granite-pilot/report.md) and
 [benchmark CSV](results/granite-pilot/phases/inference/benchmark.csv).
 
-These are feasibility results on arithmetic, lookup, string transformations, and
-held-out compositions that share synthetic template families. Six tasks cannot
-establish broad generalization. HF controller tokens are actual tokenizer counts;
-downstream tool tokens are estimates, and zero configured prices leave monetary
-costs unknown. The research hypothesis remains unresolved.
+These are results on arithmetic, lookup, string transformations, and compositions
+that share synthetic template families. Forty-eight related tasks and one seed
+cannot establish broad generalization. HF controller tokens are actual tokenizer
+counts; downstream tool tokens are estimates, and zero configured prices leave
+monetary costs unknown. The [combined failure analysis](docs/routing_failure_analysis.md)
+examines label coverage and generalization. The research hypothesis remains
+unresolved.
 
 ## Run locally
 
@@ -275,7 +292,12 @@ measurements so the original interpretation cannot silently carry over.
 Use `python -m conductor.analyze` for new runs. [Contributing](CONTRIBUTING.md)
 describes validation expectations.
 
-The next study should compare reward-filtered supervision and context choices,
-then use multiple seeds, frozen LLM specialists, a larger locked test set, and
-real NVIDIA measurements. The six inspected pilot tasks should not be reused
-as a fresh test set after tuning.
+The next study follows the proposed frozen
+[eight-step coordination protocol](docs/coordination_v2_protocol.md), with seeds
+**42, 137, and 2027**. It specifies capability boundaries, grouped dependency and
+recovery tasks, strong cheap controls, head/LoRA/DPO gates, and a fresh final
+inventory. [Factorized routing and label coverage](docs/factorized_routing.md)
+describe the next model/data design. Neither that controller nor the new study
+is implemented. The [protocol YAML](configs/research/coordination_v2_protocol.yaml)
+is declarative, not a training configuration. Both inspected inventories now
+serve as development evidence and must not be reused as fresh final tests.
