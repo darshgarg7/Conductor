@@ -1,0 +1,21 @@
+include: [../models/granite.yaml]
+model:
+  state_serialization: priority_v1
+  max_length: 256
+  local_files_only: true
+training:
+  stage: dpo
+  data: data/generated/routing-repair/curated/preferences.jsonl
+  checkpoint: outputs/research/routing-repair/sft
+  output: outputs/research/routing-repair/preference
+  epochs: 1
+  batch_size: 2
+  gradient_accumulation_steps: 2
+  learning_rate: 0.00003
+  weight_decay: 0.01
+  validation_fraction: 0.25
+  beta: 0.1
+  max_grad_norm: 1.0
+  gradient_checkpointing: false
+  scheduler: constant
+  save_every_epochs: 1

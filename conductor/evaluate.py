@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from conductor.evaluation.io import write_csv, write_jsonl
+from conductor.evaluation.diagnostics import routing_diagnostics
 from conductor.evaluation.tasks import heldout_tasks
 from conductor.evaluation.provenance import canonical_hash, checkpoint_sha256, file_sha256, specialist_identity
 from conductor.metrics.aggregate import aggregate_metrics, trajectory_metrics
@@ -152,24 +153,31 @@ async def evaluate(config: dict[str, Any], checkpoint: str | None = None) -> dic
     rows = [trajectory_metrics(item) for item in trajectories]
     per_policy = aggregate_metrics(rows)
     per_category = aggregate_metrics(rows, ("policy", "category", "split", "generalization"))
+    per_template = aggregate_metrics(rows, ("policy", "template_family", "generalization"))
+    diagnostic_options = config.get("routing_diagnostics", {})
+    routing = routing_diagnostics(trajectories,
+        permutation_samples=diagnostic_options.get("permutation_samples", 199), seed=config.get("seed", 42))
     from conductor.metrics.aggregate import paired_differences
     measured_names = [status["policy"] for status in statuses if status["status"] == "measured"]
     comparisons = [paired_differences(rows, baseline, candidate,
                     bootstrap_samples=config.get("bootstrap_samples", 2000), seed=config.get("seed", 42))
                    for baseline in measured_names for candidate in measured_names if baseline != candidate]
     write_json(run.output / "paired_comparisons.json", comparisons)
+    write_json(run.output / "routing_diagnostics.json", routing)
     write_jsonl(run.output / "trajectories.jsonl", trajectories)
     write_csv(run.output / "task_metrics.csv", rows)
     write_csv(run.output / "per_policy.csv", per_policy)
     write_csv(run.output / "per_category.csv", per_category)
+    write_csv(run.output / "per_template.csv", per_template)
     write_json(run.output / "policy_status.json", statuses)
     write_json(run.output / "expert_stats.json", expert_stats)
     write_json(run.output / "expert_stats_rollout.json", expert_stats)
     write_json(run.output / "initial_state_probe.json", initial_probes)
-    result = {"policies": per_policy, "categories": per_category, "policy_status": statuses,
+    result = {"policies": per_policy, "categories": per_category, "templates": per_template, "policy_status": statuses,
               "fixed_budgets": budgets, "task_count": len(tasks),
               "provenance": provenance, "specialists_unchanged": True,
               "paired_comparisons": comparisons,
+              "routing_diagnostics": routing,
               "scope": "Deterministic development agents unless the agent configuration selects actual model backends."}
     run.finish(result)
     return result

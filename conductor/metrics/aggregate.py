@@ -62,6 +62,7 @@ def trajectory_metrics(trajectory: Any) -> dict[str, Any]:
         "cost_comparison_valid": cost_valid,
         "token_billing_status": "actual_backend_tokens" if cost_valid else "unknown_or_proxy_tokens",
         "category": task.get("task_type", "unknown"), "split": task.get("split", "unknown"),
+        "template_family": metadata.get("template_family", "unknown"),
         "generalization": metadata.get("generalization", metadata.get("distribution",
                                         "unseen_composition" if metadata.get("ood") else "seen_family")),
         "task_success": bool(item.get("task_success", False)), "grader_score": item.get("grader_score", 0.0),

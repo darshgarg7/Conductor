@@ -5,6 +5,9 @@ import json
 import random
 from conductor.schema import Task
 
+TEMPLATE_FAMILIES = ("arithmetic_addition", "inline_lookup", "reverse_string", "count_vowels",
+                     "lookup_multiply", "addition_reverse_digits")
+
 
 def _id(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()[:16]
@@ -46,7 +49,8 @@ def make_tasks(seed: int = 42, train_count: int = 24, eval_count: int = 12) -> l
             else:
                 task_type, text, answer = "composed_math_string", f"Compute {a} + {b}. then reverse the digits of the result.", str(a + b)[::-1]
             tasks.append(Task(_id(text), text, task_type, split, answer,
-                              {"family": task_type, "ood": category >= 4, "grader": "exact", "generation_seed": seed}))
+                              {"family": task_type, "template_family": TEMPLATE_FAMILIES[category],
+                               "ood": category >= 4, "grader": "exact", "generation_seed": seed}))
     if len({_id(task.user_task) for task in tasks}) != len(tasks):
         raise RuntimeError("duplicate task text")
     return tasks

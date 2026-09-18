@@ -1,0 +1,22 @@
+# Six-policy ablation of the repaired training pipeline. The original seven-
+# policy pilot remains archived; its invalid prompted baseline is not a claim
+# of superiority over a functioning supervisor.
+include: [../models/granite.yaml, ../agents/dev.yaml]
+seed: 42
+inference:
+  preserve_checkpoint_context: true
+output: outputs/research/routing-repair/evaluation
+data: data/generated/routing-repair/tasks.jsonl
+splits: [eval]
+policies: [all_agent, rule_based, random_top_k, base_moe, conductor_sft, conductor_preference]
+mandatory_policies: [all_agent, rule_based, random_top_k, base_moe, conductor_sft, conductor_preference]
+checkpoints:
+  conductor_sft: outputs/research/routing-repair/sft
+  conductor_preference: outputs/research/routing-repair/preference
+k: 2
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12
+probe_batch_size: 2
+strict_mode: true
+bootstrap_samples: 2000

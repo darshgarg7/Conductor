@@ -1,0 +1,6 @@
+seed: 42
+routing: {k: 2}
+curation:
+  source: data/generated/routing-repair/preferences.jsonl
+  output: data/generated/routing-repair/curated
+  max_rejected_per_state: 2

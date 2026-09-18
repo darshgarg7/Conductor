@@ -1,0 +1,25 @@
+# Locked before head selection. Evaluation remains template-bound, including
+# two composition categories absent from the training inventory.
+include: [../agents/dev.yaml]
+seed: 314159
+output: outputs/research/routing-repair/generation
+dataset_output: data/generated/routing-repair
+train_count: 36
+eval_count: 48
+policies: [all_agent, rule_based, random_top_k]
+k: 2
+max_rounds: 3
+token_budget: 8192
+agent_call_budget: 12
+preference:
+  enabled: true
+  max_candidates: 10
+  max_states_per_task: 100
+  minimum_margin: 0.000001
+reward:
+  tokens: 0.05
+  token_normalizer: 1000
+  latency: 0.0
+  agent_calls: 0.04
+  communication: 0.01
+  communication_normalizer: 20

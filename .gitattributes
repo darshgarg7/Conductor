@@ -1,6 +1,7 @@
 # Preserve archived bytes so published checksums survive checkout on any OS.
 results/granite-pilot/** -text
 results/support-demo/** -text
+results/routing-repair/** -text
 
 # Python's CSV writer uses standard CRLF record endings.
 *.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

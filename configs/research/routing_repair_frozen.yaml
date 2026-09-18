@@ -1,0 +1,6 @@
+include: [routing_repair_evaluate.yaml]
+output: outputs/research/routing-repair/frozen
+policies: [conductor_sft]
+mandatory_policies: [conductor_sft]
+checkpoints:
+  conductor_sft: outputs/research/routing-repair/probe/selected

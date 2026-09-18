@@ -121,6 +121,30 @@ def test_in_place_export_rejects_unsaved_and_training_instances(saved_hf_control
     assert not loaded._in_place_merged
 
 
+def test_priority_mean_normalized_checkpoint_and_preserving_export_roundtrip(saved_hf_controller, tmp_path):
+    configuration, _ = saved_hf_controller
+    configuration["model"].update(state_serialization="priority_v1", pooling="mean",
+                                  head_input_normalization="layer_norm", max_length=128)
+    original = build_controller(configuration)
+    source = tmp_path / "priority-source"
+    original.save(source, "sft")
+    restored = build_controller(configuration, str(source))
+    states = [ExecutionState("Calculate 2 plus 3", "math", current_step=1,
+                             agents_already_called=["math"], previous_agent_outputs=[{
+                                 "agent": "math", "content": "2 plus 3", "metadata": {"answer": "5"},
+                                 "latency_seconds": .123, "cost_usd": 99}])]
+    with torch.inference_mode():
+        before = restored.forward_states(states)
+    export = tmp_path / "priority-merged"
+    restored.export_merged(export, states)
+    reloaded = build_controller(configuration, str(export))
+    assert reloaded.state_serialization == "priority_v1"
+    assert reloaded.model.pooling == "mean" and reloaded.model.head_input_normalization == "layer_norm"
+    with torch.inference_mode():
+        torch.testing.assert_close(before, reloaded.forward_states(states), rtol=1e-4, atol=1e-5)
+    assert reloaded.last_tokenization_details[0]["priority_fields"]["answer_present"]
+
+
 def test_failed_in_place_merge_blocks_inference_and_publication(saved_hf_controller, tmp_path, monkeypatch):
     configuration, source = saved_hf_controller
     controller = build_controller(configuration, str(source))

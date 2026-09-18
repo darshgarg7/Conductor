@@ -1,0 +1,7 @@
+include: [routing_repair_evaluate.yaml]
+output: outputs/research/routing-repair/reference
+policies: [conductor_sft, conductor_preference]
+mandatory_policies: [conductor_sft, conductor_preference]
+checkpoints:
+  conductor_sft: outputs/research/granite-pilot/sft
+  conductor_preference: outputs/research/granite-pilot/preference

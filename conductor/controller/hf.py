@@ -82,20 +82,61 @@ def _file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _public_evidence(value: Any) -> Any:
+    """Remove private grading fields and measured run accounting recursively."""
+    excluded = {"expected_answer", "grader_score", "task_success", "reward", "chosen_reward", "rejected_reward",
+                "tokens", "input_tokens", "output_tokens", "total_tokens", "token_usage", "token_accounting",
+                "latency", "latency_seconds", "elapsed_seconds", "wall_clock_latency", "wall_clock_latency_seconds",
+                "cost", "cost_usd", "estimated_cost_usd", "estimated_inference_cost", "controller_tokens",
+                "controller_latency_seconds", "controller_cost_usd"}
+    if isinstance(value, dict):
+        return {key: _public_evidence(item) for key, item in value.items() if key not in excluded}
+    if isinstance(value, list):
+        return [_public_evidence(item) for item in value]
+    return value
+
+
 class HFRoutingModel(nn.Module):
-    def __init__(self, backbone: nn.Module, hidden_size: int, num_actions: int) -> None:
+    def __init__(self, backbone: nn.Module, hidden_size: int, num_actions: int,
+                 pooling: str = "last", head_input_normalization: str = "none") -> None:
         super().__init__()
+        if pooling not in {"last", "mean"}:
+            raise ValueError("pooling must be last or mean")
+        if head_input_normalization not in {"none", "layer_norm"}:
+            raise ValueError("head_input_normalization must be none or layer_norm")
         self.backbone = backbone
+        self.pooling = pooling
+        self.head_input_normalization = head_input_normalization
         self.head = nn.Linear(hidden_size, num_actions)
+
+    def pooled_hidden(self, hidden_states: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+        """The exact FP32 head input; usable for frozen-representation ablations."""
+        if bool((mask.sum(-1) == 0).any()):
+            raise ValueError("routing inputs must contain at least one unmasked token")
+        if self.pooling == "mean":
+            # FP32 reduction excludes either left or right padding. The head and
+            # stateless normalization have no additional checkpoint tensors.
+            weights = mask.unsqueeze(-1).to(torch.float32)
+            unpadded = hidden_states.float().masked_fill(~mask.bool().unsqueeze(-1), 0)
+            hidden = unpadded.sum(1) / weights.sum(1)
+        else:
+            positions = torch.arange(mask.shape[1], device=mask.device)
+            last = (positions[None, :] * mask).max(-1).values.long()
+            hidden = hidden_states[torch.arange(len(last), device=last.device), last].float()
+        if self.head_input_normalization == "layer_norm":
+            hidden = F.layer_norm(hidden, (hidden.shape[-1],))
+        return hidden
+
+    def represent(self, inputs: dict[str, torch.Tensor], output_router_logits: bool = False
+                  ) -> tuple[torch.Tensor, Any]:
+        output = self.backbone(**inputs, use_cache=False, return_dict=True,
+                               output_router_logits=output_router_logits)
+        return self.pooled_hidden(output.last_hidden_state, inputs["attention_mask"]), getattr(output, "router_logits", None)
 
     def forward(self, inputs: dict[str, torch.Tensor], output_router_logits: bool = False
                 ) -> tuple[torch.Tensor, Any]:
-        output = self.backbone(**inputs, use_cache=False, return_dict=True,
-                               output_router_logits=output_router_logits)
-        positions = torch.arange(inputs["attention_mask"].shape[1], device=inputs["input_ids"].device)
-        last = (positions[None, :] * inputs["attention_mask"]).max(-1).values.long()
-        hidden = output.last_hidden_state[torch.arange(len(last), device=last.device), last]
-        return self.head(hidden.to(self.head.weight.dtype)), getattr(output, "router_logits", None)
+        hidden, routers = self.represent(inputs, output_router_logits)
+        return self.head(hidden.to(self.head.weight.dtype)), routers
 
 
 class HFController:
@@ -109,6 +150,15 @@ class HFController:
             raise ImportError("HF controllers require `pip install -e '.[hf]'`") from error
         self.config = copy.deepcopy(config)
         model_config = self.config["model"]
+        self.state_serialization = model_config.get("state_serialization", "legacy")
+        self.pooling = model_config.get("pooling", "last")
+        self.head_input_normalization = model_config.get("head_input_normalization", "none")
+        if self.state_serialization not in {"legacy", "priority_v1"}:
+            raise ValueError("state_serialization must be legacy or priority_v1")
+        if self.pooling not in {"last", "mean"}:
+            raise ValueError("pooling must be last or mean")
+        if self.head_input_normalization not in {"none", "layer_norm"}:
+            raise ValueError("head_input_normalization must be none or layer_norm")
         self.base_model_name = model_config.get("name", "allenai/OLMoE-1B-7B-0924")
         if Path(self.base_model_name).is_dir():
             self.base_model_name = str(Path(self.base_model_name).resolve())
@@ -160,7 +210,9 @@ class HFController:
         self.max_length = int(model_config.get("max_length", 1024))
         if self.max_length < 16:
             raise ValueError("HF max_length must be >=16")
-        self.context_strategy = "task/type header capped at 1/3 context; newest serialized execution-state tail uses remainder"
+        self.context_strategy = ("task/type header capped at 1/3 context; newest serialized execution-state tail uses remainder"
+                                 if self.state_serialization == "legacy" else
+                                 "priority_v1: complete compact progress/type; full task when it fits, otherwise task prefix; newest sanitized evidence tail")
         attention = model_config.get("attention_implementation", "sdpa")
         if attention not in {"eager", "sdpa", "flash_attention_2"}:
             raise ValueError("attention_implementation must be eager, sdpa, or flash_attention_2")
@@ -186,7 +238,8 @@ class HFController:
                 backbone = get_peft_model(backbone, adapter)
         # Float32 action head and adapters; pretrained backbone runs at selected
         # precision. Keep trainable parameters in float32 for stable optimization.
-        self.model = HFRoutingModel(backbone, architecture.hidden_size, len(self.catalog)).to(device=self.device)
+        self.model = HFRoutingModel(backbone, architecture.hidden_size, len(self.catalog), self.pooling,
+                                    self.head_input_normalization).to(device=self.device)
         for parameter in self.model.parameters():
             if parameter.requires_grad:
                 parameter.data = parameter.data.float()
@@ -194,6 +247,8 @@ class HFController:
         self._compiled_model: Any = None
         self.compile_status: dict[str, Any] = {"enabled": False, "validated": False}
         self._token_cache: OrderedDict[str, tuple[int, ...]] = OrderedDict()
+        self._token_cache_details: OrderedDict[str, dict[str, Any]] = OrderedDict()
+        self.last_tokenization_details: list[dict[str, Any]] = []
         self._token_cache_size = int(config.get("inference", {}).get("token_cache_size", 0))
         if self._token_cache_size < 0:
             raise ValueError("token_cache_size must be nonnegative")
@@ -225,8 +280,29 @@ class HFController:
         self.token_accounting = "HF tokenizer input tokens; classifier emits no language tokens"
         self.model.eval()
 
-    @staticmethod
-    def serialize(state: ExecutionState) -> str:
+    def serialize(self=None, state: ExecutionState | None = None) -> str:
+        # Keep the historical HFController.serialize(state) class call usable.
+        # Bound instance calls select their checkpoint's serialization version.
+        if isinstance(self, ExecutionState) and state is None:
+            state, mode = self, "legacy"
+        else:
+            mode = getattr(self, "state_serialization", "legacy")
+        if state is None:
+            raise TypeError("serialize requires an ExecutionState")
+        if mode == "priority_v1":
+            routes = [{key: route[key] for key in ("selected_agents", "execution_mode", "terminate") if key in route}
+                      for route in state.previous_routing_decisions[-1:]]
+            progress = {"step": state.current_step, "called": list(dict.fromkeys(state.agents_already_called)),
+                        "budget": {key: state.remaining_budget[key] for key in ("agent_calls", "tokens") if key in state.remaining_budget},
+                        "recent_routes": routes,
+                        "answer_present": any(isinstance(output.get("metadata", {}).get("answer"), str)
+                                              for output in state.previous_agent_outputs)}
+            # Public agent evidence remains available; private labels and run
+            # accounting cannot become predictive shortcuts in this version.
+            history = _public_evidence({"conversation": state.conversation_state, "tools": state.tool_results,
+                                        "outputs": state.previous_agent_outputs})
+            return json.dumps({"version": "priority_v1", "progress": progress, "task_type": state.task_type,
+                               "user_task": state.user_task, "history": history}, separators=(",", ":"), ensure_ascii=False)
         whole = state.to_dict()
         fields = ("conversation_state", "agents_already_called", "remaining_budget", "current_step",
                   "previous_routing_decisions", "tool_results", "previous_agent_outputs")
@@ -236,6 +312,7 @@ class HFController:
 
     def tokenize_serialized(self, texts: list[str]) -> dict[str, torch.Tensor]:
         items = []
+        details = []
         reserve = self.tokenizer.num_special_tokens_to_add(pair=False)
         budget = self.max_length - reserve
         for text in texts:
@@ -244,21 +321,61 @@ class HFController:
                 self._token_cache_hits += 1
                 self._token_cache.move_to_end(text)
                 items.append(list(cached))
+                details.append(copy.deepcopy(self._token_cache_details.get(text, {"version": "legacy"})))
                 continue
             self._token_cache_misses += 1
-            header_text, tail_text = text.rsplit("\0CONDUCTOR_STATE\0", 1)
-            header = self.tokenizer.encode(header_text, add_special_tokens=False)
-            header = header[:max(1, budget // 3)]
-            tail = self.tokenizer.encode(tail_text, add_special_tokens=False)
-            inputs = self.tokenizer.build_inputs_with_special_tokens(header + tail[-(budget - len(header)):])
+            if getattr(self, "state_serialization", "legacy") == "priority_v1":
+                content, detail = self._priority_tokens(text, budget)
+            else:
+                header_text, tail_text = text.rsplit("\0CONDUCTOR_STATE\0", 1)
+                header = self.tokenizer.encode(header_text, add_special_tokens=False)
+                header = header[:max(1, budget // 3)]
+                tail = self.tokenizer.encode(tail_text, add_special_tokens=False)
+                content = header + tail[-(budget - len(header)):]
+                detail = {"version": "legacy"}
+            inputs = self.tokenizer.build_inputs_with_special_tokens(content)
+            if len(inputs) > self.max_length:
+                raise ValueError("tokenizer special-token accounting exceeded max_length")
             items.append(inputs)
+            details.append(detail)
             if self._token_cache_size:
                 self._token_cache[text] = tuple(inputs)
+                self._token_cache_details[text] = copy.deepcopy(detail)
                 while len(self._token_cache) > self._token_cache_size:
-                    self._token_cache.popitem(last=False)
+                    evicted, _ = self._token_cache.popitem(last=False)
+                    self._token_cache_details.pop(evicted, None)
         encoded = self.tokenizer.pad({"input_ids": items}, padding=True, return_tensors="pt")
         self._last_encoded_tokens = encoded["attention_mask"].sum(-1).tolist()
+        self.last_tokenization_details = details
         return {key: value for key, value in encoded.items() if key in {"input_ids", "attention_mask"}}
+
+    def _priority_tokens(self, text: str, budget: int) -> tuple[list[int], dict[str, Any]]:
+        record = json.loads(text)
+        if record.get("version") != "priority_v1":
+            raise ValueError("priority_v1 tokenizer requires priority_v1 serialization")
+        def encode(value: str) -> list[int]:
+            return self.tokenizer.encode(value, add_special_tokens=False)
+        prefix = encode("Progress: " + json.dumps(record["progress"], separators=(",", ":"), ensure_ascii=False)
+                        + "\nTask type: " + record["task_type"] + "\n")
+        task_prefix = encode("User task: ")
+        evidence_prefix = encode("\nRecent evidence: ")
+        remaining = budget - len(prefix) - len(task_prefix) - len(evidence_prefix)
+        if remaining < 1:
+            # Never silently truncate fields advertised as preserved. A small
+            # context or unusually large called/route fields must fail clearly.
+            raise ValueError("priority_v1 progress/type fields do not fit max_length; increase model.max_length")
+        task = encode(record["user_task"])
+        history = encode(json.dumps(record["history"], separators=(",", ":"), ensure_ascii=False))
+        task_count = min(len(task), remaining if len(task) <= remaining else max(1, remaining * 2 // 3))
+        history_count = min(len(history), remaining - task_count)
+        content = prefix + task_prefix + task[:task_count] + evidence_prefix
+        if history_count:
+            content += history[-history_count:]
+        return content, {"version": "priority_v1", "priority_fields": copy.deepcopy(record["progress"]),
+                         "task_type": record["task_type"], "priority_tokens": len(prefix),
+                         "task_tokens_total": len(task), "task_tokens_kept": task_count,
+                         "history_tokens_total": len(history), "history_tokens_kept": history_count,
+                         "task_truncated": task_count < len(task), "history_truncated": history_count < len(history)}
 
     def tokenize_states(self, states: list[ExecutionState]) -> dict[str, torch.Tensor]:
         return self.tokenize_serialized([self.serialize(state) for state in states])
@@ -271,6 +388,7 @@ class HFController:
 
     def token_cache_clear(self) -> None:
         self._token_cache.clear()
+        self._token_cache_details.clear()
         self._token_cache_hits = self._token_cache_misses = 0
 
     def token_cache_stats(self) -> dict[str, int]:
@@ -405,6 +523,8 @@ class HFController:
                    "resolved_revision": self.resolved_revision, "local_checkpoint_sha256": self.local_checkpoint_sha256,
                    "action_catalog_size": len(self.catalog), "token_accounting": self.token_accounting,
                    "context_strategy": self.context_strategy, "max_length": self.max_length,
+                   "state_serialization": self.state_serialization, "pooling": self.pooling,
+                   "head_input_normalization": self.head_input_normalization,
                    "method": "constrained categorical routing head with optional coordinator-backbone LoRA"})
 
     def export_merged(self, path: str | Path, validation_states: list[ExecutionState] | None = None,
@@ -456,7 +576,8 @@ class HFController:
         if hasattr(backbone, "merge_and_unload"):
             backbone = backbone.merge_and_unload(safe_merge=True)
         if preserve_model:
-            merged = HFRoutingModel(backbone, self.model.head.in_features, len(self.catalog)).to(self.device)
+            merged = HFRoutingModel(backbone, self.model.head.in_features, len(self.catalog), self.pooling,
+                                    self.head_input_normalization).to(self.device)
             merged.head.load_state_dict(self.model.head.state_dict())
         else:
             self.model.backbone = backbone
@@ -480,7 +601,9 @@ class HFController:
                     "preserve_model": preserve_model, "in_place_merge": not preserve_model,
                     "validation_probe_count": len(probes), **validation,
                     "action_catalog_size": len(self.catalog), "token_accounting": self.token_accounting,
-                    "context_strategy": self.context_strategy, "max_length": self.max_length}
+                    "context_strategy": self.context_strategy, "max_length": self.max_length,
+                    "state_serialization": self.state_serialization, "pooling": self.pooling,
+                    "head_input_normalization": self.head_input_normalization}
         with atomic_directory(target) as temporary:
             backbone.save_pretrained(temporary / "backbone", safe_serialization=True)
             self.tokenizer.save_pretrained(temporary / "backbone")
@@ -513,6 +636,8 @@ class HFController:
         if overrides:
             config = merge(config, {"inference": overrides.get("inference", {})})
             for key in ("device", "dtype", "max_length", "attention_implementation", "require_cuda"):
+                if key == "max_length" and config.get("inference", {}).get("preserve_checkpoint_context", False):
+                    continue
                 if key in overrides.get("model", {}):
                     config["model"][key] = overrides["model"][key]
         return cls(config, checkpoint=path)

@@ -1,0 +1,7 @@
+include: [routing_repair_evaluate.yaml]
+output: outputs/research/routing-repair/dense-sequential
+policies: [all_agent]
+mandatory_policies: [all_agent]
+all_agent:
+  rounds: 1
+  execution_mode: sequential

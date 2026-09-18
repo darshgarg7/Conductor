@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from conductor.evaluation.io import write_csv
+from conductor.evaluation.diagnostics import routing_diagnostics
 from conductor.metrics.aggregate import aggregate_metrics, paired_differences, trajectory_metrics
 from conductor.utils.runs import write_json
 
@@ -178,6 +179,11 @@ def analyze(evaluation: str | Path, output: str | Path | None = None,
     target.mkdir(parents=True, exist_ok=True)
     trajectory_path = source / "trajectories.jsonl"
     trajectories = [json.loads(line) for line in trajectory_path.read_text().splitlines() if line.strip()] if trajectory_path.exists() else []
+    run_path = source / "run.json"
+    evaluation_config = json.loads(run_path.read_text()).get("configuration", {}) if run_path.exists() else {}
+    diagnostic_options = evaluation_config.get("routing_diagnostics", {})
+    routing = routing_diagnostics(trajectories,
+        permutation_samples=diagnostic_options.get("permutation_samples", 199), seed=evaluation_config.get("seed", 42))
     rows = [trajectory_metrics(item) for item in trajectories]
     policies = sorted({row["policy"] for row in rows})
     paired = [paired_differences(rows, baseline, candidate)
@@ -253,12 +259,14 @@ def analyze(evaluation: str | Path, output: str | Path | None = None,
               "paired_inference_optimizations": (benchmark_result or {}).get("paired_optimizations", []),
               "expert_stats": expert_stats, "initial_state_expert_summary": initial_expert_summary,
               "rollout_expert_summary": rollout_expert_summary, "identical_probe_states": identical_probe_states,
+              "routing_diagnostics": routing,
               "conclusions": conclusions,
               "limitations": ["Development deterministic agents do not establish real language-model coordination quality.",
                               "Random-initialized tiny models are not pretrained MoE baselines.",
                               "No GPU cluster performance claim follows from CPU/local measurements."]}
     result["plots"] = plot_results(rows, target / "plots", benchmark_result, initial_expert_summary)
     write_json(target / "analysis.json", result)
+    write_json(target / "routing_diagnostics.json", routing)
     write_csv(target / "paired_comparisons.csv", [{key: value for key, value in item.items() if key != "categories"} for item in paired])
     write_csv(target / "categories.csv", categories)
     write_csv(target / "generalization.csv", generalization)
