@@ -41,6 +41,16 @@ workflow success, agent calls, total CPU latency, then identifier. Learned-contr
 gates use full online workflow success by dependency stage. Classification
 accuracy alone cannot advance the study.
 
+If that gate passes, extract the four frozen Granite representation variants
+once, fit both complete-catalog and factorized heads for all three seeds, and
+measure their online development behavior:
+
+```bash
+python -m conductor.coordination.study \
+  --config configs/research/coordination_v2_study.yaml \
+  --stage probe
+```
+
 `conductor/coordination/preferences.py` constructs DPO data only from mistakes
 made by a saved SFT checkpoint. Each pair replays the actual action and a public
 rule rescue from the identical serialized state under separately instantiated,

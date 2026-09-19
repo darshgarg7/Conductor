@@ -24,3 +24,8 @@ study:
   mlp_learning_rate: 0.003
   cheap_weight_decay: 0.001
   development_latency_repetitions: 1
+  model_max_length: 384
+  factorized_head_hidden_dim: 64
+  probe_batch_size: 2
+  probe_epochs: 200
+  probe_learning_rate: 0.01

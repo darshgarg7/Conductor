@@ -1,4 +1,4 @@
-"""Select a routing-head representation using task-disjoint linear probes.
+"""Select routing-head representations using task-disjoint frozen-feature probes.
 
 The pretrained backbone and zero-initialized LoRA updates stay frozen here.
 One backbone pass supplies four pooling/normalization ablations. The selected
@@ -201,49 +201,92 @@ def probe(config: dict[str, Any]) -> dict[str, Any]:
     write_json(output / "token_audit.json", token_audit)
     labels = torch.tensor([controller.catalog.index(record["decision"]) for record in records])
     states = [ExecutionState(**record["state"]) for record in records]
-    summaries, weights, traces, cached = {}, {}, {}, {}
+    cached: dict[str, torch.Tensor] = {}
     for name, chunks in representations.items():
-        features = torch.cat(chunks)
-        cached[name] = features
-        fit = fit_factorized_head if effective["model"].get("head_type", "catalog") == "factorized" else fit_head
-        arguments = (features, states, labels, train_indices, validation_indices, controller.catalog,
-                     int(effective.get("routing", {}).get("k", 2))) if fit is fit_factorized_head else (
-                     features, labels, train_indices, validation_indices, controller.catalog,
-                     int(effective.get("routing", {}).get("k", 2)))
-        extra = {"hidden_dim": int(effective["model"].get("head_hidden_dim", 64))} if fit is fit_factorized_head else {}
-        weights[name], summaries[name], traces[name] = fit(
-            *arguments, epochs=int(options.get("epochs", 200)),
-            learning_rate=float(options.get("learning_rate", .01)), seed=int(effective.get("seed", 42)), **extra)
+        cached[name] = torch.cat(chunks)
     if file_digest(options["data"]) != source_hash:
         raise ValueError("training source changed during feature extraction")
     if validation_source and file_digest(validation_source) != validation_hash:
         raise ValueError("validation source changed during feature extraction")
-    selected = min(summaries, key=lambda name: (-summaries[name]["validation_accuracy"], summaries[name]["validation_loss"], name))
-    pooling, normalization = selected.split("/")
-    controller.model.pooling = pooling
-    controller.model.head_input_normalization = normalization
-    controller.pooling = pooling
-    controller.head_input_normalization = normalization
-    controller.config["model"].update(pooling=pooling, head_input_normalization=normalization)
-    controller.model.head.load_state_dict(weights[selected])
-    checkpoint = output / "selected"
-    controller.save(checkpoint, "sft")
-    metadata = json.loads((checkpoint / "controller.json").read_text())
-    metadata.update(training_scope="frozen_backbone_head_only", backbone_adapters_updated=False,
-                    source_dataset_sha256=source_hash, validation_dataset_sha256=validation_hash,
-                    selected_on="explicit_development" if validation_source else "task_disjoint_internal_validation")
-    write_json(checkpoint / "controller.json", metadata)
+    head_types = list(options.get("head_types", [effective["model"].get("head_type", "catalog")]))
+    seeds = [int(value) for value in options.get("seeds", [effective.get("seed", 42)])]
+    if not head_types or any(value not in {"catalog", "factorized"} for value in head_types):
+        raise ValueError("probe.head_types must contain catalog and/or factorized")
+    if not seeds or len(set(seeds)) != len(seeds):
+        raise ValueError("probe.seeds must be nonempty and unique")
+    all_summaries: dict[str, Any] = {}
+    all_traces: dict[str, Any] = {}
+    selections: dict[str, Any] = {}
+    checkpoints: dict[str, Any] = {}
+    k = int(effective.get("routing", {}).get("k", 2))
+    hidden_dim = int(effective["model"].get("head_hidden_dim", 64))
+    for seed in seeds:
+        seed_key = str(seed)
+        all_summaries[seed_key], all_traces[seed_key] = {}, {}
+        selections[seed_key], checkpoints[seed_key] = {}, {}
+        for head_type in head_types:
+            summaries: dict[str, Any] = {}
+            traces: dict[str, Any] = {}
+            weights: dict[str, dict[str, torch.Tensor]] = {}
+            for name, features in cached.items():
+                if head_type == "factorized":
+                    weights[name], summaries[name], traces[name] = fit_factorized_head(
+                        features, states, labels, train_indices, validation_indices, controller.catalog, k,
+                        epochs=int(options.get("epochs", 200)), learning_rate=float(options.get("learning_rate", .01)),
+                        seed=seed, hidden_dim=hidden_dim)
+                else:
+                    weights[name], summaries[name], traces[name] = fit_head(
+                        features, labels, train_indices, validation_indices, controller.catalog, k,
+                        epochs=int(options.get("epochs", 200)), learning_rate=float(options.get("learning_rate", .01)),
+                        seed=seed)
+            selected = min(summaries, key=lambda name: (
+                -summaries[name]["validation_accuracy"], summaries[name]["validation_loss"], name))
+            pooling, normalization = selected.split("/")
+            controller.model.pooling = pooling
+            controller.model.head_input_normalization = normalization
+            controller.pooling = pooling
+            controller.head_input_normalization = normalization
+            controller.head_type = head_type
+            controller.model.head_type = head_type
+            controller.config["seed"] = seed
+            controller.config["model"].update(pooling=pooling, head_input_normalization=normalization,
+                                               head_type=head_type, head_hidden_dim=hidden_dim)
+            feature_dim = cached[selected].shape[1]
+            controller.model.head = (FactorizedHead(feature_dim, controller.catalog.max_agents,
+                                                     controller.catalog.agents, hidden_dim)
+                                     if head_type == "factorized" else
+                                     nn.Linear(feature_dim, len(controller.catalog))).to(controller.device)
+            controller.model.head.load_state_dict(weights[selected])
+            multi = len(head_types) > 1 or len(seeds) > 1
+            checkpoint = (output / "selected" / head_type / f"seed-{seed}") if multi else output / "selected"
+            controller.save(checkpoint, "sft")
+            metadata = json.loads((checkpoint / "controller.json").read_text())
+            metadata.update(training_scope="frozen_backbone_head_only", backbone_adapters_updated=False,
+                            probe_seed=seed, source_dataset_sha256=source_hash,
+                            validation_dataset_sha256=validation_hash,
+                            selected_on="explicit_development" if validation_source else
+                                        "task_disjoint_internal_validation")
+            write_json(checkpoint / "controller.json", metadata)
+            all_summaries[seed_key][head_type] = summaries
+            all_traces[seed_key][head_type] = traces
+            selections[seed_key][head_type] = selected
+            checkpoints[seed_key][head_type] = str(checkpoint)
     torch.save({"features": cached, "labels": labels, "dataset_sha256": source_hash,
                 "model": controller.config["model"], "state_sha256": [digest(record["state"]) for record in records]},
                output / "representations.pt")
-    write_json(output / "fit_trace.json", traces)
-    write_json(output / "selected_config.json", controller.config)
-    result = {"selected_representation": selected, "ablations": summaries, "checkpoint": str(checkpoint),
+    write_json(output / "fit_trace.json", all_traces)
+    write_json(output / "selected_configs.json", {"selections": selections, "checkpoints": checkpoints})
+    result = {"selected_representations": selections, "ablations": all_summaries, "checkpoints": checkpoints,
               "dataset_sha256": source_hash, "validation_dataset_sha256": validation_hash,
               "training_tasks": len(train_ids), "validation_tasks": len(validation_ids),
               "pretrained": True, "backbone_updated": False, "specialists_updated": False,
               "selection_uses_heldout_tasks": False,
               "scope": "Frozen pretrained representations; fitted action heads. Online task success requires separate rollout evaluation."}
+    if len(head_types) == len(seeds) == 1:
+        seed_key, head_type = str(seeds[0]), head_types[0]
+        result.update(selected_representation=selections[seed_key][head_type],
+                      checkpoint=checkpoints[seed_key][head_type],
+                      ablations=all_summaries[seed_key][head_type])
     run.finish(result)
     return result
 

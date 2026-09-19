@@ -16,6 +16,7 @@ from typing import Any
 from conductor.coordination.evaluate import evaluate
 from conductor.coordination.generate import generate
 from conductor.datasets.integrity import file_digest
+from conductor.training.probe import probe
 from conductor.training.runner import train
 from conductor.utils.config import load_config
 from conductor.utils.runs import write_json
@@ -182,18 +183,98 @@ async def run_cheap_stage(config: dict[str, Any]) -> dict[str, Any]:
     return summary
 
 
+async def run_probe_stage(config: dict[str, Any]) -> dict[str, Any]:
+    study = config["study"]
+    root = Path(study.get("output", "outputs/coordination-v2"))
+    dataset = Path(study["dataset"])
+    cheap_summary_path = root / "cheap_stage_summary.json"
+    if not cheap_summary_path.exists() or not json.loads(cheap_summary_path.read_text()).get("all_learned_controls_passed"):
+        raise ValueError("cached pretrained probe is blocked until the cheap learned controls pass development")
+    seeds = [int(value) for value in study.get("seeds", [42, 137, 2027])]
+    probe_output = root / "probe"
+    model = {
+        "backend": "hf", "name": "ibm-granite/granite-3.1-1b-a400m-base",
+        "revision": "408b6e90baab8cf24f4aa9f8e19703ffa0a53b29", "pretrained": True,
+        "max_agents": 3, "max_length": int(study.get("model_max_length", 384)),
+        "device": "cpu", "dtype": "float32", "attention_implementation": "sdpa",
+        "local_files_only": True, "trust_remote_code": False, "state_serialization": "priority_v1",
+        "head_type": "catalog", "head_hidden_dim": int(study.get("factorized_head_hidden_dim", 64)),
+        "lora": {"enabled": True, "r": 4, "alpha": 8, "dropout": 0.0,
+                 "target_modules": ["q_proj", "v_proj", "router.layer"]},
+    }
+    settings = {
+        "seed": seeds[0], "model": model, "routing": {"k": 3},
+        "inference": {"instrument_experts": False, "sample": False, "token_cache_size": 0},
+        "probe": {"data": str(dataset / "sft_train.jsonl"),
+                  "validation_data": str(dataset / "sft_development.jsonl"),
+                  "output": str(probe_output), "batch_size": int(study.get("probe_batch_size", 2)),
+                  "epochs": int(study.get("probe_epochs", 200)),
+                  "learning_rate": float(study.get("probe_learning_rate", .01)),
+                  "head_types": ["catalog", "factorized"], "seeds": seeds},
+        "tracking": {"enabled": False},
+    }
+    if (probe_output / "metrics.json").exists():
+        measured_probe = json.loads((probe_output / "metrics.json").read_text())
+    else:
+        measured_probe = probe(settings)
+    per_seed: dict[int, dict[str, dict[str, float]]] = {}
+    for seed in seeds:
+        output = root / "development-probe" / f"seed-{seed}"
+        if (output / "metrics.json").exists():
+            result = json.loads((output / "metrics.json").read_text())
+        else:
+            checkpoints = measured_probe["checkpoints"][str(seed)]
+            result = await evaluate({
+                "seed": seed, "data": str(dataset / "tasks.jsonl"), "splits": ["dev"], "output": str(output),
+                "agents": {"backend": "workflow", "stores_path": str(dataset / "public_stores.json")},
+                "model": model, "routing": {"k": 3},
+                "orchestration": {"max_rounds": 6, "token_budget": 16384, "agent_call_budget": 12},
+                "latency_repetitions": int(study.get("development_latency_repetitions", 1)),
+                "bootstrap_samples": 1999,
+                "policies": [
+                    {"id": "public_state_rules"},
+                    {"id": "frozen_catalog_head", "kind": "frozen_backbone_trained_head",
+                     "checkpoint": checkpoints["catalog"]},
+                    {"id": "frozen_factorized_head", "kind": "frozen_backbone_trained_head",
+                     "checkpoint": checkpoints["factorized"]},
+                ],
+            })
+        per_seed[seed] = {identifier: _policy_summary(result, identifier)
+                          for identifier in ("frozen_catalog_head", "frozen_factorized_head")}
+    floor = float(study.get("development_floor", .95))
+    gates = {seed: {identifier: {"passed": values["success_rate"] >= floor
+                                           and values["minimum_dependency_stage_success"] >= floor,
+                                 "success_rate": values["success_rate"],
+                                 "minimum_dependency_stage_success": values["minimum_dependency_stage_success"],
+                                 "floor": floor}
+                    for identifier, values in policies.items()}
+             for seed, policies in per_seed.items()}
+    factorized_passed = all(values["frozen_factorized_head"]["passed"] for values in gates.values())
+    summary = {"stage": "cached_pretrained_frozen_heads", "seeds": seeds,
+               "probe": measured_probe, "per_seed": per_seed, "development_gates": gates,
+               "factorized_head_all_seeds_passed": factorized_passed,
+               "next_stage": "factorized_lora_sft" if factorized_passed else "blocked_before_lora",
+               "model_context_locked": {"state_serialization": "priority_v1",
+                                        "max_length": model["max_length"],
+                                        "selected_representations": measured_probe["selected_representations"]}}
+    write_json(root / "probe_stage_summary.json", summary)
+    return summary
+
+
 async def run(config: dict[str, Any], stage: str) -> dict[str, Any]:
     if stage == "data":
         return await generate(config["data_generation"])
     if stage == "cheap":
         return await run_cheap_stage(config)
-    raise ValueError("stage must be data or cheap")
+    if stage == "probe":
+        return await run_probe_stage(config)
+    raise ValueError("stage must be data, cheap, or probe")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/research/coordination_v2_study.yaml")
-    parser.add_argument("--stage", required=True, choices=("data", "cheap"))
+    parser.add_argument("--stage", required=True, choices=("data", "cheap", "probe"))
     args = parser.parse_args()
     print(json.dumps(asyncio.run(run(load_config(args.config), args.stage)), indent=2))
 
