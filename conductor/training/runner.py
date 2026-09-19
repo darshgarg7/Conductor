@@ -25,6 +25,7 @@ import torch.distributed as dist
 from torch.nn import functional as F
 from torch.nn.parallel import DistributedDataParallel
 
+from conductor.controller.actions import ActionCatalog
 from conductor.controller.artifacts import atomic_json, resolve_checkpoint
 from conductor.controller.factory import build_controller
 from conductor.schema import AGENT_NAMES, ExecutionState, RoutingDecision
@@ -92,14 +93,25 @@ def _reference_cache(config: dict[str, Any], checkpoint: str, records: list[dict
         reference = build_controller(config, checkpoint)
         if reference.stage != "sft":
             raise ValueError("DPO requires the exact SFT checkpoint, not a pretrained/random/preference model")
+        head_metadata = (reference.model.head.metadata() if hasattr(reference.model.head, "metadata") else
+                         {"head_type": "catalog", "action_catalog_size": len(reference.catalog)})
+        support_identity = {"head": head_metadata, "k": k,
+                            "state_serialization": getattr(reference, "state_serialization", "public_feature_v1"),
+                            "feature_version": getattr(reference, "feature_version", None)}
         entries = []
         with torch.inference_mode():
             for batch in batches(records, batch_size):
                 good, bad = _log_probabilities(reference, batch, k)
                 for record, chosen, rejected in zip(batch, good.cpu().tolist(), bad.cpu().tolist()):
                     entries.append({"task_id": record.get("task_id"), "state_sha256": canonical_hash(record["state"]),
+                                    "chosen_action_sha256": canonical_hash(ActionCatalog.key(
+                                        RoutingDecision(**record["chosen"]))),
+                                    "rejected_action_sha256": canonical_hash(ActionCatalog.key(
+                                        RoutingDecision(**record["rejected"]))),
                                     "chosen_logp": chosen, "rejected_logp": rejected})
-        cache = {"sft_checkpoint_sha256": digest, "records_sha256": expected_records, "k": k, "records": entries}
+        cache = {"sft_checkpoint_sha256": digest, "records_sha256": expected_records, "k": k,
+                 "policy_support": support_identity, "policy_support_sha256": canonical_hash(support_identity),
+                 "records": entries}
         del reference
         gc.collect()
         if torch.cuda.is_available():
@@ -114,6 +126,10 @@ def _reference_cache(config: dict[str, Any], checkpoint: str, records: list[dict
     for record, entry in zip(records, cache["records"]):
         if canonical_hash(record["state"]) != entry["state_sha256"]:
             raise ValueError("reference cache order/state mismatch")
+        if (canonical_hash(ActionCatalog.key(RoutingDecision(**record["chosen"]))) != entry["chosen_action_sha256"]
+                or canonical_hash(ActionCatalog.key(RoutingDecision(**record["rejected"])))
+                != entry["rejected_action_sha256"]):
+            raise ValueError("reference cache complete-action identity mismatch")
         record["reference_chosen_logp"] = entry["chosen_logp"]
         record["reference_rejected_logp"] = entry["rejected_logp"]
     return digest, cache
@@ -136,6 +152,20 @@ def _losses(controller: Any, records: list[dict[str, Any]], stage: str, k: int,
     if getattr(controller, "last_auxiliary_loss", None) is not None:
         losses = losses + float(controller.config["training"].get("router_auxiliary_weight", 0)) * controller.last_auxiliary_loss
     return losses, (chosen > rejected).float(), margin.detach()
+
+
+def _validate_public_action_support(record: dict[str, Any], fields: tuple[str, ...]) -> None:
+    state = ExecutionState(**record["state"])
+    calls = state.remaining_budget.get("agent_calls", 0)
+    tokens = state.remaining_budget.get("tokens", 0)
+    if (isinstance(calls, bool) or isinstance(tokens, bool) or not isinstance(calls, (int, float))
+            or not isinstance(tokens, (int, float)) or not math.isfinite(calls) or not math.isfinite(tokens)
+            or calls < 0 or tokens < 0):
+        raise ValueError("training states require finite nonnegative public budgets")
+    for field in fields:
+        decision = RoutingDecision(**record[field]).validate(len(AGENT_NAMES))
+        if len(decision.selected_agents) > int(calls) or (tokens < 1 and not decision.terminate):
+            raise ValueError(f"{field} action violates its public state budget support")
 
 
 def _aggregate(values: list[float], device: torch.device, world: int) -> list[float]:
@@ -251,6 +281,7 @@ def _train(config: dict[str, Any], checkpoint: str | None, resume: str | None, r
     legal = []
     for record in records:
         fields = ("decision",) if stage == "sft" else ("chosen", "rejected")
+        _validate_public_action_support(record, fields)
         decisions = [RoutingDecision(**record[field]) for field in fields]
         for decision in decisions:
             decision.validate(len(AGENT_NAMES))
@@ -263,10 +294,28 @@ def _train(config: dict[str, Any], checkpoint: str | None, resume: str | None, r
     excluded = original_examples - len(records)
     if excluded and rank == 0:
         log_event("training_labels_excluded", reason="action exceeds configured k", count=excluded, k=k)
+    explicit_validation = None
+    validation_hash = None
+    if training.get("validation_data"):
+        path = Path(training["validation_data"])
+        validation_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+        explicit_validation = read_records(path, stage, allowed_splits=("dev", "development", "validation"))
+        fit_ids = {record["task_id"] for record in records}
+        validation_ids = {record["task_id"] for record in explicit_validation}
+        fit_groups = {record.get("source_group", record["task_id"]) for record in records}
+        validation_groups = {record.get("source_group", record["task_id"]) for record in explicit_validation}
+        if fit_ids & validation_ids or fit_groups & validation_groups:
+            raise ValueError("explicit development validation overlaps fitting task/source groups")
+        for record in explicit_validation:
+            fields = ("decision",) if stage == "sft" else ("chosen", "rejected")
+            _validate_public_action_support(record, fields)
+            for field in fields:
+                RoutingDecision(**record[field]).validate(k)
     reference_digest = None
     reference_cache = None
     if stage == "dpo":
-        reference_digest, reference_cache = _reference_cache(config, checkpoint, records, batch_size, k, output, rank, world, resumed)
+        reference_digest, reference_cache = _reference_cache(config, checkpoint,
+            records + (explicit_validation or []), batch_size, k, output, rank, world, resumed)
     controller = build_controller(config, resume or checkpoint, training=True)
     controller.config["training"] = dict(training)
     controller.config["seed"] = seed
@@ -277,7 +326,10 @@ def _train(config: dict[str, Any], checkpoint: str | None, resume: str | None, r
             controller.catalog.index(record[field])
         if stage == "dpo" and controller.catalog.index(record["chosen"]) == controller.catalog.index(record["rejected"]):
             raise ValueError("preference actions must differ")
-    train_records, validation = split_by_task(records, float(training.get("validation_fraction", .2)), seed)
+    if explicit_validation is None:
+        train_records, validation = split_by_task(records, float(training.get("validation_fraction", .2)), seed)
+    else:
+        train_records, validation = records, explicit_validation
     partitions = {"train_task_ids": sorted({str(record.get("task_id", record["state"]["user_task"])) for record in train_records}),
                   "validation_task_ids": sorted({str(record.get("task_id", record["state"]["user_task"])) for record in validation})}
     identity = {"stage": stage, "seed": seed, "world_size": world, "dataset_sha256": source_hash,
@@ -293,6 +345,8 @@ def _train(config: dict[str, Any], checkpoint: str | None, resume: str | None, r
                 "execution_device_type": controller.device.type,
                 "per_rank_execution_hardware": _execution_identity(controller, world),
                 "model_sha256": canonical_hash({key: value for key, value in controller.config["model"].items() if key not in {"device", "require_cuda"}})}
+    if validation_hash is not None:
+        identity["validation_dataset_sha256"] = validation_hash
     if controller.config["model"].get("backend") == "hf":
         identity["hf_versions"] = {"transformers": version("transformers"), "peft": version("peft"), "tokenizers": version("tokenizers")}
     if identity["router_auxiliary_weight"] < 0 or (identity["router_auxiliary_weight"] and controller.config["model"].get("backend") != "hf"):
@@ -431,6 +485,8 @@ def _train(config: dict[str, Any], checkpoint: str | None, resume: str | None, r
                "reference_checkpoint_sha256": reference_digest, "dataset_sha256": source_hash,
                "pretrained": controller.config.get("model", {}).get("backend") == "hf" and controller.pretrained,
                "checkpoint": str(output), "resume_checkpoint": str(checkpoint_path), "specialists_updated": False}
+    if validation_hash is not None:
+        metrics["validation_dataset_sha256"] = validation_hash
     if rank == 0:
         # Compatibility root files are exports; normal loaders use the atomically
         # committed pointer, so concurrent readers never observe mixed weights.

@@ -294,12 +294,17 @@ measurements so the original interpretation cannot silently carry over.
 Use `python -m conductor.analyze` for new runs. [Contributing](CONTRIBUTING.md)
 describes validation expectations.
 
-The next study follows the proposed frozen
+The next study follows the frozen
 [eight-step coordination protocol](docs/coordination_v2_protocol.md), with seeds
 **42, 137, and 2027**. It specifies capability boundaries, grouped dependency and
 recovery tasks, strong cheap controls, head/LoRA/DPO gates, and a fresh final
 inventory. [Factorized routing and label coverage](docs/factorized_routing.md)
-describe the next model/data design. Neither that controller nor the new study
-is implemented. The [protocol YAML](configs/research/coordination_v2_protocol.yaml)
-is declarative, not a training configuration. Both inspected inventories now
-serve as development evidence and must not be reused as fresh final tests.
+describe the normalized stop/count/mode/agent policy now implemented for the HF
+and cheap controller backends. The controlled workflow generator, label audits,
+cheap learned controls, online evaluator, and on-policy preference builder are
+implemented; no coordination-v2 result is reported until their sealed runs
+finish. [Execution instructions](docs/coordination_v2_execution.md) distinguish
+the executable study configuration from the declarative
+[protocol YAML](configs/research/coordination_v2_protocol.yaml). Both previously
+inspected inventories remain development evidence and cannot be reused as fresh
+final tests.

@@ -1,4 +1,6 @@
 """Frozen specialist factories; the coordinator is trained independently."""
+import json
+from pathlib import Path
 from typing import Any
 import asyncio
 from conductor.agents.base import Agent, CAPABILITIES
@@ -10,6 +12,15 @@ def build_agents(config: dict[str, Any] | None = None) -> dict[str, Agent]:
     config = config or {}
     if "agents" in config:
         config = config["agents"]
+    if config.get("backend") == "workflow":
+        from conductor.coordination.specialists import build_workflow_agents
+        from conductor.coordination.workloads import PublicStores
+        stores = config.get("stores")
+        if stores is None and config.get("stores_path"):
+            stores = json.loads(Path(config["stores_path"]).read_text())
+        if stores is None:
+            raise ValueError("workflow agents require agents.stores or agents.stores_path")
+        return build_workflow_agents(PublicStores.from_dict(stores))
     names = config.get("names", list(AGENT_NAMES))
     shared: dict[str, Any] = {}
     limits: dict[str, asyncio.Semaphore] = {}

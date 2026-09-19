@@ -9,7 +9,7 @@ from typing import Any, Iterator
 from conductor.schema import ExecutionState
 
 
-def read_records(path: str | Path, stage: str) -> list[dict[str, Any]]:
+def read_records(path: str | Path, stage: str, *, allowed_splits: tuple[str, ...] = ("train",)) -> list[dict[str, Any]]:
     required = {"state", "decision"} if stage == "sft" else {"state", "chosen", "rejected"}
     records = []
     with Path(path).open() as handle:
@@ -19,7 +19,7 @@ def read_records(path: str | Path, stage: str) -> list[dict[str, Any]]:
             record = json.loads(line)
             if not required <= record.keys():
                 raise ValueError(f"{path}:{number} missing {required - record.keys()}")
-            if record.get("split", "train") != "train":
+            if record.get("split", "train") not in allowed_splits:
                 raise ValueError(f"{path}:{number}: held-out evaluation records must never train the controller")
             ExecutionState(**record["state"])
             records.append(record)

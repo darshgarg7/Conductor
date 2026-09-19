@@ -1,10 +1,12 @@
-# Factorized routing and label coverage: proposed next experiment
+# Factorized routing and label coverage
 
-This is a design proposal, not an implemented controller or a new experimental
-result. The current learned controllers use a normalized categorical catalog of
-complete routing decisions. That implementation remains the compatibility path
-and an experimental control. Internal MoE expert selection is distinct from the
-external specialist-agent selection described here.
+The normalized factorized controller described here is implemented in
+`conductor/controller/factorized.py` for both HF and cheap controller backends.
+Its probability, mask, canonicalization, budget, gradient, and checkpoint
+semantics are covered by unit tests. It has not yet produced a coordination-v2
+experimental result. The normalized categorical catalog remains the
+compatibility path and experimental control. Internal MoE expert selection is
+distinct from the external specialist-agent selection described here.
 
 The proposed change replaces the growing complete-action head with conditional
 heads for **stop → count → mode → agent choices**. It still predicts one complete

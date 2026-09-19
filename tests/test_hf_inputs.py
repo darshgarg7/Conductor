@@ -11,6 +11,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+from conductor.controller.actions import ActionCatalog
 from conductor.controller.hf import HFController, HFRoutingModel
 from conductor.schema import ExecutionState
 
@@ -146,6 +147,29 @@ def test_pooling_rejects_all_padding_and_invalid_options():
     for options in ({"pooling": "max"}, {"head_input_normalization": "batch_norm"}):
         with pytest.raises(ValueError):
             HFRoutingModel(nn.Identity(), 2, 2, **options)
+
+
+def test_hf_factorized_head_receives_tensor_budgets_without_forwarding_them_to_backbone():
+    hidden = torch.tensor([[[1., 2.]], [[3., 4.]]])
+
+    class FixedBackbone(nn.Module):
+        def forward(self, input_ids, attention_mask, **kwargs):
+            assert input_ids.shape == attention_mask.shape == (2, 1)
+            assert not any(key.startswith("_routing_") for key in kwargs)
+            return SimpleNamespace(last_hidden_state=hidden, router_logits=None)
+
+    catalog = ActionCatalog(2)
+    model = HFRoutingModel(FixedBackbone(), 2, len(catalog), head_type="factorized",
+                           max_agents=2, head_hidden_dim=8)
+    inputs = {"input_ids": torch.ones(2, 1, dtype=torch.long),
+              "attention_mask": torch.ones(2, 1, dtype=torch.long),
+              "_routing_call_budgets": torch.tensor([0, 1]),
+              "_routing_token_budgets": torch.tensor([10, 10])}
+    logps, _ = model(inputs, routing_k=2)
+    torch.testing.assert_close(logps.exp().sum(-1), torch.ones(2))
+    assert torch.isfinite(logps[0, 0]) and torch.isneginf(logps[0, 1:]).all()
+    for index, action in enumerate(catalog.actions):
+        assert bool(torch.isfinite(logps[1, index])) == (len(action.selected_agents) <= 1)
 
 
 def test_checkpoint_context_preservation_is_opt_in_and_does_not_block_device_override(tmp_path, monkeypatch):

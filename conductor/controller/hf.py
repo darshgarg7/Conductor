@@ -34,7 +34,8 @@ MERGED_EXPORT_LOW_PRECISION_TOLERANCES = {"logits": {"rtol": 2e-3, "atol": 2e-3}
 
 
 def _validate_merged_logits(before: torch.Tensor, after: torch.Tensor, catalog: ActionCatalog,
-                            dtype: torch.dtype, temperature: float) -> dict[str, Any]:
+                            dtype: torch.dtype, temperature: float, *,
+                            allow_masked_actions: bool = False) -> dict[str, Any]:
     """Gate export on bounded logit drift, probabilities, and every legal budget.
 
     FP32 permits absolute near-zero logit drift up to 1e-4 from rearranged
@@ -45,7 +46,13 @@ def _validate_merged_logits(before: torch.Tensor, after: torch.Tensor, catalog: 
     """
     if not 0 < temperature < float("inf"):
         raise ValueError("merged validation requires a finite positive temperature")
-    if not bool(torch.isfinite(before).all()) or not bool(torch.isfinite(after).all()):
+    valid = torch.isfinite(before)
+    if allow_masked_actions:
+        if (not torch.equal(valid, torch.isfinite(after)) or not bool(valid.any(-1).all())
+                or bool(torch.isnan(before).any() | torch.isnan(after).any())
+                or bool(torch.isposinf(before).any() | torch.isposinf(after).any())):
+            raise FloatingPointError("merged export changed valid action support or produced invalid logits")
+    elif not bool(valid.all()) or not bool(torch.isfinite(after).all()):
         raise FloatingPointError("merged export produced non-finite validation logits")
     before, after = before.float(), after.float()
     defaults = MERGED_EXPORT_FP32_TOLERANCES if dtype == torch.float32 else MERGED_EXPORT_LOW_PRECISION_TOLERANCES
@@ -68,7 +75,7 @@ def _validate_merged_logits(before: torch.Tensor, after: torch.Tensor, catalog: 
         maximum_probability_difference = max(maximum_probability_difference,
                                              float((before_probability - after_probability).abs().max()))
     return {"validation_tolerances": tolerances, "validation_k_values": k_values,
-            "maximum_logit_difference": float((before - after).abs().max()),
+            "maximum_logit_difference": float((before[valid] - after[valid]).abs().max()),
             "maximum_probability_difference": maximum_probability_difference,
             "probability_temperature": temperature,
             "routing_validation": "unchanged masked-logit and serving-probability greedy argmax for every supported k"}
@@ -98,7 +105,9 @@ def _public_evidence(value: Any) -> Any:
 
 class HFRoutingModel(nn.Module):
     def __init__(self, backbone: nn.Module, hidden_size: int, num_actions: int,
-                 pooling: str = "last", head_input_normalization: str = "none") -> None:
+                 pooling: str = "last", head_input_normalization: str = "none",
+                 head_type: str = "catalog", max_agents: int = 3,
+                 head_hidden_dim: int = 64) -> None:
         super().__init__()
         if pooling not in {"last", "mean"}:
             raise ValueError("pooling must be last or mean")
@@ -107,7 +116,16 @@ class HFRoutingModel(nn.Module):
         self.backbone = backbone
         self.pooling = pooling
         self.head_input_normalization = head_input_normalization
-        self.head = nn.Linear(hidden_size, num_actions)
+        self.head_type = head_type
+        if head_type == "catalog":
+            self.head = nn.Linear(hidden_size, num_actions)
+        elif head_type == "factorized":
+            from conductor.controller.factorized import FactorizedHead
+            self.head = FactorizedHead(hidden_size, max_agents=max_agents, hidden_dim=head_hidden_dim)
+            if self.head.out_features != num_actions:
+                raise ValueError("factorized head and action catalog disagree")
+        else:
+            raise ValueError("head_type must be catalog or factorized")
 
     def pooled_hidden(self, hidden_states: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
         """The exact FP32 head input; usable for frozen-representation ablations."""
@@ -129,14 +147,25 @@ class HFRoutingModel(nn.Module):
 
     def represent(self, inputs: dict[str, torch.Tensor], output_router_logits: bool = False
                   ) -> tuple[torch.Tensor, Any]:
-        output = self.backbone(**inputs, use_cache=False, return_dict=True,
+        backbone_inputs = {key: value for key, value in inputs.items() if not key.startswith("_routing_")}
+        output = self.backbone(**backbone_inputs, use_cache=False, return_dict=True,
                                output_router_logits=output_router_logits)
         return self.pooled_hidden(output.last_hidden_state, inputs["attention_mask"]), getattr(output, "router_logits", None)
 
-    def forward(self, inputs: dict[str, torch.Tensor], output_router_logits: bool = False
+    def forward(self, inputs: dict[str, torch.Tensor], output_router_logits: bool = False,
+                routing_k: int | None = None
                 ) -> tuple[torch.Tensor, Any]:
         hidden, routers = self.represent(inputs, output_router_logits)
-        return self.head(hidden.to(self.head.weight.dtype)), routers
+        return self.head_logits(hidden, inputs, routing_k), routers
+
+    def head_logits(self, hidden: torch.Tensor, inputs: dict[str, torch.Tensor],
+                    routing_k: int | None = None) -> torch.Tensor:
+        hidden = hidden.to(next(self.head.parameters()).dtype)
+        if self.head_type == "factorized":
+            return self.head.all_log_probabilities(hidden, k=routing_k,
+                call_budgets=inputs.get("_routing_call_budgets"),
+                token_budgets=inputs.get("_routing_token_budgets"))
+        return self.head(hidden)
 
 
 class HFController:
@@ -153,6 +182,7 @@ class HFController:
         self.state_serialization = model_config.get("state_serialization", "legacy")
         self.pooling = model_config.get("pooling", "last")
         self.head_input_normalization = model_config.get("head_input_normalization", "none")
+        self.head_type = model_config.get("head_type", "catalog")
         if self.state_serialization not in {"legacy", "priority_v1"}:
             raise ValueError("state_serialization must be legacy or priority_v1")
         if self.pooling not in {"last", "mean"}:
@@ -239,7 +269,8 @@ class HFController:
         # Float32 action head and adapters; pretrained backbone runs at selected
         # precision. Keep trainable parameters in float32 for stable optimization.
         self.model = HFRoutingModel(backbone, architecture.hidden_size, len(self.catalog), self.pooling,
-                                    self.head_input_normalization).to(device=self.device)
+                                    self.head_input_normalization, self.head_type, self.catalog.max_agents,
+                                    int(model_config.get("head_hidden_dim", 64))).to(device=self.device)
         for parameter in self.model.parameters():
             if parameter.requires_grad:
                 parameter.data = parameter.data.float()
@@ -347,7 +378,17 @@ class HFController:
         encoded = self.tokenizer.pad({"input_ids": items}, padding=True, return_tensors="pt")
         self._last_encoded_tokens = encoded["attention_mask"].sum(-1).tolist()
         self.last_tokenization_details = details
-        return {key: value for key, value in encoded.items() if key in {"input_ids", "attention_mask"}}
+        result = {key: value for key, value in encoded.items() if key in {"input_ids", "attention_mask"}}
+        if getattr(self, "head_type", "catalog") == "factorized":
+            budgets = []
+            for text in texts:
+                if getattr(self, "state_serialization", "legacy") == "legacy":
+                    budgets.append(json.loads(text.rsplit("\0CONDUCTOR_STATE\0", 1)[1])["remaining_budget"])
+                else:
+                    budgets.append(json.loads(text)["progress"]["budget"])
+            result["_routing_call_budgets"] = torch.tensor([budget.get("agent_calls", 0) for budget in budgets])
+            result["_routing_token_budgets"] = torch.tensor([budget.get("tokens", 0) for budget in budgets])
+        return result
 
     def _priority_tokens(self, text: str, budget: int) -> tuple[list[int], dict[str, Any]]:
         record = json.loads(text)
@@ -428,7 +469,10 @@ class HFController:
         needs_router = (track and self.instrument_experts) or auxiliary_weight > 0
         runner = self._compiled_model if not self.model.training and self._compiled_model is not None else self.model
         try:
-            logits, router_logits = runner(inputs, output_router_logits=needs_router)
+            if getattr(self, "head_type", "catalog") == "factorized":
+                logits, router_logits = runner(inputs, output_router_logits=needs_router, routing_k=k)
+            else:
+                logits, router_logits = runner(inputs, output_router_logits=needs_router)
             if runner is self._compiled_model:
                 self.compile_status["validated"] = True
         except Exception as error:
@@ -525,7 +569,9 @@ class HFController:
                    "context_strategy": self.context_strategy, "max_length": self.max_length,
                    "state_serialization": self.state_serialization, "pooling": self.pooling,
                    "head_input_normalization": self.head_input_normalization,
-                   "method": "constrained categorical routing head with optional coordinator-backbone LoRA"})
+                   "head_type": self.head_type,
+                   "head_semantics": self.model.head.metadata() if self.head_type == "factorized" else {"type": "catalog"},
+                   "method": "normalized complete-action routing with optional coordinator-backbone LoRA"})
 
     def export_merged(self, path: str | Path, validation_states: list[ExecutionState] | None = None,
                       *, preserve_model: bool = True) -> dict[str, Any]:
@@ -564,7 +610,8 @@ class HFController:
         inputs = self.encode_states(probes)
         with torch.inference_mode():
             before, _ = self.model(inputs, output_router_logits=False)
-        if not bool(torch.isfinite(before).all()):
+            reference_hidden = self.model.represent(inputs)[0] if self.head_type == "factorized" else None
+        if self.head_type != "factorized" and not bool(torch.isfinite(before).all()):
             raise FloatingPointError("source controller produced non-finite validation logits")
         backbone = copy.deepcopy(self.model.backbone) if preserve_model else self.model.backbone
         if not preserve_model:
@@ -577,7 +624,8 @@ class HFController:
             backbone = backbone.merge_and_unload(safe_merge=True)
         if preserve_model:
             merged = HFRoutingModel(backbone, self.model.head.in_features, len(self.catalog), self.pooling,
-                                    self.head_input_normalization).to(self.device)
+                                    self.head_input_normalization, self.head_type, self.catalog.max_agents,
+                                    int(self.config["model"].get("head_hidden_dim", 64))).to(self.device)
             merged.head.load_state_dict(self.model.head.state_dict())
         else:
             self.model.backbone = backbone
@@ -586,7 +634,20 @@ class HFController:
         merged.eval()
         with torch.inference_mode():
             after, _ = merged(inputs, output_router_logits=False)
-        validation = _validate_merged_logits(before, after, self.catalog, self.dtype, self.temperature)
+            merged_hidden = merged.represent(inputs)[0] if self.head_type == "factorized" else None
+        validation = _validate_merged_logits(before, after, self.catalog, self.dtype, self.temperature,
+                                             allow_masked_actions=self.head_type == "factorized")
+        if self.head_type == "factorized":
+            # Top-k changes conditional count normalizers. Validate the actual
+            # per-k policy, rather than masking a k=max joint distribution.
+            by_k = {}
+            with torch.inference_mode():
+                for routing_k in range(1, self.catalog.max_agents + 1):
+                    by_k[str(routing_k)] = _validate_merged_logits(
+                        self.model.head_logits(reference_hidden, inputs, routing_k),
+                        merged.head_logits(merged_hidden, inputs, routing_k),
+                        self.catalog, self.dtype, self.temperature, allow_masked_actions=True)
+            validation["conditional_policy_validation_by_k"] = by_k
         if not preserve_model:
             self._in_place_merge_validated = True
         configuration = copy.deepcopy(self.config)

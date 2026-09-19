@@ -141,10 +141,25 @@ def build_policy(name: str, config: dict[str, Any], checkpoint: str | None = Non
                               execution_mode=dense.get("execution_mode", "parallel"), order=dense.get("order"))
     if normalized == "rule_based":
         return RuleBasedPolicy(config.get("routing", {}).get("rules"), available)
+    if normalized == "public_state_rules":
+        from conductor.coordination.policies import WorkflowRulePolicy
+        return WorkflowRulePolicy()
     if normalized == "random_top_k":
         return RandomTopKPolicy(int(config.get("seed", 42)), int(config.get("orchestration", {}).get("max_rounds", 3)), available)
     if normalized == "static_supervisor":
         return StaticSupervisorPolicy(config.get("supervisor", {}))
+    if normalized in {"sparse_linear_router", "small_mlp_router"}:
+        if checkpoint is None:
+            checkpoint = config.get("checkpoints", {}).get(normalized)
+        if not checkpoint:
+            raise ValueError(f"{normalized} requires a fitted cheap-controller checkpoint")
+        from conductor.controller.factory import build_controller
+        policy = build_controller(config, checkpoint)
+        expected = "linear" if normalized == "sparse_linear_router" else "mlp"
+        if getattr(policy, "architecture", None) != expected:
+            raise ValueError(f"{normalized} requires cheap {expected} architecture")
+        policy.name = normalized
+        return policy
     if normalized in {"base_moe", "conductor_sft", "conductor_preference"}:
         from conductor.controller.factory import build_controller
         if normalized == "base_moe" and checkpoint is not None:

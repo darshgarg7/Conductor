@@ -1,0 +1,20 @@
+# Executable coordination-v2 train/development corpus generation.
+seed: 314159
+dataset_output: data/coordination-v2
+output: outputs/coordination-v2/data-generation
+train_count: 72
+development_count: 36
+policies:
+  - public_state_rules
+  - random_top_k
+  - iterative_all_agent_sequential
+  - all_agent_parallel
+  - stop_immediately
+routing:
+  k: 3
+orchestration:
+  max_rounds: 6
+  token_budget: 16384
+  agent_call_budget: 12
+tracking:
+  enabled: false

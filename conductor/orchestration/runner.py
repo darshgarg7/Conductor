@@ -21,6 +21,9 @@ def initial_state(task: Task, token_budget: int = 8192, agent_call_budget: int =
 
 
 def assemble_answer(state: ExecutionState) -> str:
+    if state.task_type == "coordination_workflow":
+        from conductor.coordination.grading import assemble_workflow_answer
+        return assemble_workflow_answer(state)
     for output in reversed(state.previous_agent_outputs):
         answer = output.get("metadata", {}).get("answer")
         if answer is not None:
@@ -187,10 +190,16 @@ async def run_trajectory(task: Task, policy: Policy, agents: dict[str, Agent], k
             stop_reason = "budget_exhausted"
             break
     final_answer = assemble_answer(state)
-    success, score = grade_answer(task, final_answer)
+    grading_details: dict[str, Any] = {}
+    if task.task_type == "coordination_workflow":
+        from conductor.coordination.grading import grade_workflow
+        success, score, grading_details = grade_workflow(task, state, final_answer)
+    else:
+        success, score = grade_answer(task, final_answer)
     return Trajectory(asdict(task), policy.name, steps, final_answer, success, score,
                       time.perf_counter() - started, graph, cost,
                       metadata={"stop_reason": stop_reason, "controller_tokens": controller_tokens,
+                                "workflow_grading": grading_details,
                                 "downstream_agent_tokens": agent_tokens, "total_tokens": controller_tokens + agent_tokens,
                                 "agent_activations": len(state.agents_already_called) - initial_calls, "coordination_rounds": len(steps),
                                 "token_budget_overrun": max(0, controller_tokens + agent_tokens - original_tokens),

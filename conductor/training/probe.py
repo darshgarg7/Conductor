@@ -19,6 +19,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from conductor.controller.actions import ActionCatalog
+from conductor.controller.factorized import FactorizedHead
 from conductor.controller.factory import build_controller
 from conductor.datasets.integrity import digest, file_digest
 from conductor.schema import ExecutionState
@@ -83,6 +84,70 @@ def fit_head(features: torch.Tensor, labels: torch.Tensor, train_indices: list[i
     return best_weights, summary, trace
 
 
+def fit_factorized_head(features: torch.Tensor, states: list[ExecutionState], labels: torch.Tensor,
+                        train_indices: list[int], validation_indices: list[int], catalog: ActionCatalog, k: int,
+                        *, epochs: int, learning_rate: float, seed: int, hidden_dim: int = 64
+                        ) -> tuple[dict[str, torch.Tensor], dict[str, Any], list[dict[str, Any]]]:
+    """Fit the normalized stop/count/mode/ordered-selection policy."""
+    if (not train_indices or not validation_indices or set(train_indices) & set(validation_indices)
+            or len(set(train_indices + validation_indices)) != len(features)):
+        raise ValueError("probe requires complete, disjoint, nonempty train/validation partitions")
+    if len(states) != len(features) or labels.shape != (len(features),):
+        raise ValueError("factorized probe states, features and labels must align")
+    if epochs < 1 or not math.isfinite(learning_rate) or learning_rate <= 0:
+        raise ValueError("probe epochs and learning_rate must be positive")
+    seed_everything(seed)
+    head = FactorizedHead(features.shape[1], catalog.max_agents, catalog.agents, hidden_dim).to(features.device)
+    optimizer = torch.optim.AdamW(head.parameters(), lr=learning_rate, weight_decay=.01)
+    train_features = features[train_indices]
+    validation_features = features[validation_indices]
+    train_states = [states[index] for index in train_indices]
+    validation_states = [states[index] for index in validation_indices]
+    train_labels = labels[train_indices]
+    validation_labels = labels[validation_indices]
+    trace: list[dict[str, Any]] = []
+    best: dict[str, Any] | None = None
+    best_weights: dict[str, torch.Tensor] | None = None
+    with torch.no_grad():
+        initial = head(features, states, k)
+        targets = initial[torch.arange(len(features)), labels]
+        if bool(torch.isneginf(targets).any()):
+            raise ValueError("factorized probe target violates public budget support")
+        initial_loss = float(F.nll_loss(initial[train_indices], train_labels))
+        finite = initial[torch.isfinite(initial)]
+        initial_logit_std = float(finite.std()) if len(finite) > 1 else 0.0
+    for epoch in range(1, epochs + 1):
+        optimizer.zero_grad(set_to_none=True)
+        logps = head(train_features, train_states, k)
+        loss = F.nll_loss(logps, train_labels)
+        if not bool(torch.isfinite(loss)):
+            raise FloatingPointError("non-finite factorized probe loss")
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(head.parameters(), 1, error_if_nonfinite=True)
+        optimizer.step()
+        with torch.no_grad():
+            predicted = head(validation_features, validation_states, k)
+            validation_loss = float(F.nll_loss(predicted, validation_labels))
+            accuracy = float((predicted.argmax(-1) == validation_labels).float().mean())
+        row = {"epoch": epoch, "train_loss": float(loss.detach()),
+               "validation_loss": validation_loss, "validation_accuracy": accuracy}
+        trace.append(row)
+        if best is None or (-accuracy, validation_loss) < (-best["validation_accuracy"], best["validation_loss"]):
+            best = row
+            best_weights = {name: value.detach().cpu().clone() for name, value in head.state_dict().items()}
+    assert best is not None and best_weights is not None
+    head.load_state_dict(best_weights)
+    with torch.no_grad():
+        predictions = head(features, states, k).argmax(-1)
+    summary = {**best, "initial_train_loss": initial_loss, "initial_logit_std": initial_logit_std,
+               "feature_rms": float(features.square().mean().sqrt()),
+               "train_examples": len(train_indices), "validation_examples": len(validation_indices),
+               "validation_predictions": predictions[validation_indices].tolist(),
+               "validation_targets": labels[validation_indices].tolist(),
+               "head_metadata": head.metadata()}
+    return best_weights, summary, trace
+
+
 def probe(config: dict[str, Any]) -> dict[str, Any]:
     effective = copy.deepcopy(config)
     options = effective["probe"]
@@ -93,7 +158,16 @@ def probe(config: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("representation probes require an actual pretrained HF MoE")
     source_hash = file_digest(options["data"])
     records = read_records(options["data"], "sft")
-    train, validation = split_by_task(records, float(options.get("validation_fraction", .25)), effective.get("seed", 42))
+    validation_source = options.get("validation_data")
+    if validation_source:
+        validation_hash = file_digest(validation_source)
+        validation = read_records(validation_source, "sft", allowed_splits=("dev", "development", "validation"))
+        train = records
+        records = train + validation
+    else:
+        validation_hash = None
+        train, validation = split_by_task(records, float(options.get("validation_fraction", .25)),
+                                          effective.get("seed", 42))
     if not validation:
         raise ValueError("representation selection requires task-disjoint validation")
     train_ids = {record["task_id"] for record in train}
@@ -126,16 +200,24 @@ def probe(config: dict[str, Any]) -> dict[str, Any]:
     write_json(output / "data_partition.json", {"train_task_ids": sorted(train_ids), "validation_task_ids": sorted(validation_ids)})
     write_json(output / "token_audit.json", token_audit)
     labels = torch.tensor([controller.catalog.index(record["decision"]) for record in records])
+    states = [ExecutionState(**record["state"]) for record in records]
     summaries, weights, traces, cached = {}, {}, {}, {}
     for name, chunks in representations.items():
         features = torch.cat(chunks)
         cached[name] = features
-        weights[name], summaries[name], traces[name] = fit_head(
-            features, labels, train_indices, validation_indices, controller.catalog,
-            int(effective.get("routing", {}).get("k", 2)), epochs=int(options.get("epochs", 200)),
-            learning_rate=float(options.get("learning_rate", .01)), seed=int(effective.get("seed", 42)))
+        fit = fit_factorized_head if effective["model"].get("head_type", "catalog") == "factorized" else fit_head
+        arguments = (features, states, labels, train_indices, validation_indices, controller.catalog,
+                     int(effective.get("routing", {}).get("k", 2))) if fit is fit_factorized_head else (
+                     features, labels, train_indices, validation_indices, controller.catalog,
+                     int(effective.get("routing", {}).get("k", 2)))
+        extra = {"hidden_dim": int(effective["model"].get("head_hidden_dim", 64))} if fit is fit_factorized_head else {}
+        weights[name], summaries[name], traces[name] = fit(
+            *arguments, epochs=int(options.get("epochs", 200)),
+            learning_rate=float(options.get("learning_rate", .01)), seed=int(effective.get("seed", 42)), **extra)
     if file_digest(options["data"]) != source_hash:
         raise ValueError("training source changed during feature extraction")
+    if validation_source and file_digest(validation_source) != validation_hash:
+        raise ValueError("validation source changed during feature extraction")
     selected = min(summaries, key=lambda name: (-summaries[name]["validation_accuracy"], summaries[name]["validation_loss"], name))
     pooling, normalization = selected.split("/")
     controller.model.pooling = pooling
@@ -148,7 +230,8 @@ def probe(config: dict[str, Any]) -> dict[str, Any]:
     controller.save(checkpoint, "sft")
     metadata = json.loads((checkpoint / "controller.json").read_text())
     metadata.update(training_scope="frozen_backbone_head_only", backbone_adapters_updated=False,
-                    source_dataset_sha256=source_hash, selected_on="task_disjoint_internal_validation")
+                    source_dataset_sha256=source_hash, validation_dataset_sha256=validation_hash,
+                    selected_on="explicit_development" if validation_source else "task_disjoint_internal_validation")
     write_json(checkpoint / "controller.json", metadata)
     torch.save({"features": cached, "labels": labels, "dataset_sha256": source_hash,
                 "model": controller.config["model"], "state_sha256": [digest(record["state"]) for record in records]},
@@ -156,7 +239,8 @@ def probe(config: dict[str, Any]) -> dict[str, Any]:
     write_json(output / "fit_trace.json", traces)
     write_json(output / "selected_config.json", controller.config)
     result = {"selected_representation": selected, "ablations": summaries, "checkpoint": str(checkpoint),
-              "dataset_sha256": source_hash, "training_tasks": len(train_ids), "validation_tasks": len(validation_ids),
+              "dataset_sha256": source_hash, "validation_dataset_sha256": validation_hash,
+              "training_tasks": len(train_ids), "validation_tasks": len(validation_ids),
               "pretrained": True, "backbone_updated": False, "specialists_updated": False,
               "selection_uses_heldout_tasks": False,
               "scope": "Frozen pretrained representations; fitted action heads. Online task success requires separate rollout evaluation."}

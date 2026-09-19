@@ -22,6 +22,9 @@ def build_controller(config: dict[str, Any], checkpoint: str | None = None, *, t
     elif backend == "hf":
         from conductor.controller.hf import HFController
         controller = HFController.load(checkpoint, config) if checkpoint else HFController(config)
+    elif backend == "cheap":
+        from conductor.controller.cheap import CheapController
+        controller = CheapController.load(checkpoint, config) if checkpoint else CheapController(config)
     else:
         raise ValueError(f"unsupported controller backend {backend!r}")
     if training:

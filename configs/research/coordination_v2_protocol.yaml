@@ -3,7 +3,7 @@
 kind: research_protocol
 protocol_version: coordination_v2
 executable: false
-status: proposed_not_run
+status: implementation_ready_not_run
 threshold_status: frozen_design_requires_new_committed_revision_before_training_changes
 claim_scope: fixed_synthetic_workflow_inventory_cpu
 
@@ -110,7 +110,7 @@ supervision:
   empty_or_rare_cells_block_unsupported_behavior_claims: true
 
 factorized_policy_proposal:
-  implementation_status: design_only_not_implemented
+  implementation_status: implemented_and_unit_tested_not_yet_measured
   compatibility_control: normalized_complete_categorical_action_catalog
   complete_joint_semantics: stop_then_count_then_conditional_mode_then_agents_without_replacement
   all_conditionals_normalized_on_valid_support: true

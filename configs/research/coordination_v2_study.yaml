@@ -1,0 +1,26 @@
+# Executable driver. Frozen scientific thresholds live in
+# coordination_v2_protocol.yaml and were committed before these measurements.
+data_generation:
+  seed: 314159
+  dataset_output: data/coordination-v2
+  output: outputs/coordination-v2/data-generation
+  train_count: 72
+  development_count: 36
+  policies: [public_state_rules, random_top_k, iterative_all_agent_sequential, all_agent_parallel, stop_immediately]
+  routing: {k: 3}
+  orchestration: {max_rounds: 6, token_budget: 16384, agent_call_budget: 12}
+  tracking: {enabled: false}
+
+study:
+  dataset: data/coordination-v2
+  output: outputs/coordination-v2
+  seeds: [42, 137, 2027]
+  development_floor: 0.95
+  cheap_feature_dim: 512
+  cheap_hidden_dim: 128
+  cheap_epochs: 200
+  cheap_batch_size: 32
+  linear_learning_rate: 0.01
+  mlp_learning_rate: 0.003
+  cheap_weight_decay: 0.001
+  development_latency_repetitions: 1
