@@ -32,3 +32,11 @@ study:
   sft_batch_size: 2
   sft_gradient_accumulation_steps: 2
   sft_learning_rate: 0.0001
+  preference_minimum_margin: 0.000001
+  preference_token_weight: 0.05
+  preference_agent_call_weight: 0.04
+  preference_communication_weight: 0.01
+  dpo_batch_size: 2
+  dpo_gradient_accumulation_steps: 2
+  dpo_learning_rate: 0.00003
+  dpo_beta: 0.1

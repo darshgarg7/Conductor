@@ -15,9 +15,10 @@ from typing import Any
 
 from conductor.coordination.evaluate import evaluate
 from conductor.coordination.generate import generate
+from conductor.coordination.preferences import generate_preferences
 from conductor.datasets.integrity import file_digest
 from conductor.training.probe import probe
-from conductor.training.runner import train
+from conductor.training.runner import checkpoint_digest, train
 from conductor.utils.config import load_config
 from conductor.utils.runs import write_json
 
@@ -382,6 +383,181 @@ async def run_sft_stage(config: dict[str, Any]) -> dict[str, Any]:
     return summary
 
 
+def _controller_runtime(study: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "model": {"backend": "hf", "device": "cpu", "dtype": "float32",
+                  "max_length": int(study.get("model_max_length", 384)),
+                  "attention_implementation": "sdpa"},
+        "routing": {"k": 3},
+        "inference": {"instrument_experts": True, "sample": False,
+                      "preserve_checkpoint_context": True, "token_cache_size": 0},
+        "tracking": {"enabled": False},
+    }
+
+
+async def run_preference_stage(config: dict[str, Any]) -> dict[str, Any]:
+    """Collect exact-state DPO pairs from each eligible SFT actor.
+
+    Development pairs are retained only for diagnostics and validation.  A seed
+    with no measured train or development mistakes blocks its dependent DPO run;
+    the driver never invents negatives or pools actors across seeds.
+    """
+    study = config["study"]
+    root = Path(study.get("output", "outputs/coordination-v2"))
+    dataset = Path(study["dataset"])
+    sft_summary_path = root / "sft_stage_summary.json"
+    if not sft_summary_path.exists():
+        raise FileNotFoundError("on-policy preferences require the completed SFT stage")
+    sft_summary = json.loads(sft_summary_path.read_text())
+    if not sft_summary.get("all_seeds_passed"):
+        raise ValueError("on-policy preferences are blocked because an SFT seed failed development")
+    seeds = [int(value) for value in study.get("seeds", [42, 137, 2027])]
+    per_seed: dict[int, dict[str, Any]] = {}
+    for seed in seeds:
+        checkpoint = sft_summary["checkpoints"][str(seed)]
+        output = dataset / "preferences" / f"seed-{seed}"
+        manifest = output / "manifest.json"
+        if manifest.exists():
+            result = json.loads(manifest.read_text())
+            if result.get("tasks_sha256") != file_digest(dataset / "tasks.jsonl"):
+                raise ValueError(f"seed {seed} preference task inventory changed")
+            if result.get("stores_sha256") != file_digest(dataset / "public_stores.json"):
+                raise ValueError(f"seed {seed} preference public stores changed")
+            if result.get("actor_checkpoint_sha256") != checkpoint_digest(checkpoint):
+                raise ValueError(f"seed {seed} preference actor checkpoint changed")
+        else:
+            settings = {
+                "seed": seed, "checkpoint": checkpoint,
+                "tasks": str(dataset / "tasks.jsonl"),
+                "stores": str(dataset / "public_stores.json"),
+                "output": str(output),
+                "run_output": str(root / "preference-generation" / f"seed-{seed}"),
+                "minimum_margin": float(study.get("preference_minimum_margin", 1e-6)),
+                "reward": {
+                    "token_weight": float(study.get("preference_token_weight", .05)),
+                    "latency_weight": 0.0,
+                    "agent_call_weight": float(study.get("preference_agent_call_weight", .04)),
+                    "communication_weight": float(study.get("preference_communication_weight", .01)),
+                },
+                **_controller_runtime(study),
+            }
+            result = await generate_preferences(settings, checkpoint)
+        per_seed[seed] = result
+    ready = all(item.get("status") == "ready" for item in per_seed.values())
+    summary = {
+        "stage": "on_policy_preferences", "seeds": seeds, "per_seed": per_seed,
+        "all_seeds_ready": ready,
+        "fit_partition": "train-task actor states only",
+        "development_partition": "pair-ranking validation and diagnostics only",
+        "final_partition_used": False,
+        "next_stage": "dpo" if ready else "blocked_before_dpo",
+    }
+    write_json(root / "preference_stage_summary.json", summary)
+    return summary
+
+
+async def run_dpo_stage(config: dict[str, Any]) -> dict[str, Any]:
+    """Fit one DPO epoch per seed against that seed's exact frozen SFT reference."""
+    study = config["study"]
+    root = Path(study.get("output", "outputs/coordination-v2"))
+    dataset = Path(study["dataset"])
+    preference_path = root / "preference_stage_summary.json"
+    if not preference_path.exists():
+        raise FileNotFoundError("DPO requires the on-policy preference stage")
+    preference_summary = json.loads(preference_path.read_text())
+    if not preference_summary.get("all_seeds_ready"):
+        raise ValueError("DPO is blocked because at least one seed lacks measured train/development pairs")
+    sft_summary = json.loads((root / "sft_stage_summary.json").read_text())
+    seeds = [int(value) for value in study.get("seeds", [42, 137, 2027])]
+    checkpoints: dict[int, str] = {}
+    training_metrics: dict[int, Any] = {}
+    adapter_updates: dict[int, Any] = {}
+    for seed in seeds:
+        reference = sft_summary["checkpoints"][str(seed)]
+        preferences = dataset / "preferences" / f"seed-{seed}"
+        output = root / "checkpoints" / f"granite-{sft_summary['head_type']}-dpo" / f"seed-{seed}"
+        settings = {
+            "seed": seed,
+            **_controller_runtime(study),
+            "training": {
+                "stage": "dpo", "data": str(preferences / "train.jsonl"),
+                "validation_data": str(preferences / "development.jsonl"),
+                "checkpoint": reference, "output": str(output),
+                "epochs": 1, "batch_size": int(study.get("dpo_batch_size", 2)),
+                "gradient_accumulation_steps": int(study.get("dpo_gradient_accumulation_steps", 2)),
+                "learning_rate": float(study.get("dpo_learning_rate", .00003)),
+                "beta": float(study.get("dpo_beta", .1)), "weight_decay": .01,
+                "max_grad_norm": 1.0, "gradient_checkpointing": False,
+                "scheduler": "constant", "save_every_epochs": 1,
+            },
+        }
+        if _completed_checkpoint(output):
+            metrics = json.loads((output / "metrics.json").read_text())
+            if metrics.get("dataset_sha256") != file_digest(preferences / "train.jsonl"):
+                raise ValueError(f"seed {seed} completed DPO used a different preference corpus")
+            if metrics.get("reference_checkpoint_sha256") != checkpoint_digest(reference):
+                raise ValueError(f"seed {seed} completed DPO used a different SFT reference")
+        else:
+            metrics = train(settings, reference)
+        report = _adapter_update_report(reference, output)
+        training_metrics[seed] = metrics
+        adapter_updates[seed] = report
+        checkpoints[seed] = str(output)
+    per_seed: dict[int, dict[str, dict[str, float]]] = {}
+    for seed in seeds:
+        output = root / "development-dpo" / f"seed-{seed}"
+        if (output / "metrics.json").exists():
+            result = json.loads((output / "metrics.json").read_text())
+        else:
+            result = await evaluate({
+                "seed": seed, "data": str(dataset / "tasks.jsonl"), "splits": ["dev"],
+                "output": str(output),
+                "agents": {"backend": "workflow", "stores_path": str(dataset / "public_stores.json")},
+                **_controller_runtime(study),
+                "orchestration": {"max_rounds": 6, "token_budget": 16384, "agent_call_budget": 12},
+                "latency_repetitions": int(study.get("development_latency_repetitions", 1)),
+                "bootstrap_samples": 1999,
+                "policies": [
+                    {"id": "public_state_rules"},
+                    {"id": "conductor_sft", "kind": "conductor_sft",
+                     "checkpoint": sft_summary["checkpoints"][str(seed)]},
+                    {"id": "conductor_preference", "kind": "conductor_preference",
+                     "checkpoint": checkpoints[seed]},
+                ],
+            })
+        per_seed[seed] = {identifier: _policy_summary(result, identifier)
+                          for identifier in ("conductor_sft", "conductor_preference")}
+    # This is a development-only artifact-release decision, frozen before the
+    # final inventory exists.  Final evaluation still reports both stages.
+    stage_locks: dict[int, dict[str, Any]] = {}
+    for seed, values in per_seed.items():
+        sft, dpo = values["conductor_sft"], values["conductor_preference"]
+        quality_ok = (dpo["success_rate"] >= sft["success_rate"] - .05
+                      and dpo["minimum_family_success"] >= .90)
+        call_reduction = ((sft["mean_agent_calls"] - dpo["mean_agent_calls"]) / sft["mean_agent_calls"]
+                          if sft["mean_agent_calls"] else None)
+        dpo_selected = quality_ok and call_reduction is not None and call_reduction >= .10
+        stage_locks[seed] = {
+            "selected": "conductor_preference" if dpo_selected else "conductor_sft",
+            "quality_gate_passed": quality_ok, "actual_call_reduction": call_reduction,
+            "dpo_efficiency_gate_passed": bool(dpo_selected),
+            "rule": "DPO only if within five quality points, every family >=90%, and calls fall >=10%",
+        }
+    summary = {
+        "stage": "dpo", "seeds": seeds, "checkpoints": checkpoints,
+        "training_metrics": training_metrics, "adapter_updates": adapter_updates,
+        "per_seed": per_seed, "development_stage_locks": stage_locks,
+        "all_seeds_completed": all(value.get("completed") for value in training_metrics.values()),
+        "next_stage": "lock_fresh_final_inventory",
+    }
+    write_json(root / "dpo_stage_summary.json", summary)
+    write_json(root / "candidate_stage_lock.json", {
+        "scope": "development-only artifact-stage selection before final inventory generation",
+        "seeds": stage_locks,
+    })
+    return summary
+
+
 async def run(config: dict[str, Any], stage: str) -> dict[str, Any]:
     if stage == "data":
         return await generate(config["data_generation"])
@@ -391,13 +567,18 @@ async def run(config: dict[str, Any], stage: str) -> dict[str, Any]:
         return await run_probe_stage(config)
     if stage == "sft":
         return await run_sft_stage(config)
-    raise ValueError("stage must be data, cheap, probe, or sft")
+    if stage == "preferences":
+        return await run_preference_stage(config)
+    if stage == "dpo":
+        return await run_dpo_stage(config)
+    raise ValueError("stage must be data, cheap, probe, sft, preferences, or dpo")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/research/coordination_v2_study.yaml")
-    parser.add_argument("--stage", required=True, choices=("data", "cheap", "probe", "sft"))
+    parser.add_argument("--stage", required=True,
+                        choices=("data", "cheap", "probe", "sft", "preferences", "dpo"))
     args = parser.parse_args()
     print(json.dumps(asyncio.run(run(load_config(args.config), args.stage)), indent=2))
 
