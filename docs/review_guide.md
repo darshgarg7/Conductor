@@ -4,10 +4,12 @@ Conductor investigates learned sparse coordination. Review the model
 post-training, inference measurements and recovery behavior together: the
 controller is both a learned policy and a component on the execution path.
 
-Start with the measured research report linked from the README. It separates
-completed CPU experiments from NVIDIA work that still needs device validation.
-The pilot is deliberately small and uses frozen deterministic specialists;
-that makes routing outcomes cheap to reproduce, but limits the research claim.
+Start with the [coordination-v2 report](../results/coordination-v2/report.md).
+It shows the strongest SFT result, the failed factorized head, and the exact gate
+that blocks DPO and final evaluation. Then use the earlier pilot and repair to
+trace why the state representation, supervision, and evaluation protocol changed.
+All completed studies use CPU and deterministic specialists; NVIDIA validation
+still requires a target host.
 
 For model work, inspect [the HF controller](../conductor/controller/hf.py),
 [training loop](../conductor/training/runner.py) and

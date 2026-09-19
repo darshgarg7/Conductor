@@ -1,0 +1,30 @@
+{
+  "model_checkpoints": {
+    "42": {
+      "path": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42",
+      "actor_checkpoint_sha256": "8023d15e687cbc0b01744ab8d8c0582614d10cd7f59ec8e1d1f865eb9e6dc298"
+    },
+    "137": {
+      "path": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-137",
+      "actor_checkpoint_sha256": "17f249be960cb6643d0d46caff93faf29cb81ece7d82a07efb8c1ad6956347e4"
+    },
+    "2027": {
+      "path": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-2027",
+      "actor_checkpoint_sha256": "d04f05768ed30aa83ac65b35c3bf295a02117ab56d5fe4bfc9f2ef7fc52a7fd4"
+    }
+  },
+  "omitted": [
+    {
+      "kind": "checkpoint_weights_and_optimizer_state",
+      "reason": "large reproducible working artifacts"
+    },
+    {
+      "kind": "full_training_and_development_trajectories",
+      "reason": "compact archive retains task metrics and audits"
+    },
+    {
+      "kind": "final_inventory",
+      "reason": "not generated after the DPO eligibility gate failed"
+    }
+  ]
+}

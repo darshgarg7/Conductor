@@ -1,0 +1,17 @@
+{
+  "status": "blocked_insufficient_pairs",
+  "train_pairs": 0,
+  "development_pairs": 1,
+  "actor_checkpoint_sha256": "17f249be960cb6643d0d46caff93faf29cb81ece7d82a07efb8c1ad6956347e4",
+  "continuation_sha256": "495ceb0d95aee2ab1d0f492daadb26930db5bed3421223dae0b7436d2127111b",
+  "preference_audit_sha256": "d6a97bb2eab660ae8bed98fd16c433f08f93f32b04a34ba70b525824543e825b",
+  "tasks_sha256": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+  "stores_sha256": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+  "latency_weight": 0.0,
+  "exclusions": {
+    "actor_matches_rescue": 279
+  },
+  "fit_partition": "train only",
+  "development_partition": "diagnostic and validation only",
+  "final_partition_used": false
+}

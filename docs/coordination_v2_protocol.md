@@ -1,15 +1,21 @@
-# Coordination v2: proposed CPU experiment
+# Coordination v2: frozen CPU protocol
 
-This is a plan for the next experiment, not a completed result or an executable
-training configuration. The [declarative protocol](../configs/research/coordination_v2_protocol.yaml)
-freezes three training seeds, **42, 137, and 2027**, and the acceptance rules below.
-Do not pass that YAML file to `conductor.train` or `conductor.evaluate`. This commit records design only;
-training has not started.
+This document is the pre-run protocol committed before measurements. The
+[declarative protocol](../configs/research/coordination_v2_protocol.yaml) freezes
+training seeds **42, 137, and 2027** and the acceptance rules below. It remains
+unchanged as historical evidence and is not an executable training config.
+
+Execution has since completed through the preference-data gate. Catalog-head
+LoRA SFT passes development for all three seeds; the factorized head fails its
+all-seed gate. On-policy collection produces no training pairs for seeds 42 and
+137, so DPO does not start and the final inventory remains unopened. See the
+[recorded result](../results/coordination-v2/report.md). The remainder of this
+document preserves the original plan and thresholds.
 
 The completed routing repair is useful development evidence. Its original
 48 held-out tasks have already been inspected and now belong to the development
 exposure ledger. They cannot become an unseen final test by renaming their IDs.
-The next study asks whether a controller can execute genuine dependencies,
+The study asks whether a controller can execute genuine dependencies,
 ignore distractors, recover from tool errors, and coordinate independent work
 without relying on a task-category tag that identifies the route.
 

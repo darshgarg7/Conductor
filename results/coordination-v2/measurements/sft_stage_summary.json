@@ -1,0 +1,243 @@
+{
+  "stage": "lora_sft",
+  "head_type": "catalog",
+  "seeds": [
+    42,
+    137,
+    2027
+  ],
+  "checkpoints": {
+    "42": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42",
+    "137": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-137",
+    "2027": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-2027"
+  },
+  "training_metrics": {
+    "42": {
+      "stage": "sft",
+      "epochs": 2,
+      "completed": true,
+      "optimizer_windows": 94,
+      "skipped_amp_updates": 0,
+      "world_size": 1,
+      "gradient_accumulation_steps": 2,
+      "train_examples": 186,
+      "validation_examples": 93,
+      "source_examples": 186,
+      "excluded_actions_exceeding_k": 0,
+      "train_k": 3,
+      "initial_train": {
+        "loss": 0.034068085010393816,
+        "accuracy": 1.0
+      },
+      "final_train": {
+        "loss": 0.01273030264478963,
+        "accuracy": 1.0
+      },
+      "final_validation": {
+        "loss": 0.024690730920341866,
+        "accuracy": 1.0
+      },
+      "trainable_parameters": 942565,
+      "total_controller_parameters": 1335567845,
+      "reference_checkpoint_sha256": null,
+      "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+      "pretrained": true,
+      "checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42",
+      "resume_checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42/resume/step-00000094-epoch-0002",
+      "specialists_updated": false,
+      "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+    },
+    "137": {
+      "stage": "sft",
+      "epochs": 2,
+      "completed": true,
+      "optimizer_windows": 94,
+      "skipped_amp_updates": 0,
+      "world_size": 1,
+      "gradient_accumulation_steps": 2,
+      "train_examples": 186,
+      "validation_examples": 93,
+      "source_examples": 186,
+      "excluded_actions_exceeding_k": 0,
+      "train_k": 3,
+      "initial_train": {
+        "loss": 0.026882489537319507,
+        "accuracy": 1.0
+      },
+      "final_train": {
+        "loss": 0.012765270384167502,
+        "accuracy": 1.0
+      },
+      "final_validation": {
+        "loss": 0.03688729275690807,
+        "accuracy": 0.989247311827957
+      },
+      "trainable_parameters": 942565,
+      "total_controller_parameters": 1335567845,
+      "reference_checkpoint_sha256": null,
+      "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+      "pretrained": true,
+      "checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-137",
+      "resume_checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-137/resume/step-00000094-epoch-0002",
+      "specialists_updated": false,
+      "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+    },
+    "2027": {
+      "stage": "sft",
+      "epochs": 2,
+      "completed": true,
+      "optimizer_windows": 94,
+      "skipped_amp_updates": 0,
+      "world_size": 1,
+      "gradient_accumulation_steps": 2,
+      "train_examples": 186,
+      "validation_examples": 93,
+      "source_examples": 186,
+      "excluded_actions_exceeding_k": 0,
+      "train_k": 3,
+      "initial_train": {
+        "loss": 0.03089405238748558,
+        "accuracy": 1.0
+      },
+      "final_train": {
+        "loss": 0.018844807473958284,
+        "accuracy": 0.9946236559139785
+      },
+      "final_validation": {
+        "loss": 0.03598245864537525,
+        "accuracy": 0.967741935483871
+      },
+      "trainable_parameters": 942565,
+      "total_controller_parameters": 1335567845,
+      "reference_checkpoint_sha256": null,
+      "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+      "pretrained": true,
+      "checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-2027",
+      "resume_checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-2027/resume/step-00000094-epoch-0002",
+      "specialists_updated": false,
+      "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+    }
+  },
+  "adapter_updates": {
+    "42": {
+      "source_adapter": "outputs/coordination-v2/probe/selected/catalog/seed-42",
+      "trained_adapter": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42",
+      "adapter_tensors": 144,
+      "changed_tensors": 144,
+      "maximum_absolute_update": 0.007071144878864288,
+      "nonzero_lora_b_tensors": 72,
+      "target_groups_changed": {
+        "q_proj": true,
+        "v_proj": true,
+        "router": true
+      },
+      "passed": true
+    },
+    "137": {
+      "source_adapter": "outputs/coordination-v2/probe/selected/catalog/seed-137",
+      "trained_adapter": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-137",
+      "adapter_tensors": 144,
+      "changed_tensors": 144,
+      "maximum_absolute_update": 0.007232099771499634,
+      "nonzero_lora_b_tensors": 72,
+      "target_groups_changed": {
+        "q_proj": true,
+        "v_proj": true,
+        "router": true
+      },
+      "passed": true
+    },
+    "2027": {
+      "source_adapter": "outputs/coordination-v2/probe/selected/catalog/seed-2027",
+      "trained_adapter": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-2027",
+      "adapter_tensors": 144,
+      "changed_tensors": 144,
+      "maximum_absolute_update": 0.0071760606952011585,
+      "nonzero_lora_b_tensors": 72,
+      "target_groups_changed": {
+        "q_proj": true,
+        "v_proj": true,
+        "router": true
+      },
+      "passed": true
+    }
+  },
+  "per_seed": {
+    "42": {
+      "frozen_selected_head": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 1.3470736146377424
+      },
+      "conductor_sft": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 1.5050336354227813
+      }
+    },
+    "137": {
+      "frozen_selected_head": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 1.3327386945311446
+      },
+      "conductor_sft": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 1.5990184143075667
+      }
+    },
+    "2027": {
+      "frozen_selected_head": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 1.338107675936448
+      },
+      "conductor_sft": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.9166666666666665,
+        "mean_wall_clock_seconds": 1.3644753762507915
+      }
+    }
+  },
+  "development_gates": {
+    "42": {
+      "passed": true,
+      "success_rate": 1.0,
+      "minimum_dependency_stage_success": 1.0,
+      "floor": 0.95
+    },
+    "137": {
+      "passed": true,
+      "success_rate": 1.0,
+      "minimum_dependency_stage_success": 1.0,
+      "floor": 0.95
+    },
+    "2027": {
+      "passed": true,
+      "success_rate": 1.0,
+      "minimum_dependency_stage_success": 1.0,
+      "floor": 0.95
+    }
+  },
+  "all_seeds_passed": true,
+  "next_stage": "on_policy_preferences"
+}

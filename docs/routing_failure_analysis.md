@@ -2,8 +2,8 @@
 
 Conductor has completed real pretrained MoE SFT and DPO. It has not demonstrated
 that learned coordination beats strong baselines. The repair recovers familiar
-single-agent tasks but fails every unseen composition. This distinction is the
-starting point for the next experiment.
+single-agent tasks but fails every unseen composition. This distinction
+motivated coordination-v2.
 
 ## What was measured
 
@@ -51,16 +51,19 @@ change. Pooling/normalization probes are narrower representation ablations.
 Single-seed results and related synthetic templates cannot establish general
 customer-task accuracy, preference-training benefit or the need for a MoE.
 
-## What happens next
+## Coordination-v2 outcome
 
-The [coordination v2 protocol](coordination_v2_protocol.md) commits three seeds,
-strong cheap controls, quality/call acceptance rules and a fresh structural-OOD
-test. The [factorized action design](factorized_routing.md) defines normalized
-complete-decision probabilities and prerequisite label audits. These are plans;
-the factorized controller and v2 experiments have not been implemented or run.
+The [coordination-v2 study](../results/coordination-v2/report.md) implements the
+planned dependency workflows, label audits, factorized control, cheap baselines,
+and three-seed LoRA SFT. Catalog-head SFT reaches 36/36 development tasks for
+all seeds, matching public-state rules. The factorized frozen head fails its
+gate at 25/36, 27/36, and 6/36. Greedy SFT rollouts supply no fitting preference
+pairs for seeds 42 and 137, so the frozen protocol blocks DPO and never opens a
+new final test. This adds a third failure mode: an on-policy preference design
+can become data-starved after a deterministic teacher is reproduced.
 
 The inspected six- and 48-task inventories are development evidence now. They
-cannot become fresh tests after further tuning. An unfavorable locked result
-must remain published. CPU timings, estimated tool tokens and fewer calls do
+cannot become fresh tests after further tuning. The unfavorable locked result
+remains published. CPU timings, estimated tool tokens and fewer calls do
 not establish dollar savings or NVIDIA performance. A successful research run
 also does not establish deployment or customer-support acceptance.

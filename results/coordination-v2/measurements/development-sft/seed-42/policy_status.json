@@ -1,0 +1,20 @@
+[
+  {
+    "policy": "public_state_rules",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": null
+  },
+  {
+    "policy": "frozen_selected_head",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": "outputs/coordination-v2/probe/selected/catalog/seed-42"
+  },
+  {
+    "policy": "conductor_sft",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42"
+  }
+]

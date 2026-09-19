@@ -1,0 +1,53 @@
+{
+  "development": {
+    "actor_checkpoint_sha256_counts": {},
+    "audit_version": "coordination_coverage_v1",
+    "canonical_distinct_actions_validated": true,
+    "chosen_agent_counts": {},
+    "chosen_multiagent_modes": {},
+    "dependency_stages": {},
+    "duplicate_pairs": 0,
+    "families": {},
+    "records": 0,
+    "records_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rejected_agent_counts": {},
+    "rejected_multiagent_modes": {},
+    "shared_public_state_and_continuation_validated": true,
+    "source_groups": 0,
+    "sources": {},
+    "state_kinds": {},
+    "tasks": 0,
+    "unique_pairs": 0
+  },
+  "exclusions": {
+    "actor_matches_rescue": 279
+  },
+  "partition_audit": {
+    "source_group_disjoint": true,
+    "task_disjoint": true
+  },
+  "state_kind_counts": {
+    "dev": {},
+    "train": {}
+  },
+  "train": {
+    "actor_checkpoint_sha256_counts": {},
+    "audit_version": "coordination_coverage_v1",
+    "canonical_distinct_actions_validated": true,
+    "chosen_agent_counts": {},
+    "chosen_multiagent_modes": {},
+    "dependency_stages": {},
+    "duplicate_pairs": 0,
+    "families": {},
+    "records": 0,
+    "records_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rejected_agent_counts": {},
+    "rejected_multiagent_modes": {},
+    "shared_public_state_and_continuation_validated": true,
+    "source_groups": 0,
+    "sources": {},
+    "state_kinds": {},
+    "tasks": 0,
+    "unique_pairs": 0
+  }
+}

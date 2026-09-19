@@ -1,0 +1,43 @@
+[
+  {
+    "policy": "public_state_rules",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": null
+  },
+  {
+    "policy": "random_top_k",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": null
+  },
+  {
+    "policy": "iterative_all_agent_sequential",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": null
+  },
+  {
+    "policy": "all_agent_parallel",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": null
+  },
+  {
+    "policy": "static_supervisor",
+    "status": "unavailable",
+    "reason": "static_supervisor unavailable: configure supervisor.name for a frozen HF LLM"
+  },
+  {
+    "policy": "sparse_linear_router",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-42"
+  },
+  {
+    "policy": "small_mlp_router",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-42"
+  }
+]

@@ -1,0 +1,151 @@
+{
+  "schema_version": "coordination-v2-data-v1",
+  "seed": 314159,
+  "budgets": {
+    "k": 3,
+    "max_rounds": 6,
+    "token_budget": 16384,
+    "agent_call_budget": 12,
+    "routing_interval": 1
+  },
+  "task_count": 108,
+  "train_tasks": 72,
+  "development_tasks": 36,
+  "trajectory_count": 540,
+  "trajectory_successes": 232,
+  "sft_train_records": 186,
+  "sft_development_records": 93,
+  "policy_counts": {
+    "public_state_rules": 108,
+    "random_top_k": 108,
+    "iterative_all_agent_sequential": 108,
+    "all_agent_parallel": 108,
+    "stop_immediately": 108
+  },
+  "public_store_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+  "specialist_audit": {
+    "specialists": [
+      {
+        "agent": "coder",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "c346f533a08aff9e3c711b8c0c409d83a7221a7f4cea8dab8f32d62e74aa37c8",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "df62736f5995802290ceda960e8f08ed01dbc6113e7a0111d38929026edd687c",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "critic",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "c1859fa5828ef2e83ed9f7fa23e5216211f8f636b599716034631ecbb535cb01",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "b74aa526e7572ccc25cfd52ca0592493466b8a276d9e6986db2d702af3c67fcd",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "math",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "a1a66a4f27d22cf3f1a2e7fee7b6252989311ee47acca1a600dbeee3aeeb8fe8",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "b511e9fd82849bb50cd93a4d5ccaec7d54b7464590751d55545cc4499fa4de43",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "planner",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "fd85abc4f1ebd729f72c612988c2cb97afe06c3158a2dd2607bc4cee4d1e9dde",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "1224bda92c85b83651add930b2e2faa010b6a37efa5a8b5400233699a7bca10b",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "researcher",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "8fb5ad16cede91ac9ba5bb620b4ab56f40e46b385b46817e0a970853b8bb9212",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "817fae417607b1fd962ebaa904832b5ccc9eaa111a6ea764f55b055d09f8f737",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "retriever",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "6a04e686ad112c7c7aa644a5957b7566a10b633919e974aee9ca0853d2ef057b",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "42ff24c4361dcee79153ec2c5d1e6e053081e163c38c785394743c15db788df2",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "tool_executor",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "b8e86960426f0882583145bc2dc5e73d15196156bd0a12ed85bf0dc2fcbc9fab",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "60356e7bf713141eeb636a52cd1aa80caba9b32ca5eb545ce65a1a02df3df0a4",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      },
+      {
+        "agent": "verifier",
+        "backend": "workflow",
+        "frozen": true,
+        "model_name": null,
+        "resolved_model_revision": null,
+        "immutable_model_version": null,
+        "identity_verifiable": true,
+        "prompt_sha256": "74a05471704f0ef82f499dbb2d892914bdbe5d1c76959a6407f345436780deb9",
+        "corpus_sha256": "548fdec65c349114bda1b6030776fbc3603dd488f44fe8c85a49bb86c9ab2552",
+        "configuration_sha256": "5165bc396018ea10a24f0715387f4e04794f2a663bd11dcd36073de4418f2c5b",
+        "implementation_sha256": "e1c7d24e869e59bc3caccc14e3680df765bf17cd2e2f77a2312e1d9cf3a7c419"
+      }
+    ],
+    "fingerprint": "18b542e6235f8b03502592812fa4c2784e53d7d6a9bc25cc179f5dd1e06f5a1c",
+    "all_frozen": true,
+    "all_frozen_llm": false,
+    "all_identities_verifiable": true
+  },
+  "coverage_audit_sha256": "4663342de4ad3c13b68591ab78b3593cf60b7c7337d0c1b84a8158bfddf28d54",
+  "files": {
+    "capability_isolation.json": "0948152c4c0c0e52e31a26c786d61d426843a2d915e9d5bc67b46a92d81201e0",
+    "coverage_audit.json": "4663342de4ad3c13b68591ab78b3593cf60b7c7337d0c1b84a8158bfddf28d54",
+    "public_stores.json": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+    "sft_development.jsonl": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1",
+    "sft_train.jsonl": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+    "tasks.jsonl": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+    "trajectories.jsonl": "e5943feb787e9b32e3620f2eb4ceebe44bdbbe51aa592fd6f986ef57bb91543a"
+  },
+  "task_inventory_sha256": "8cfa0b817fb14b70c5fa10c87a3d3c7ad11997dd0c71416f2fd42e847f87477c",
+  "controller_state_excludes_private_task_metadata": true,
+  "supervision_source": "successful public-state rule teacher trajectories"
+}

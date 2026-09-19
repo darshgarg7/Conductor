@@ -1,0 +1,75 @@
+{
+  "development": {
+    "actor_checkpoint_sha256_counts": {
+      "17f249be960cb6643d0d46caff93faf29cb81ece7d82a07efb8c1ad6956347e4": 1
+    },
+    "audit_version": "coordination_coverage_v1",
+    "canonical_distinct_actions_validated": true,
+    "chosen_agent_counts": {
+      "2": 1
+    },
+    "chosen_multiagent_modes": {
+      "sequential": 1
+    },
+    "dependency_stages": {
+      "3": 1
+    },
+    "duplicate_pairs": 0,
+    "families": {
+      "tool_failure_then_recover": 1
+    },
+    "records": 1,
+    "records_sha256": "0f619d236b19cdf63d27b8f72e2c92b2fa2bd33c4bdc177e9e2e0db301b6c367",
+    "rejected_agent_counts": {
+      "1": 1
+    },
+    "rejected_multiagent_modes": {},
+    "shared_public_state_and_continuation_validated": true,
+    "source_groups": 1,
+    "sources": {
+      "on_policy_mistake": 1
+    },
+    "state_kinds": {
+      "failure": 1,
+      "intermediate": 1,
+      "partial": 1
+    },
+    "tasks": 1,
+    "unique_pairs": 1
+  },
+  "exclusions": {
+    "actor_matches_rescue": 279
+  },
+  "partition_audit": {
+    "source_group_disjoint": true,
+    "task_disjoint": true
+  },
+  "state_kind_counts": {
+    "dev": {
+      "failure": 1,
+      "intermediate": 1,
+      "partial": 1
+    },
+    "train": {}
+  },
+  "train": {
+    "actor_checkpoint_sha256_counts": {},
+    "audit_version": "coordination_coverage_v1",
+    "canonical_distinct_actions_validated": true,
+    "chosen_agent_counts": {},
+    "chosen_multiagent_modes": {},
+    "dependency_stages": {},
+    "duplicate_pairs": 0,
+    "families": {},
+    "records": 0,
+    "records_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rejected_agent_counts": {},
+    "rejected_multiagent_modes": {},
+    "shared_public_state_and_continuation_validated": true,
+    "source_groups": 0,
+    "sources": {},
+    "state_kinds": {},
+    "tasks": 0,
+    "unique_pairs": 0
+  }
+}

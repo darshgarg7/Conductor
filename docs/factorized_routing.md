@@ -3,8 +3,10 @@
 The normalized factorized controller described here is implemented in
 `conductor/controller/factorized.py` for both HF and cheap controller backends.
 Its probability, mask, canonicalization, budget, gradient, and checkpoint
-semantics are covered by unit tests. It has not yet produced a coordination-v2
-experimental result. The normalized categorical catalog remains the
+semantics are covered by unit tests. In coordination-v2, its frozen-backbone
+probe scores **25/36, 27/36, and 6/36** across seeds 42, 137, and 2027, so it
+fails the predeclared all-seed development gate and does not advance to LoRA.
+The normalized categorical catalog scores 36/36 for all seeds and remains the
 compatibility path and experimental control. Internal MoE expert selection is
 distinct from the external specialist-agent selection described here.
 

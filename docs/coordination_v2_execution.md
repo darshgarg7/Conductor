@@ -67,8 +67,29 @@ hash-identical continuation policies. Training-task pairs are the only fitting
 partition; development pairs are diagnostics and validation; final tasks are
 never converted into preferences.
 
+Collect each seed's on-policy pairs and apply the DPO gate with:
+
+```bash
+python -m conductor.coordination.study \
+  --config configs/research/coordination_v2_study.yaml \
+  --stage preferences
+
+python -m conductor.coordination.study \
+  --config configs/research/coordination_v2_study.yaml \
+  --stage dpo
+```
+
+The recorded run yields train/development pair counts of 0/0, 0/1, and 2/3
+for seeds 42, 137, and 2027. The all-seed gate blocks DPO before an optimizer
+step. Because the protocol requires completed SFT and DPO for every seed, the
+fresh final inventory is not generated. The blocked summary is a completed
+study outcome.
+
 The protocol and thresholds were committed before these runs in
 `configs/research/coordination_v2_protocol.yaml`. The generated corpus,
 development outputs, checkpoints, and later final lock belong under
 `data/coordination-v2` and `outputs/coordination-v2`; they are measurements, not
-hard-coded documentation values.
+hard-coded documentation values. The compact public record lives in
+`results/coordination-v2/` and can be rebuilt with
+`python scripts/report_coordination_v2.py` when the exact recorded working
+artifacts are present.

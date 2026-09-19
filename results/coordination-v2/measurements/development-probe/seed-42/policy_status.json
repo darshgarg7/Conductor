@@ -1,0 +1,20 @@
+[
+  {
+    "policy": "public_state_rules",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": null
+  },
+  {
+    "policy": "frozen_catalog_head",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": "outputs/coordination-v2/probe/selected/catalog/seed-42"
+  },
+  {
+    "policy": "frozen_factorized_head",
+    "status": "measured",
+    "tasks": 36,
+    "checkpoint": "outputs/coordination-v2/probe/selected/factorized/seed-42"
+  }
+]

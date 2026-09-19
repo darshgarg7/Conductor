@@ -117,10 +117,12 @@ matched k=2/concurrency-four comparison, dynamic batching records 0.843×
 throughput and 1.133× p95 latency relative to queued individual inference;
 those regressions remain published, not relabeled as optimizations.
 
-The proposed [coordination-v2 protocol](coordination_v2_protocol.md) freezes
-eight ordered steps and seeds 42, 137, and 2027. Its
-[YAML](../configs/research/coordination_v2_protocol.yaml) is a declarative plan,
-not an executable configuration or achieved result. Both inspected pilot and
-repair inventories are development evidence; a new final suite must be sealed
-before its outcomes guide any claim. The plan supplies no additional training,
-GPU, inference-saving, or production-readiness evidence.
+The [coordination-v2 result](../results/coordination-v2/report.md) adds a
+three-seed pretrained-MoE SFT study. Every catalog-head SFT seed passes the
+36-task development gate, while the factorized head fails. The preference stage
+has no fitting pair for two seeds, so DPO and the final suite remain blocked.
+This supports the reported multi-seed SFT implementation and adapter-update
+claim. It supplies no new DPO, final-generalization, GPU, inference-saving, or
+production-readiness evidence. The
+[YAML](../configs/research/coordination_v2_protocol.yaml) remains the immutable
+pre-run declaration rather than an achieved-results file.

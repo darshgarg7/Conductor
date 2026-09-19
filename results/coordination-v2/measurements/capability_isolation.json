@@ -1,0 +1,38 @@
+{
+  "scope": "repeat one frozen public capability under the common task budget",
+  "per_specialist": {
+    "planner": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "retriever": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "researcher": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "coder": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "tool_executor": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "critic": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "verifier": {
+      "tasks": 108,
+      "successes": 0
+    },
+    "math": {
+      "tasks": 108,
+      "successes": 0
+    }
+  },
+  "all_single_capability_successes_zero": true
+}

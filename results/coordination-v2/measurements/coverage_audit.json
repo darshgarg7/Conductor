@@ -1,0 +1,346 @@
+{
+  "audit_version": "coordination_coverage_v1",
+  "coverage_gate_passed": true,
+  "minimum_development_source_groups_per_family": 6,
+  "partitions": {
+    "development": {
+      "agent_labels": {
+        "coder": 6,
+        "critic": 6,
+        "math": 12,
+        "researcher": 18,
+        "retriever": 36,
+        "tool_executor": 6,
+        "verifier": 18
+      },
+      "audit_version": "coordination_coverage_v1",
+      "contradictory_public_state_labels": 0,
+      "counts": {
+        "count:0": 36,
+        "count:1": 21,
+        "count:2": 27,
+        "count:3": 9,
+        "mode:parallel": 6,
+        "mode:sequential": 30,
+        "split:dev": 93,
+        "state:failure": 12,
+        "state:handoff": 30,
+        "state:initial": 36,
+        "state:intermediate": 57,
+        "state:partial": 39,
+        "state:stopping": 36
+      },
+      "distinct_public_states": 93,
+      "duplicate_public_state_records": 0,
+      "families": {
+        "distractor_evidence_then_verify": {
+          "counts": {
+            "count:0": 6,
+            "count:1": 3,
+            "count:3": 6,
+            "mode:sequential": 6,
+            "split:dev": 15,
+            "state:handoff": 6,
+            "state:initial": 6,
+            "state:intermediate": 9,
+            "state:partial": 6,
+            "state:stopping": 6
+          },
+          "source_groups": 6,
+          "tasks": 6
+        },
+        "parallel_evidence_then_combine": {
+          "counts": {
+            "count:0": 6,
+            "count:1": 3,
+            "count:2": 9,
+            "mode:parallel": 6,
+            "mode:sequential": 3,
+            "split:dev": 18,
+            "state:handoff": 3,
+            "state:initial": 6,
+            "state:intermediate": 12,
+            "state:partial": 9,
+            "state:stopping": 6
+          },
+          "source_groups": 6,
+          "tasks": 6
+        },
+        "research_then_verify": {
+          "counts": {
+            "count:0": 6,
+            "count:1": 3,
+            "count:2": 6,
+            "mode:sequential": 6,
+            "split:dev": 15,
+            "state:handoff": 6,
+            "state:initial": 6,
+            "state:intermediate": 9,
+            "state:partial": 6,
+            "state:stopping": 6
+          },
+          "source_groups": 6,
+          "tasks": 6
+        },
+        "retrieve_code_then_verify": {
+          "counts": {
+            "count:0": 6,
+            "count:1": 3,
+            "count:2": 6,
+            "mode:sequential": 6,
+            "split:dev": 15,
+            "state:handoff": 6,
+            "state:initial": 6,
+            "state:intermediate": 9,
+            "state:partial": 6,
+            "state:stopping": 6
+          },
+          "source_groups": 6,
+          "tasks": 6
+        },
+        "retrieve_then_calculate": {
+          "counts": {
+            "count:0": 6,
+            "count:2": 3,
+            "count:3": 3,
+            "mode:sequential": 6,
+            "split:dev": 12,
+            "state:handoff": 6,
+            "state:initial": 6,
+            "state:intermediate": 6,
+            "state:partial": 3,
+            "state:stopping": 6
+          },
+          "source_groups": 6,
+          "tasks": 6
+        },
+        "tool_failure_then_recover": {
+          "counts": {
+            "count:0": 6,
+            "count:1": 9,
+            "count:2": 3,
+            "mode:sequential": 3,
+            "split:dev": 18,
+            "state:failure": 12,
+            "state:handoff": 3,
+            "state:initial": 6,
+            "state:intermediate": 12,
+            "state:partial": 9,
+            "state:stopping": 6
+          },
+          "source_groups": 6,
+          "tasks": 6
+        }
+      },
+      "k": 3,
+      "records": 93,
+      "records_sha256": "4e40fb5785a50be150c370bc9704b579c99e8e5a648411d84ee03c6ac490af37",
+      "scope": "chosen supervised labels, not candidate action availability",
+      "sequential_orders": {
+        "math>verifier": 3,
+        "retriever>coder": 6,
+        "retriever>critic>researcher": 6,
+        "retriever>math": 3,
+        "retriever>math>verifier": 3,
+        "retriever>researcher": 6,
+        "retriever>verifier": 3
+      },
+      "state_tag_source": "offline provenance except initial/intermediate and chosen stop",
+      "steps": {
+        "0": 36,
+        "1": 36,
+        "2": 21
+      },
+      "within_action_handoffs": {
+        "critic>researcher": 6,
+        "math>verifier": 6,
+        "retriever>coder": 6,
+        "retriever>critic": 6,
+        "retriever>math": 6,
+        "retriever>researcher": 6,
+        "retriever>verifier": 3
+      }
+    },
+    "train": {
+      "agent_labels": {
+        "coder": 12,
+        "critic": 12,
+        "math": 24,
+        "researcher": 36,
+        "retriever": 72,
+        "tool_executor": 12,
+        "verifier": 36
+      },
+      "audit_version": "coordination_coverage_v1",
+      "contradictory_public_state_labels": 0,
+      "counts": {
+        "count:0": 72,
+        "count:1": 42,
+        "count:2": 54,
+        "count:3": 18,
+        "mode:parallel": 12,
+        "mode:sequential": 60,
+        "split:train": 186,
+        "state:failure": 24,
+        "state:handoff": 60,
+        "state:initial": 72,
+        "state:intermediate": 114,
+        "state:partial": 78,
+        "state:stopping": 72
+      },
+      "distinct_public_states": 186,
+      "duplicate_public_state_records": 0,
+      "families": {
+        "distractor_evidence_then_verify": {
+          "counts": {
+            "count:0": 12,
+            "count:1": 6,
+            "count:3": 12,
+            "mode:sequential": 12,
+            "split:train": 30,
+            "state:handoff": 12,
+            "state:initial": 12,
+            "state:intermediate": 18,
+            "state:partial": 12,
+            "state:stopping": 12
+          },
+          "source_groups": 12,
+          "tasks": 12
+        },
+        "parallel_evidence_then_combine": {
+          "counts": {
+            "count:0": 12,
+            "count:1": 6,
+            "count:2": 18,
+            "mode:parallel": 12,
+            "mode:sequential": 6,
+            "split:train": 36,
+            "state:handoff": 6,
+            "state:initial": 12,
+            "state:intermediate": 24,
+            "state:partial": 18,
+            "state:stopping": 12
+          },
+          "source_groups": 12,
+          "tasks": 12
+        },
+        "research_then_verify": {
+          "counts": {
+            "count:0": 12,
+            "count:1": 6,
+            "count:2": 12,
+            "mode:sequential": 12,
+            "split:train": 30,
+            "state:handoff": 12,
+            "state:initial": 12,
+            "state:intermediate": 18,
+            "state:partial": 12,
+            "state:stopping": 12
+          },
+          "source_groups": 12,
+          "tasks": 12
+        },
+        "retrieve_code_then_verify": {
+          "counts": {
+            "count:0": 12,
+            "count:1": 6,
+            "count:2": 12,
+            "mode:sequential": 12,
+            "split:train": 30,
+            "state:handoff": 12,
+            "state:initial": 12,
+            "state:intermediate": 18,
+            "state:partial": 12,
+            "state:stopping": 12
+          },
+          "source_groups": 12,
+          "tasks": 12
+        },
+        "retrieve_then_calculate": {
+          "counts": {
+            "count:0": 12,
+            "count:2": 6,
+            "count:3": 6,
+            "mode:sequential": 12,
+            "split:train": 24,
+            "state:handoff": 12,
+            "state:initial": 12,
+            "state:intermediate": 12,
+            "state:partial": 6,
+            "state:stopping": 12
+          },
+          "source_groups": 12,
+          "tasks": 12
+        },
+        "tool_failure_then_recover": {
+          "counts": {
+            "count:0": 12,
+            "count:1": 18,
+            "count:2": 6,
+            "mode:sequential": 6,
+            "split:train": 36,
+            "state:failure": 24,
+            "state:handoff": 6,
+            "state:initial": 12,
+            "state:intermediate": 24,
+            "state:partial": 18,
+            "state:stopping": 12
+          },
+          "source_groups": 12,
+          "tasks": 12
+        }
+      },
+      "k": 3,
+      "records": 186,
+      "records_sha256": "2790bb82ed93e098a11cc27bff61bdcc367336c34d671f59d5c889c5bd0083bf",
+      "scope": "chosen supervised labels, not candidate action availability",
+      "sequential_orders": {
+        "math>verifier": 6,
+        "retriever>coder": 12,
+        "retriever>critic>researcher": 12,
+        "retriever>math": 6,
+        "retriever>math>verifier": 6,
+        "retriever>researcher": 12,
+        "retriever>verifier": 6
+      },
+      "state_tag_source": "offline provenance except initial/intermediate and chosen stop",
+      "steps": {
+        "0": 72,
+        "1": 72,
+        "2": 42
+      },
+      "within_action_handoffs": {
+        "critic>researcher": 12,
+        "math>verifier": 12,
+        "retriever>coder": 12,
+        "retriever>critic": 12,
+        "retriever>math": 12,
+        "retriever>researcher": 12,
+        "retriever>verifier": 6
+      }
+    }
+  },
+  "required_cells": [
+    "count:0",
+    "count:1",
+    "count:2",
+    "count:3",
+    "mode:parallel",
+    "mode:sequential",
+    "state:failure",
+    "state:handoff",
+    "state:initial",
+    "state:intermediate",
+    "state:stopping"
+  ],
+  "required_families": [
+    "distractor_evidence_then_verify",
+    "parallel_evidence_then_combine",
+    "research_then_verify",
+    "retrieve_code_then_verify",
+    "retrieve_then_calculate",
+    "tool_failure_then_recover"
+  ],
+  "source_group_disjoint": true,
+  "task_disjoint": true
+}

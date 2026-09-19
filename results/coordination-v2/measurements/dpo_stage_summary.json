@@ -1,0 +1,11 @@
+{
+  "stage": "dpo",
+  "status": "blocked",
+  "reason": "at least one predeclared seed lacks measured train/development preference pairs",
+  "blocked_seeds": {
+    "42": "blocked_insufficient_pairs",
+    "137": "blocked_insufficient_pairs"
+  },
+  "training_started": false,
+  "next_stage": "study_blocked_before_final"
+}

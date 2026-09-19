@@ -1,0 +1,183 @@
+{
+  "scope": "CPU development-gate study on controlled synthetic workflows; no final test or GPU run",
+  "recorded_input_sha256": "7e3e944d25a4741580e2c5345379cb233f14644ec9c7859d0c376c9cdc59a600",
+  "input_hashes": {
+    "data/coordination-v2/manifest.json": "e65a226b60dfa6b2b9800f45a979071415c8ed087d77f6b1a2ad770d68f10a75",
+    "outputs/coordination-v2/cheap_stage_summary.json": "0baab2be7fbe786cf7ac792bf5bf03f307220e3fcaeccfe01a106186ab50d44f",
+    "outputs/coordination-v2/probe_stage_summary.json": "1d3a4ef00db75866af2fba89fc14fbec45b3fb5182385ca4618d7ce0a64e7dc3",
+    "outputs/coordination-v2/sft_stage_summary.json": "c5a4e77d6b32700483ff08cfab6c60633105055d86f640be2929dbb2e65d5a33",
+    "outputs/coordination-v2/preference_stage_summary.json": "b1e96cf993a793c24a3639ade23e148374375f303d3edf1a322486f3ae61d91e",
+    "outputs/coordination-v2/dpo_stage_summary.json": "cdc6a22142902ae2cf807cd17da4e8af3b9a2d6940ce0161cddc8a83bc95b7d3"
+  },
+  "tasks": {
+    "task_count": 108,
+    "train_tasks": 72,
+    "development_tasks": 36,
+    "trajectory_count": 540,
+    "trajectory_successes": 232,
+    "sft_train_records": 186,
+    "sft_development_records": 93
+  },
+  "development": [
+    {
+      "policy": "public_state_rules",
+      "label": "Public-state rules",
+      "seeds": [
+        42,
+        137,
+        2027
+      ],
+      "success_by_seed": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_success_rate": 1.0,
+      "mean_mean_agent_calls": 2.8333333333333335,
+      "mean_mean_total_tokens": 235.5,
+      "mean_mean_controller_tokens": 0.0,
+      "mean_mean_downstream_tokens": 235.5,
+      "mean_mean_wall_clock_seconds": 0.04660172032405777,
+      "mean_mean_controller_seconds": 0.00016672915996793932
+    },
+    {
+      "policy": "frozen_catalog_head",
+      "label": "Frozen catalog head",
+      "seeds": [
+        42,
+        137,
+        2027
+      ],
+      "success_by_seed": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_success_rate": 1.0,
+      "mean_mean_agent_calls": 2.8333333333333335,
+      "mean_mean_total_tokens": 1019.388888888889,
+      "mean_mean_controller_tokens": 783.888888888889,
+      "mean_mean_downstream_tokens": 235.5,
+      "mean_mean_wall_clock_seconds": 1.9590615459159448,
+      "mean_mean_controller_seconds": 1.9079939757745403
+    },
+    {
+      "policy": "frozen_factorized_head",
+      "label": "Factorized head",
+      "seeds": [
+        42,
+        137,
+        2027
+      ],
+      "success_by_seed": [
+        0.6944444444444444,
+        0.75,
+        0.16666666666666666
+      ],
+      "mean_success_rate": 0.5370370370370371,
+      "mean_mean_agent_calls": 2.9166666666666665,
+      "mean_mean_total_tokens": 1124.7592592592594,
+      "mean_mean_controller_tokens": 823.0,
+      "mean_mean_downstream_tokens": 301.75925925925924,
+      "mean_mean_wall_clock_seconds": 3.312560469141722,
+      "mean_mean_controller_seconds": 3.2506833456335933
+    },
+    {
+      "policy": "conductor_sft",
+      "label": "LoRA SFT",
+      "seeds": [
+        42,
+        137,
+        2027
+      ],
+      "success_by_seed": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_success_rate": 1.0,
+      "mean_mean_agent_calls": 2.861111111111111,
+      "mean_mean_total_tokens": 1027.9907407407409,
+      "mean_mean_controller_tokens": 787.4444444444445,
+      "mean_mean_downstream_tokens": 240.5462962962963,
+      "mean_mean_wall_clock_seconds": 1.4895091419937134,
+      "mean_mean_controller_seconds": 1.4421476821379555
+    }
+  ],
+  "sft": {
+    "all_seeds_passed": true,
+    "trainable_parameters": 942565,
+    "total_controller_parameters": 1335567845,
+    "adapter_update_checks": {
+      "42": true,
+      "137": true,
+      "2027": true
+    }
+  },
+  "preferences": {
+    "42": {
+      "status": "blocked_insufficient_pairs",
+      "train_pairs": 0,
+      "development_pairs": 0,
+      "actor_checkpoint_sha256": "8023d15e687cbc0b01744ab8d8c0582614d10cd7f59ec8e1d1f865eb9e6dc298",
+      "continuation_sha256": "495ceb0d95aee2ab1d0f492daadb26930db5bed3421223dae0b7436d2127111b",
+      "preference_audit_sha256": "89edf4f29f4fabea87700e74361ca731565aa4b0cfe5d0245f92b4151c162921",
+      "tasks_sha256": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+      "stores_sha256": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+      "latency_weight": 0.0,
+      "exclusions": {
+        "actor_matches_rescue": 279
+      },
+      "fit_partition": "train only",
+      "development_partition": "diagnostic and validation only",
+      "final_partition_used": false
+    },
+    "137": {
+      "status": "blocked_insufficient_pairs",
+      "train_pairs": 0,
+      "development_pairs": 1,
+      "actor_checkpoint_sha256": "17f249be960cb6643d0d46caff93faf29cb81ece7d82a07efb8c1ad6956347e4",
+      "continuation_sha256": "495ceb0d95aee2ab1d0f492daadb26930db5bed3421223dae0b7436d2127111b",
+      "preference_audit_sha256": "d6a97bb2eab660ae8bed98fd16c433f08f93f32b04a34ba70b525824543e825b",
+      "tasks_sha256": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+      "stores_sha256": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+      "latency_weight": 0.0,
+      "exclusions": {
+        "actor_matches_rescue": 279
+      },
+      "fit_partition": "train only",
+      "development_partition": "diagnostic and validation only",
+      "final_partition_used": false
+    },
+    "2027": {
+      "status": "ready",
+      "train_pairs": 2,
+      "development_pairs": 3,
+      "actor_checkpoint_sha256": "d04f05768ed30aa83ac65b35c3bf295a02117ab56d5fe4bfc9f2ef7fc52a7fd4",
+      "continuation_sha256": "495ceb0d95aee2ab1d0f492daadb26930db5bed3421223dae0b7436d2127111b",
+      "preference_audit_sha256": "6114e2a4b514a698ce82d67767fdae09e5d82f7311de9ad427a6b07bdb8a2520",
+      "tasks_sha256": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+      "stores_sha256": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+      "latency_weight": 0.0,
+      "exclusions": {
+        "actor_matches_rescue": 274
+      },
+      "fit_partition": "train only",
+      "development_partition": "diagnostic and validation only",
+      "final_partition_used": false
+    }
+  },
+  "dpo": {
+    "stage": "dpo",
+    "status": "blocked",
+    "reason": "at least one predeclared seed lacks measured train/development preference pairs",
+    "blocked_seeds": {
+      "42": "blocked_insufficient_pairs",
+      "137": "blocked_insufficient_pairs"
+    },
+    "training_started": false,
+    "next_stage": "study_blocked_before_final"
+  },
+  "final_inventory_generated": false,
+  "study_outcome": "blocked_before_dpo_and_final_under_predeclared_all_seed_gate"
+}

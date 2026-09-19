@@ -1,0 +1,235 @@
+{
+  "runs": [
+    {
+      "path": "outputs/coordination-v2/data-generation/run.json",
+      "git_commit": "562f57dc33879d6496bde275e0055cfc29ff7b44",
+      "git_dirty": false,
+      "seed": 314159,
+      "runtime_seconds": 63.662427333998494,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/probe/run.json",
+      "git_commit": "f5b0b625d8d90d593b87005721fe9b57388b40e7",
+      "git_dirty": true,
+      "seed": 42,
+      "runtime_seconds": 399.54951045900816,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-42/run.json",
+      "git_commit": "2fb775323c942153b70fdca68e63ce0a6ce74fbf",
+      "git_dirty": true,
+      "seed": 42,
+      "runtime_seconds": 1078.702793791017,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/preference-generation/seed-42/run.json",
+      "git_commit": "03d1ab881a7321496353387b441a7f309a2e1d43",
+      "git_dirty": true,
+      "seed": 42,
+      "runtime_seconds": 148.13923179195262,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-137/run.json",
+      "git_commit": "2fb775323c942153b70fdca68e63ce0a6ce74fbf",
+      "git_dirty": true,
+      "seed": 137,
+      "runtime_seconds": 1086.5006495839916,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/preference-generation/seed-137/run.json",
+      "git_commit": "03d1ab881a7321496353387b441a7f309a2e1d43",
+      "git_dirty": true,
+      "seed": 137,
+      "runtime_seconds": 151.18583041703096,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/checkpoints/granite-catalog-sft/seed-2027/run.json",
+      "git_commit": "2fb775323c942153b70fdca68e63ce0a6ce74fbf",
+      "git_dirty": true,
+      "seed": 2027,
+      "runtime_seconds": 1090.249769749993,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    },
+    {
+      "path": "outputs/coordination-v2/preference-generation/seed-2027/run.json",
+      "git_commit": "03d1ab881a7321496353387b441a7f309a2e1d43",
+      "git_dirty": true,
+      "seed": 2027,
+      "runtime_seconds": 151.18336299998919,
+      "hardware": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "python": "3.12.14",
+        "torch": "2.14.0",
+        "cuda_available": false,
+        "cuda_runtime": null,
+        "cudnn_version": null,
+        "visible_nvidia_devices": [],
+        "mps_available": true,
+        "cpu_count": 11
+      },
+      "library_versions": {
+        "torch": "2.14.0",
+        "transformers": "4.57.6",
+        "peft": "0.21.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3",
+        "PyYAML": "6.0.3",
+        "fastapi": "0.141.1",
+        "uvicorn": "0.53.0"
+      }
+    }
+  ],
+  "source_commits": [
+    "03d1ab881a7321496353387b441a7f309a2e1d43",
+    "2fb775323c942153b70fdca68e63ce0a6ce74fbf",
+    "562f57dc33879d6496bde275e0055cfc29ff7b44",
+    "f5b0b625d8d90d593b87005721fe9b57388b40e7"
+  ],
+  "dirty_run_note": "Generated working data was untracked during early phases; source commit IDs remain recorded. The public archive contains byte hashes for every retained measurement."
+}

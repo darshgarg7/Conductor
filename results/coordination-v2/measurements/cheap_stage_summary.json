@@ -1,0 +1,411 @@
+{
+  "stage": "cheap_supervised_controls",
+  "seeds": [
+    42,
+    137,
+    2027
+  ],
+  "per_seed": {
+    "42": {
+      "public_state_rules": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.04702041902055498
+      },
+      "sparse_linear_router": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.06479235752744393
+      },
+      "small_mlp_router": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.06294144100199144
+      }
+    },
+    "137": {
+      "public_state_rules": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.042113319498538554
+      },
+      "sparse_linear_router": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.06193507531133946
+      },
+      "small_mlp_router": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.059941394574707374
+      }
+    },
+    "2027": {
+      "public_state_rules": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.04366580802080636
+      },
+      "sparse_linear_router": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.06035632288775458
+      },
+      "small_mlp_router": {
+        "success_rate": 1.0,
+        "family_balanced_success": 1.0,
+        "minimum_family_success": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.05994061455647978
+      }
+    }
+  },
+  "development_gates": {
+    "42": {
+      "sparse_linear_router": {
+        "passed": true,
+        "success_rate": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "floor": 0.95
+      },
+      "small_mlp_router": {
+        "passed": true,
+        "success_rate": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "floor": 0.95
+      }
+    },
+    "137": {
+      "sparse_linear_router": {
+        "passed": true,
+        "success_rate": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "floor": 0.95
+      },
+      "small_mlp_router": {
+        "passed": true,
+        "success_rate": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "floor": 0.95
+      }
+    },
+    "2027": {
+      "sparse_linear_router": {
+        "passed": true,
+        "success_rate": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "floor": 0.95
+      },
+      "small_mlp_router": {
+        "passed": true,
+        "success_rate": 1.0,
+        "minimum_dependency_stage_success": 1.0,
+        "floor": 0.95
+      }
+    }
+  },
+  "primary_baseline_lock": {
+    "status": "locked",
+    "floor": 0.95,
+    "selected": "public_state_rules",
+    "candidates": [
+      {
+        "policy": "public_state_rules",
+        "seeds": [
+          42,
+          137,
+          2027
+        ],
+        "mean_family_balanced_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.044266515513299964,
+        "minimum_seed_success": 1.0,
+        "eligible": true
+      },
+      {
+        "policy": "small_mlp_router",
+        "seeds": [
+          42,
+          137,
+          2027
+        ],
+        "mean_family_balanced_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.06094115004439286,
+        "minimum_seed_success": 1.0,
+        "eligible": true
+      },
+      {
+        "policy": "sparse_linear_router",
+        "seeds": [
+          42,
+          137,
+          2027
+        ],
+        "mean_family_balanced_success": 1.0,
+        "mean_agent_calls": 2.8333333333333335,
+        "mean_wall_clock_seconds": 0.062361251908845984,
+        "minimum_seed_success": 1.0,
+        "eligible": true
+      }
+    ],
+    "selection_order": [
+      "highest mean family-balanced workflow success",
+      "lowest mean agent calls",
+      "lowest mean total CPU latency",
+      "lexicographic policy identifier"
+    ]
+  },
+  "training_metrics": {
+    "42": {
+      "linear": {
+        "stage": "sft",
+        "epochs": 200,
+        "completed": true,
+        "optimizer_windows": 1200,
+        "skipped_amp_updates": 0,
+        "world_size": 1,
+        "gradient_accumulation_steps": 1,
+        "train_examples": 186,
+        "validation_examples": 93,
+        "source_examples": 186,
+        "excluded_actions_exceeding_k": 0,
+        "train_k": 3,
+        "initial_train": {
+          "loss": 6.1508531467888945,
+          "accuracy": 0.0
+        },
+        "final_train": {
+          "loss": 0.007168719605092079,
+          "accuracy": 1.0
+        },
+        "final_validation": {
+          "loss": 0.03514070151954569,
+          "accuracy": 1.0
+        },
+        "trainable_parameters": 248805,
+        "total_controller_parameters": 248805,
+        "reference_checkpoint_sha256": null,
+        "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+        "pretrained": false,
+        "checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-42",
+        "resume_checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-42/resume/step-00001200-epoch-0200",
+        "specialists_updated": false,
+        "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+      },
+      "mlp": {
+        "stage": "sft",
+        "epochs": 200,
+        "completed": true,
+        "optimizer_windows": 1200,
+        "skipped_amp_updates": 0,
+        "world_size": 1,
+        "gradient_accumulation_steps": 1,
+        "train_examples": 186,
+        "validation_examples": 93,
+        "source_examples": 186,
+        "excluded_actions_exceeding_k": 0,
+        "train_k": 3,
+        "initial_train": {
+          "loss": 6.178328975554435,
+          "accuracy": 0.0
+        },
+        "final_train": {
+          "loss": 6.153286742647328e-05,
+          "accuracy": 1.0
+        },
+        "final_validation": {
+          "loss": 0.0010604325641867935,
+          "accuracy": 1.0
+        },
+        "trainable_parameters": 144741,
+        "total_controller_parameters": 144741,
+        "reference_checkpoint_sha256": null,
+        "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+        "pretrained": false,
+        "checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-42",
+        "resume_checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-42/resume/step-00001200-epoch-0200",
+        "specialists_updated": false,
+        "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+      }
+    },
+    "137": {
+      "linear": {
+        "stage": "sft",
+        "epochs": 200,
+        "completed": true,
+        "optimizer_windows": 1200,
+        "skipped_amp_updates": 0,
+        "world_size": 1,
+        "gradient_accumulation_steps": 1,
+        "train_examples": 186,
+        "validation_examples": 93,
+        "source_examples": 186,
+        "excluded_actions_exceeding_k": 0,
+        "train_k": 3,
+        "initial_train": {
+          "loss": 6.2020924886067705,
+          "accuracy": 0.0
+        },
+        "final_train": {
+          "loss": 0.007355787741240635,
+          "accuracy": 1.0
+        },
+        "final_validation": {
+          "loss": 0.03664481511680029,
+          "accuracy": 1.0
+        },
+        "trainable_parameters": 248805,
+        "total_controller_parameters": 248805,
+        "reference_checkpoint_sha256": null,
+        "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+        "pretrained": false,
+        "checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-137",
+        "resume_checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-137/resume/step-00001200-epoch-0200",
+        "specialists_updated": false,
+        "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+      },
+      "mlp": {
+        "stage": "sft",
+        "epochs": 200,
+        "completed": true,
+        "optimizer_windows": 1200,
+        "skipped_amp_updates": 0,
+        "world_size": 1,
+        "gradient_accumulation_steps": 1,
+        "train_examples": 186,
+        "validation_examples": 93,
+        "source_examples": 186,
+        "excluded_actions_exceeding_k": 0,
+        "train_k": 3,
+        "initial_train": {
+          "loss": 6.189745256977696,
+          "accuracy": 0.0
+        },
+        "final_train": {
+          "loss": 7.421263025432665e-05,
+          "accuracy": 1.0
+        },
+        "final_validation": {
+          "loss": 0.0007522391275532784,
+          "accuracy": 1.0
+        },
+        "trainable_parameters": 144741,
+        "total_controller_parameters": 144741,
+        "reference_checkpoint_sha256": null,
+        "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+        "pretrained": false,
+        "checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-137",
+        "resume_checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-137/resume/step-00001200-epoch-0200",
+        "specialists_updated": false,
+        "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+      }
+    },
+    "2027": {
+      "linear": {
+        "stage": "sft",
+        "epochs": 200,
+        "completed": true,
+        "optimizer_windows": 1200,
+        "skipped_amp_updates": 0,
+        "world_size": 1,
+        "gradient_accumulation_steps": 1,
+        "train_examples": 186,
+        "validation_examples": 93,
+        "source_examples": 186,
+        "excluded_actions_exceeding_k": 0,
+        "train_k": 3,
+        "initial_train": {
+          "loss": 6.127954380486601,
+          "accuracy": 0.0
+        },
+        "final_train": {
+          "loss": 0.007251025287694828,
+          "accuracy": 1.0
+        },
+        "final_validation": {
+          "loss": 0.03551259092105332,
+          "accuracy": 1.0
+        },
+        "trainable_parameters": 248805,
+        "total_controller_parameters": 248805,
+        "reference_checkpoint_sha256": null,
+        "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+        "pretrained": false,
+        "checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-2027",
+        "resume_checkpoint": "outputs/coordination-v2/checkpoints/cheap-linear/seed-2027/resume/step-00001200-epoch-0200",
+        "specialists_updated": false,
+        "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+      },
+      "mlp": {
+        "stage": "sft",
+        "epochs": 200,
+        "completed": true,
+        "optimizer_windows": 1200,
+        "skipped_amp_updates": 0,
+        "world_size": 1,
+        "gradient_accumulation_steps": 1,
+        "train_examples": 186,
+        "validation_examples": 93,
+        "source_examples": 186,
+        "excluded_actions_exceeding_k": 0,
+        "train_k": 3,
+        "initial_train": {
+          "loss": 6.184242904827159,
+          "accuracy": 0.0
+        },
+        "final_train": {
+          "loss": 3.7760279762248196e-05,
+          "accuracy": 1.0
+        },
+        "final_validation": {
+          "loss": 0.0005737072838250027,
+          "accuracy": 1.0
+        },
+        "trainable_parameters": 144741,
+        "total_controller_parameters": 144741,
+        "reference_checkpoint_sha256": null,
+        "dataset_sha256": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+        "pretrained": false,
+        "checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-2027",
+        "resume_checkpoint": "outputs/coordination-v2/checkpoints/cheap-mlp/seed-2027/resume/step-00001200-epoch-0200",
+        "specialists_updated": false,
+        "validation_dataset_sha256": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1"
+      }
+    }
+  },
+  "all_learned_controls_passed": true,
+  "next_stage": "cached_pretrained_representation_probe",
+  "dataset_hashes": {
+    "tasks.jsonl": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+    "public_stores.json": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+    "sft_train.jsonl": "998e808b6133406a78a3d650a90a34da310b8c9ef8d059414ea806254d7b3881",
+    "sft_development.jsonl": "6b203ba209b96e59e9de364280c76159104de0e485db75bd3a30f4bfc66615e1",
+    "coverage_audit.json": "4663342de4ad3c13b68591ab78b3593cf60b7c7337d0c1b84a8158bfddf28d54"
+  }
+}

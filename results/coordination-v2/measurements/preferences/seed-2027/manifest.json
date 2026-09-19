@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "train_pairs": 2,
+  "development_pairs": 3,
+  "actor_checkpoint_sha256": "d04f05768ed30aa83ac65b35c3bf295a02117ab56d5fe4bfc9f2ef7fc52a7fd4",
+  "continuation_sha256": "495ceb0d95aee2ab1d0f492daadb26930db5bed3421223dae0b7436d2127111b",
+  "preference_audit_sha256": "6114e2a4b514a698ce82d67767fdae09e5d82f7311de9ad427a6b07bdb8a2520",
+  "tasks_sha256": "5c5a777629c83a60f1ef90ba1340aa5327f120bca4b2fb28627db7704fb0734f",
+  "stores_sha256": "4c355500bba49251b4ab460f0dbc4a9911a92d598d73174060e75bc2504d7c05",
+  "latency_weight": 0.0,
+  "exclusions": {
+    "actor_matches_rescue": 274
+  },
+  "fit_partition": "train only",
+  "development_partition": "diagnostic and validation only",
+  "final_partition_used": false
+}

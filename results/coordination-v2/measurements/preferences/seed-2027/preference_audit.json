@@ -1,0 +1,97 @@
+{
+  "development": {
+    "actor_checkpoint_sha256_counts": {
+      "d04f05768ed30aa83ac65b35c3bf295a02117ab56d5fe4bfc9f2ef7fc52a7fd4": 3
+    },
+    "audit_version": "coordination_coverage_v1",
+    "canonical_distinct_actions_validated": true,
+    "chosen_agent_counts": {
+      "1": 3
+    },
+    "chosen_multiagent_modes": {},
+    "dependency_stages": {
+      "2": 3
+    },
+    "duplicate_pairs": 0,
+    "families": {
+      "parallel_evidence_then_combine": 3
+    },
+    "records": 3,
+    "records_sha256": "cd4ee9313e4d1cbfbcbb07fca239d866d75f4ce40634fef86b4cde5b9d8325c6",
+    "rejected_agent_counts": {
+      "2": 3
+    },
+    "rejected_multiagent_modes": {
+      "sequential": 3
+    },
+    "shared_public_state_and_continuation_validated": true,
+    "source_groups": 3,
+    "sources": {
+      "on_policy_mistake": 3
+    },
+    "state_kinds": {
+      "handoff": 3,
+      "intermediate": 3,
+      "partial": 3
+    },
+    "tasks": 3,
+    "unique_pairs": 3
+  },
+  "exclusions": {
+    "actor_matches_rescue": 274
+  },
+  "partition_audit": {
+    "source_group_disjoint": true,
+    "task_disjoint": true
+  },
+  "state_kind_counts": {
+    "dev": {
+      "handoff": 3,
+      "intermediate": 3,
+      "partial": 3
+    },
+    "train": {
+      "handoff": 2,
+      "intermediate": 2,
+      "partial": 2
+    }
+  },
+  "train": {
+    "actor_checkpoint_sha256_counts": {
+      "d04f05768ed30aa83ac65b35c3bf295a02117ab56d5fe4bfc9f2ef7fc52a7fd4": 2
+    },
+    "audit_version": "coordination_coverage_v1",
+    "canonical_distinct_actions_validated": true,
+    "chosen_agent_counts": {
+      "1": 2
+    },
+    "chosen_multiagent_modes": {},
+    "dependency_stages": {
+      "2": 2
+    },
+    "duplicate_pairs": 0,
+    "families": {
+      "parallel_evidence_then_combine": 2
+    },
+    "records": 2,
+    "records_sha256": "21d42cf55bd677298f55d91c7f9b975dbccd25a517c17ff4c5b7d9a357b29a4a",
+    "rejected_agent_counts": {
+      "2": 2
+    },
+    "rejected_multiagent_modes": {
+      "sequential": 2
+    },
+    "shared_public_state_and_continuation_validated": true,
+    "source_groups": 2,
+    "sources": {
+      "on_policy_mistake": 2
+    },
+    "state_kinds": {
+      "handoff": 2,
+      "intermediate": 2,
+      "partial": 2
+    },
+    "tasks": 2,
+    "unique_pairs": 2
+  }
+}
