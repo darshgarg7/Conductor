@@ -29,3 +29,6 @@ study:
   probe_batch_size: 2
   probe_epochs: 200
   probe_learning_rate: 0.01
+  sft_batch_size: 2
+  sft_gradient_accumulation_steps: 2
+  sft_learning_rate: 0.0001

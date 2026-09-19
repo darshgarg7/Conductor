@@ -51,6 +51,15 @@ python -m conductor.coordination.study \
   --stage probe
 ```
 
+Only a head type that passes the online gate for all three seeds advances to
+rank-four LoRA SFT:
+
+```bash
+python -m conductor.coordination.study \
+  --config configs/research/coordination_v2_study.yaml \
+  --stage sft
+```
+
 `conductor/coordination/preferences.py` constructs DPO data only from mistakes
 made by a saved SFT checkpoint. Each pair replays the actual action and a public
 rule rescue from the identical serialized state under separately instantiated,

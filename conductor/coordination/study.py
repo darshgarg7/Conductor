@@ -249,15 +249,136 @@ async def run_probe_stage(config: dict[str, Any]) -> dict[str, Any]:
                                  "floor": floor}
                     for identifier, values in policies.items()}
              for seed, policies in per_seed.items()}
-    factorized_passed = all(values["frozen_factorized_head"]["passed"] for values in gates.values())
+    head_identifiers = ("frozen_catalog_head", "frozen_factorized_head")
+    eligible = [identifier for identifier in head_identifiers
+                if all(values[identifier]["passed"] for values in gates.values())]
+    head_rows = []
+    for identifier in head_identifiers:
+        values = [per_seed[seed][identifier] for seed in seeds]
+        head_rows.append({"policy": identifier,
+                          "mean_family_balanced_success": statistics.fmean(
+                              item["family_balanced_success"] for item in values),
+                          "mean_agent_calls": statistics.fmean(item["mean_agent_calls"] for item in values),
+                          "mean_wall_clock_seconds": statistics.fmean(
+                              item["mean_wall_clock_seconds"] for item in values),
+                          "all_seed_gates_passed": identifier in eligible})
+    selected = (min((row for row in head_rows if row["all_seed_gates_passed"]),
+                    key=lambda row: (-row["mean_family_balanced_success"], row["mean_agent_calls"],
+                                     row["mean_wall_clock_seconds"], row["policy"]))["policy"]
+                if eligible else None)
     summary = {"stage": "cached_pretrained_frozen_heads", "seeds": seeds,
                "probe": measured_probe, "per_seed": per_seed, "development_gates": gates,
-               "factorized_head_all_seeds_passed": factorized_passed,
-               "next_stage": "factorized_lora_sft" if factorized_passed else "blocked_before_lora",
+               "head_selection": {"eligible": eligible, "selected": selected, "candidates": head_rows,
+                                  "rule": "only all-seed passing heads; then success, calls, CPU latency, identifier"},
+               "factorized_head_all_seeds_passed": "frozen_factorized_head" in eligible,
+               "next_stage": "catalog_lora_sft" if selected == "frozen_catalog_head" else (
+                   "factorized_lora_sft" if selected == "frozen_factorized_head" else "blocked_before_lora"),
                "model_context_locked": {"state_serialization": "priority_v1",
                                         "max_length": model["max_length"],
                                         "selected_representations": measured_probe["selected_representations"]}}
     write_json(root / "probe_stage_summary.json", summary)
+    return summary
+
+
+def _adapter_update_report(before: str | Path, after: str | Path) -> dict[str, Any]:
+    import torch
+    from safetensors.torch import load_file
+    source = load_file(str(Path(before) / "adapter" / "adapter_model.safetensors"))
+    trained = load_file(str(Path(after) / "adapter" / "adapter_model.safetensors"))
+    if source.keys() != trained.keys():
+        raise ValueError("LoRA adapter tensor inventory changed across SFT")
+    changed = {name: float((trained[name].float() - source[name].float()).abs().max())
+               for name in source if not torch.equal(source[name], trained[name])}
+    nonzero_b = [name for name, value in trained.items() if "lora_B" in name and bool(value.abs().max() > 0)]
+    groups = {target: any(target in name for name in changed) for target in ("q_proj", "v_proj", "router")}
+    return {"source_adapter": str(before), "trained_adapter": str(after),
+            "adapter_tensors": len(source), "changed_tensors": len(changed),
+            "maximum_absolute_update": max(changed.values(), default=0.0),
+            "nonzero_lora_b_tensors": len(nonzero_b), "target_groups_changed": groups,
+            "passed": bool(changed and nonzero_b and all(groups.values()))}
+
+
+async def run_sft_stage(config: dict[str, Any]) -> dict[str, Any]:
+    study = config["study"]
+    root = Path(study.get("output", "outputs/coordination-v2"))
+    dataset = Path(study["dataset"])
+    probe_summary = json.loads((root / "probe_stage_summary.json").read_text())
+    selected = probe_summary.get("head_selection", {}).get("selected")
+    head_type = {"frozen_catalog_head": "catalog", "frozen_factorized_head": "factorized"}.get(selected)
+    if head_type is None:
+        raise ValueError("LoRA SFT is blocked because no frozen head passed every development gate")
+    seeds = [int(value) for value in study.get("seeds", [42, 137, 2027])]
+    checkpoints = probe_summary["probe"]["checkpoints"]
+    training_metrics: dict[int, Any] = {}
+    adapter_updates: dict[int, Any] = {}
+    sft_checkpoints: dict[int, str] = {}
+    for seed in seeds:
+        source = checkpoints[str(seed)][head_type]
+        output = root / "checkpoints" / f"granite-{head_type}-sft" / f"seed-{seed}"
+        settings = {
+            "seed": seed,
+            "model": {"backend": "hf", "device": "cpu", "dtype": "float32",
+                      "max_length": int(study.get("model_max_length", 384)),
+                      "attention_implementation": "sdpa"},
+            "routing": {"k": 3},
+            "inference": {"instrument_experts": True, "sample": False,
+                          "preserve_checkpoint_context": True, "token_cache_size": 0},
+            "training": {"stage": "sft", "data": str(dataset / "sft_train.jsonl"),
+                         "validation_data": str(dataset / "sft_development.jsonl"),
+                         "checkpoint": source, "output": str(output),
+                         "epochs": 2, "batch_size": int(study.get("sft_batch_size", 2)),
+                         "gradient_accumulation_steps": int(study.get("sft_gradient_accumulation_steps", 2)),
+                         "learning_rate": float(study.get("sft_learning_rate", .0001)),
+                         "weight_decay": .01, "max_grad_norm": 1.0,
+                         "gradient_checkpointing": False, "scheduler": "constant", "save_every_epochs": 1},
+            "tracking": {"enabled": False},
+        }
+        metrics = json.loads((output / "metrics.json").read_text()) if _completed_checkpoint(output) else train(
+            settings, source)
+        report = _adapter_update_report(source, output)
+        if not report["passed"]:
+            raise RuntimeError(f"saved LoRA adapter did not update all declared target groups for seed {seed}")
+        training_metrics[seed] = metrics
+        adapter_updates[seed] = report
+        sft_checkpoints[seed] = str(output)
+    per_seed: dict[int, dict[str, dict[str, float]]] = {}
+    for seed in seeds:
+        output = root / "development-sft" / f"seed-{seed}"
+        if (output / "metrics.json").exists():
+            result = json.loads((output / "metrics.json").read_text())
+        else:
+            result = await evaluate({
+                "seed": seed, "data": str(dataset / "tasks.jsonl"), "splits": ["dev"], "output": str(output),
+                "agents": {"backend": "workflow", "stores_path": str(dataset / "public_stores.json")},
+                "model": {"backend": "hf", "device": "cpu", "dtype": "float32",
+                          "max_length": int(study.get("model_max_length", 384))},
+                "routing": {"k": 3},
+                "orchestration": {"max_rounds": 6, "token_budget": 16384, "agent_call_budget": 12},
+                "latency_repetitions": int(study.get("development_latency_repetitions", 1)),
+                "bootstrap_samples": 1999,
+                "policies": [
+                    {"id": "public_state_rules"},
+                    {"id": "frozen_selected_head", "kind": "frozen_backbone_trained_head",
+                     "checkpoint": checkpoints[str(seed)][head_type]},
+                    {"id": "conductor_sft", "kind": "conductor_sft",
+                     "checkpoint": sft_checkpoints[seed]},
+                ],
+            })
+        per_seed[seed] = {identifier: _policy_summary(result, identifier)
+                          for identifier in ("frozen_selected_head", "conductor_sft")}
+    floor = float(study.get("development_floor", .95))
+    gates = {seed: {"passed": values["conductor_sft"]["success_rate"] >= floor
+                              and values["conductor_sft"]["minimum_dependency_stage_success"] >= floor,
+                    "success_rate": values["conductor_sft"]["success_rate"],
+                    "minimum_dependency_stage_success": values["conductor_sft"]["minimum_dependency_stage_success"],
+                    "floor": floor} for seed, values in per_seed.items()}
+    passed = all(value["passed"] for value in gates.values())
+    summary = {"stage": "lora_sft", "head_type": head_type, "seeds": seeds,
+               "checkpoints": sft_checkpoints, "training_metrics": training_metrics,
+               "adapter_updates": adapter_updates, "per_seed": per_seed,
+               "development_gates": gates, "all_seeds_passed": passed,
+               "next_stage": "on_policy_preferences" if passed else "blocked_before_dpo"}
+    write_json(root / "sft_stage_summary.json", summary)
     return summary
 
 
@@ -268,13 +389,15 @@ async def run(config: dict[str, Any], stage: str) -> dict[str, Any]:
         return await run_cheap_stage(config)
     if stage == "probe":
         return await run_probe_stage(config)
-    raise ValueError("stage must be data, cheap, or probe")
+    if stage == "sft":
+        return await run_sft_stage(config)
+    raise ValueError("stage must be data, cheap, probe, or sft")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/research/coordination_v2_study.yaml")
-    parser.add_argument("--stage", required=True, choices=("data", "cheap", "probe"))
+    parser.add_argument("--stage", required=True, choices=("data", "cheap", "probe", "sft"))
     args = parser.parse_args()
     print(json.dumps(asyncio.run(run(load_config(args.config), args.stage)), indent=2))
 
