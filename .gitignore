@@ -17,6 +17,7 @@ __pycache__/
 outputs/*
 data/dev/
 data/generated/
+data/coordination-v2/
 *.pt
 *.safetensors
 wandb/

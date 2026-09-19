@@ -7,6 +7,7 @@ import copy
 import hashlib
 import json
 import statistics
+import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -14,8 +15,9 @@ from typing import Any
 import numpy as np
 
 from conductor.agents import build_agents
+from conductor.agents.audit import specialist_audit
 from conductor.controller.factory import build_controller
-from conductor.datasets.integrity import file_digest, iter_records
+from conductor.datasets.integrity import digest, file_digest, iter_records
 from conductor.evaluation.io import write_csv, write_jsonl
 from conductor.metrics.aggregate import aggregate_metrics, paired_differences, trajectory_metrics
 from conductor.orchestration.runner import run_trajectory
@@ -23,6 +25,7 @@ from conductor.routing.policies import AllAgentPolicy, RandomTopKPolicy, StaticS
 from conductor.schema import Task
 from conductor.utils.config import load_config
 from conductor.utils.runs import Run, seed_everything, write_json
+from conductor.training.runner import checkpoint_digest
 
 from .policies import WorkflowRulePolicy
 from .workloads import FAMILIES
@@ -95,12 +98,18 @@ async def evaluate(config: dict[str, Any]) -> dict[str, Any]:
     splits = set(effective.get("splits", ["dev"]))
     tasks = _tasks(task_path, splits)
     agents = build_agents(effective)
+    agent_identity = specialist_audit(agents)
     orchestration = effective.get("orchestration", {})
     budgets = {"k": int(effective.get("routing", {}).get("k", 3)),
                "max_rounds": int(orchestration.get("max_rounds", 6)),
                "token_budget": int(orchestration.get("token_budget", 16384)),
                "agent_call_budget": int(orchestration.get("agent_call_budget", 12)),
                "routing_interval": 1}
+    data_sha256 = file_digest(task_path)
+    configuration_sha256 = digest(effective)
+    experiment_sha256 = digest({"data_sha256": data_sha256,
+                                "specialist_sha256": agent_identity["fingerprint"],
+                                "seed": seed, "splits": sorted(splits), "budgets": budgets})
     repetitions = int(effective.get("latency_repetitions", 1))
     if repetitions < 1:
         raise ValueError("latency_repetitions must be positive")
@@ -115,11 +124,15 @@ async def evaluate(config: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("evaluation needs nonempty uniquely identified policy specifications")
     for spec in specs:
         identifier = spec["id"]
+        construction_started = time.perf_counter()
         try:
             policy = build_workflow_policy(spec, effective, seed)
         except (FileNotFoundError, ImportError, RuntimeError, ValueError) as error:
-            statuses.append({"policy": identifier, "status": "unavailable", "reason": str(error)})
+            statuses.append({"policy": identifier, "status": "unavailable", "reason": str(error),
+                             "construction_seconds": time.perf_counter() - construction_started})
             continue
+        construction_seconds = time.perf_counter() - construction_started
+        checkpoint_sha256 = checkpoint_digest(spec["checkpoint"]) if spec.get("checkpoint") else None
         policy_rows: list[dict[str, Any]] = []
         for repetition in range(repetitions):
             seed_everything(seed)
@@ -132,7 +145,11 @@ async def evaluate(config: dict[str, Any]) -> dict[str, Any]:
                 item = trajectory.to_dict()
                 item["policy"] = identifier
                 item["metadata"].update(evaluation_seed=seed, latency_repetition=repetition,
-                                        data_sha256=file_digest(task_path),
+                                        data_sha256=data_sha256,
+                                        specialist_sha256=agent_identity["fingerprint"],
+                                        experiment_sha256=experiment_sha256,
+                                        checkpoint_sha256=checkpoint_sha256,
+                                        config_sha256=configuration_sha256,
                                         controller_token_accounting=getattr(policy, "token_accounting", "none"))
                 metric = trajectory_metrics(item)
                 metric.update(family=task.metadata["family"],
@@ -146,7 +163,8 @@ async def evaluate(config: dict[str, Any]) -> dict[str, Any]:
                     rows.append(metric)
                     policy_rows.append(metric)
         statuses.append({"policy": identifier, "status": "measured", "tasks": len(policy_rows),
-                         "checkpoint": spec.get("checkpoint")})
+                         "checkpoint": spec.get("checkpoint"), "checkpoint_sha256": checkpoint_sha256,
+                         "construction_seconds": construction_seconds})
         stats = getattr(policy, "expert_stats", None)
         if callable(stats):
             expert_stats[identifier] = stats()
@@ -176,10 +194,13 @@ async def evaluate(config: dict[str, Any]) -> dict[str, Any]:
     result = {"task_count": len(tasks), "splits": sorted(splits), "budgets": budgets,
               "latency_repetitions": repetitions,
               "latency_protocol": "repetition zero cold for process; later repetitions reuse controller caches",
+              "policy_construction_excluded_from_trajectory_latency": True,
+              "data_sha256": data_sha256, "specialist_audit": agent_identity,
+              "experiment_sha256": experiment_sha256, "config_sha256": configuration_sha256,
               "policies": summaries, "policy_status": statuses, "per_family": per_family,
               "per_dependency_stage": per_stage, "breakdowns": policy_breakdowns,
               "timing": timing_summary, "paired_comparisons": comparisons,
-              "data_sha256": file_digest(task_path), "workflow_families": list(FAMILIES)}
+              "workflow_families": list(FAMILIES)}
     run.finish(result)
     return result
 
