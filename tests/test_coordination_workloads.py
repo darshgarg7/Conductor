@@ -11,11 +11,12 @@ from conductor.coordination.grading import grade_workflow
 from conductor.coordination.evaluate import evaluate
 from conductor.coordination.generate import generate
 from conductor.coordination.policies import WorkflowRulePolicy
-from conductor.coordination.preferences import generate_preferences
+from conductor.coordination.preferences import _tags, generate_preferences
 from conductor.coordination.specialists import build_workflow_agents
 from conductor.coordination.workloads import FAMILIES, PublicStores, make_final_workload, make_workload, parse_request
 from conductor.orchestration.runner import initial_state, run_trajectory
 from conductor.training.runner import train
+from conductor.schema import RoutingDecision
 
 
 def test_balanced_group_disjoint_inventory_and_private_boundary():
@@ -26,6 +27,16 @@ def test_balanced_group_disjoint_inventory_and_private_boundary():
     assert len({task.metadata["source_group"] for task in tasks}) == len(tasks)
     assert all("expected_answer" not in parse_request(task.user_task) for task in tasks)
     assert stores.corpus_sha256 == PublicStores.from_dict(stores.to_dict()).corpus_sha256
+
+
+def test_preference_state_tags_cover_handoffs_and_stopping() -> None:
+    tasks, _ = make_workload(train_count=6, dev_count=0)
+    state = initial_state(tasks[0])
+    state.current_step = 1
+    handoff = _tags(state, RoutingDecision(["retriever", "math"], "sequential"))
+    stopping = _tags(state, RoutingDecision([], terminate=True))
+    assert {"intermediate", "handoff"} <= set(handoff)
+    assert {"intermediate", "stopping"} <= set(stopping)
 
 
 def test_final_inventory_has_new_structures_and_separate_groups():

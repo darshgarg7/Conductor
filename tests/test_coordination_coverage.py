@@ -6,7 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from conductor.coordination.coverage import audit_partitions, audit_preferences, audit_sft_records, write_immutable_audit
+from conductor.coordination.coverage import (audit_partitions, audit_preferences, audit_sft_records,
+                                             preference_pair_sha256, write_immutable_audit)
 from conductor.schema import ExecutionState, RoutingDecision
 
 
@@ -71,6 +72,19 @@ def test_ordered_preferences_and_duplicates_are_disclosed() -> None:
     report = audit_preferences([value, copy.deepcopy(value)])
     assert report["canonical_distinct_actions_validated"] and report["duplicate_pairs"] == 1
     assert report["sources"] == {"on_policy_mistake": 2}
+    assert report["chosen_agent_counts"] == {"2": 2}
+    assert report["chosen_multiagent_modes"] == {"sequential": 2}
+
+
+def test_stored_preference_identity_uses_serialized_public_state() -> None:
+    value = preference()
+    value["pair_sha256"] = preference_pair_sha256(
+        value["state"], RoutingDecision(**value["chosen"]), RoutingDecision(**value["rejected"]),
+        value["continuation_sha256"])
+    assert audit_preferences([value])["unique_pairs"] == 1
+    value["pair_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="stored preference pair identity"):
+        audit_preferences([value])
 
 
 def test_parallel_reordering_is_not_a_real_preference() -> None:

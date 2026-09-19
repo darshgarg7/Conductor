@@ -16,7 +16,7 @@ from typing import Any
 from conductor.coordination.evaluate import evaluate
 from conductor.coordination.generate import generate
 from conductor.coordination.preferences import generate_preferences
-from conductor.datasets.integrity import file_digest
+from conductor.datasets.integrity import file_digest, iter_records
 from conductor.training.probe import probe
 from conductor.training.runner import checkpoint_digest, train
 from conductor.utils.config import load_config
@@ -395,6 +395,39 @@ def _controller_runtime(study: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _validate_preference_reference(directory: Path, checkpoint: str | Path) -> dict[str, Any]:
+    manifest = json.loads((directory / "manifest.json").read_text())
+    expected_actor = checkpoint_digest(checkpoint)
+    if manifest.get("status") != "ready":
+        raise ValueError(f"preference corpus is not ready: {directory}")
+    if manifest.get("actor_checkpoint_sha256") != expected_actor:
+        raise ValueError("preference manifest actor does not match the exact SFT reference")
+    if manifest.get("preference_audit_sha256") != file_digest(directory / "preference_audit.json"):
+        raise ValueError("preference audit bytes changed after the manifest was written")
+    partitions: dict[str, list[dict[str, Any]]] = {}
+    for split, filename in (("train", "train.jsonl"), ("dev", "development.jsonl")):
+        records = list(iter_records(directory / filename))
+        if not records:
+            raise ValueError(f"empty {split} preference partition")
+        if any(record.get("split") != split for record in records):
+            raise ValueError(f"{split} preference partition contains a different split")
+        if any(record.get("actor_checkpoint_sha256") != expected_actor for record in records):
+            raise ValueError(f"{split} preference record actor does not match the SFT reference")
+        if any(record.get("continuation_sha256") != manifest.get("continuation_sha256") for record in records):
+            raise ValueError(f"{split} preference continuation identity changed")
+        partitions[split] = records
+    train_tasks = {record["task_id"] for record in partitions["train"]}
+    dev_tasks = {record["task_id"] for record in partitions["dev"]}
+    train_groups = {record["source_group"] for record in partitions["train"]}
+    dev_groups = {record["source_group"] for record in partitions["dev"]}
+    if train_tasks & dev_tasks or train_groups & dev_groups:
+        raise ValueError("preference train/development partitions overlap")
+    return {"actor_checkpoint_sha256": expected_actor,
+            "train_sha256": file_digest(directory / "train.jsonl"),
+            "development_sha256": file_digest(directory / "development.jsonl"),
+            "audit_sha256": manifest["preference_audit_sha256"]}
+
+
 async def run_preference_stage(config: dict[str, Any]) -> dict[str, Any]:
     """Collect exact-state DPO pairs from each eligible SFT actor.
 
@@ -466,15 +499,27 @@ async def run_dpo_stage(config: dict[str, Any]) -> dict[str, Any]:
         raise FileNotFoundError("DPO requires the on-policy preference stage")
     preference_summary = json.loads(preference_path.read_text())
     if not preference_summary.get("all_seeds_ready"):
-        raise ValueError("DPO is blocked because at least one seed lacks measured train/development pairs")
+        blocked = {seed: values.get("status", "missing")
+                   for seed, values in preference_summary.get("per_seed", {}).items()
+                   if values.get("status") != "ready"}
+        summary = {
+            "stage": "dpo", "status": "blocked", "reason":
+                "at least one predeclared seed lacks measured train/development preference pairs",
+            "blocked_seeds": blocked, "training_started": False,
+            "next_stage": "study_blocked_before_final",
+        }
+        write_json(root / "dpo_stage_summary.json", summary)
+        return summary
     sft_summary = json.loads((root / "sft_stage_summary.json").read_text())
     seeds = [int(value) for value in study.get("seeds", [42, 137, 2027])]
     checkpoints: dict[int, str] = {}
     training_metrics: dict[int, Any] = {}
     adapter_updates: dict[int, Any] = {}
+    preference_identities: dict[int, Any] = {}
     for seed in seeds:
         reference = sft_summary["checkpoints"][str(seed)]
         preferences = dataset / "preferences" / f"seed-{seed}"
+        preference_identities[seed] = _validate_preference_reference(preferences, reference)
         output = root / "checkpoints" / f"granite-{sft_summary['head_type']}-dpo" / f"seed-{seed}"
         settings = {
             "seed": seed,
@@ -497,6 +542,17 @@ async def run_dpo_stage(config: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError(f"seed {seed} completed DPO used a different preference corpus")
             if metrics.get("reference_checkpoint_sha256") != checkpoint_digest(reference):
                 raise ValueError(f"seed {seed} completed DPO used a different SFT reference")
+            run_identity = json.loads((output / "run.json").read_text()).get("data_identity", {})
+            expected_identity = {
+                "stage": "dpo", "seed": seed, "k": 3, "batch_size": settings["training"]["batch_size"],
+                "gradient_accumulation_steps": settings["training"]["gradient_accumulation_steps"],
+                "beta": settings["training"]["beta"], "learning_rate": settings["training"]["learning_rate"],
+                "validation_dataset_sha256": preference_identities[seed]["development_sha256"],
+            }
+            changed = [key for key, value in expected_identity.items() if run_identity.get(key) != value]
+            controller_stage = json.loads((output / "controller.json").read_text()).get("stage")
+            if changed or controller_stage != "preference" or metrics.get("epochs") != 1:
+                raise ValueError(f"seed {seed} completed DPO identity mismatch: {changed}")
         else:
             metrics = train(settings, reference)
         report = _adapter_update_report(reference, output)
@@ -545,6 +601,7 @@ async def run_dpo_stage(config: dict[str, Any]) -> dict[str, Any]:
         }
     summary = {
         "stage": "dpo", "seeds": seeds, "checkpoints": checkpoints,
+        "preference_identities": preference_identities,
         "training_metrics": training_metrics, "adapter_updates": adapter_updates,
         "per_seed": per_seed, "development_stage_locks": stage_locks,
         "all_seeds_completed": all(value.get("completed") for value in training_metrics.values()),

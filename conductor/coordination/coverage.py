@@ -25,6 +25,15 @@ def canonical_sha256(value: Any) -> str:
                                    allow_nan=False).encode()).hexdigest()
 
 
+def preference_pair_sha256(state: dict[str, Any], chosen: RoutingDecision,
+                           rejected: RoutingDecision, continuation: str, k: int = 3) -> str:
+    """Return the one canonical identity used by generation and audit."""
+    catalog = ActionCatalog(k)
+    public_sha = hashlib.sha256(serialize_public_state(ExecutionState(**state)).encode()).hexdigest()
+    return canonical_sha256({"state": public_sha, "chosen": catalog.key(chosen),
+                             "rejected": catalog.key(rejected), "continuation": continuation})
+
+
 def _field(record: dict[str, Any], key: str, default: Any = None) -> Any:
     return record.get(key, record.get("metadata", {}).get(key, default))
 
@@ -127,8 +136,16 @@ def audit_preferences(records: Iterable[dict[str, Any]], k: int = 3) -> dict[str
     groups: set[str] = set()
     pairs: Counter[str] = Counter()
     sources: Counter[str] = Counter()
+    families: Counter[str] = Counter()
+    dependency_stages: Counter[str] = Counter()
+    state_kinds: Counter[str] = Counter()
+    chosen_counts: Counter[str] = Counter()
+    rejected_counts: Counter[str] = Counter()
+    chosen_modes: Counter[str] = Counter()
+    rejected_modes: Counter[str] = Counter()
+    actors: Counter[str] = Counter()
     for record in values:
-        task, group, _ = _identity(record)
+        task, group, family = _identity(record)
         task_ids.add(task)
         groups.add(group)
         good = _valid_decision(record, "chosen", catalog, k)
@@ -148,13 +165,34 @@ def audit_preferences(records: Iterable[dict[str, Any]], k: int = 3) -> dict[str
         for key in ("chosen_continuation_sha256", "rejected_continuation_sha256"):
             if key in record and record[key] != continuation:
                 raise ValueError("preference branches use different continuation policies")
-        pair_sha = canonical_sha256({"state": public_sha, "chosen": catalog.key(good),
-                                     "rejected": catalog.key(bad), "continuation": continuation})
+        pair_sha = preference_pair_sha256(record["state"], good, bad, continuation, k)
+        stored_pair = record.get("pair_sha256")
+        if stored_pair is not None and stored_pair != pair_sha:
+            raise ValueError("stored preference pair identity does not match canonical public-state identity")
         pairs[pair_sha] += 1
         sources[str(_field(record, "preference_source", "unspecified"))] += 1
+        families[family] += 1
+        dependency_stages[str(_field(record, "dependency_stages", "unknown"))] += 1
+        for tag in _field(record, "state_kinds", []):
+            state_kinds[str(tag)] += 1
+        chosen_counts[str(len(good.selected_agents))] += 1
+        rejected_counts[str(len(bad.selected_agents))] += 1
+        if len(good.selected_agents) > 1:
+            chosen_modes[good.execution_mode] += 1
+        if len(bad.selected_agents) > 1:
+            rejected_modes[bad.execution_mode] += 1
+        actors[str(_field(record, "actor_checkpoint_sha256", "missing"))] += 1
     return {"audit_version": AUDIT_VERSION, "records": len(values), "records_sha256": canonical_sha256(values),
             "tasks": len(task_ids), "source_groups": len(groups), "unique_pairs": len(pairs),
             "duplicate_pairs": sum(count - 1 for count in pairs.values()), "sources": dict(sorted(sources.items())),
+            "families": dict(sorted(families.items())),
+            "dependency_stages": dict(sorted(dependency_stages.items())),
+            "state_kinds": dict(sorted(state_kinds.items())),
+            "chosen_agent_counts": dict(sorted(chosen_counts.items())),
+            "rejected_agent_counts": dict(sorted(rejected_counts.items())),
+            "chosen_multiagent_modes": dict(sorted(chosen_modes.items())),
+            "rejected_multiagent_modes": dict(sorted(rejected_modes.items())),
+            "actor_checkpoint_sha256_counts": dict(sorted(actors.items())),
             "shared_public_state_and_continuation_validated": True, "canonical_distinct_actions_validated": True}
 
 

@@ -94,7 +94,11 @@ def _reference_cache(config: dict[str, Any], checkpoint: str, records: list[dict
         if reference.stage != "sft":
             raise ValueError("DPO requires the exact SFT checkpoint, not a pretrained/random/preference model")
         head_metadata = (reference.model.head.metadata() if hasattr(reference.model.head, "metadata") else
-                         {"head_type": "catalog", "action_catalog_size": len(reference.catalog)})
+                         {"head_type": "catalog", "action_catalog_size": len(reference.catalog),
+                          "catalog_version": "complete_action_v1",
+                          "agent_order": list(reference.catalog.agents),
+                          "agent_order_sha256": canonical_hash(list(reference.catalog.agents)),
+                          "mask_version": "top_k_only_v1"})
         support_identity = {"head": head_metadata, "k": k,
                             "state_serialization": getattr(reference, "state_serialization", "public_feature_v1"),
                             "feature_version": getattr(reference, "feature_version", None)}
